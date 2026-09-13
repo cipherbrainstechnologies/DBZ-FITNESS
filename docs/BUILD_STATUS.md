@@ -1,6 +1,6 @@
 # Build Status — Saiyan Ascend
 
-Last updated: 2026-09-13
+Last updated: 2026-09-13 (security dependency refresh)
 
 ## Current milestone
 
@@ -25,6 +25,14 @@ Milestone 11 release scaffolding remains in-repo and **NOT DEPLOYED**.
 | M11 Release scaffolding | Templates in-repo | **NOT DEPLOYED**; image builds not verified without Docker |
 
 ## Completed behaviour
+
+### Railway security dependency refresh (2026-09-13)
+
+- Upgraded `@saiyan/web` **Next.js** `15.2.4` → `15.5.25` (fixes 3 critical RCE advisories and related high/moderate Next.js CVEs).
+- Upgraded **next-intl** `4.1.0` → `4.14.4` (open-redirect + prototype-pollution fixes).
+- Added root **pnpm overrides** for transitive deps used by Railway services: `lodash@^4.18.1`, `multer@^2.3.0`, `postcss@^8.5.23`, `uuid@^11.1.1`, `decode-uri-component@^0.5.0`.
+- `pnpm audit`: **56 → 2** findings (remaining 2 high are `image-size` via Expo/mobile only — no upstream patch published; not included in API/web/worker Docker images).
+- Verified: `@saiyan/api`, `@saiyan/web`, `@saiyan/worker` production builds; domain (63) + providers (3) tests PASS.
 
 ### Milestone 1–7 (prior)
 
@@ -78,6 +86,9 @@ Milestone 11 release scaffolding remains in-repo and **NOT DEPLOYED**.
 | `pnpm --filter @saiyan/domain test` | PASS — **63 tests** (incl. 6 coach safety) |
 | `pnpm --filter @saiyan/providers test` | PASS — **3 tests** (fixture never invents nutrition numbers) |
 | `pnpm --filter @saiyan/api build` | PASS |
+| `pnpm --filter @saiyan/web build` | PASS (Next.js 15.5.25) |
+| `pnpm --filter @saiyan/worker build` | PASS |
+| `pnpm audit` | 2 high (mobile-only `image-size`; no patch) — down from 56 (3 critical) |
 | `pnpm --filter @saiyan/worker lint` | PASS |
 | `pnpm docker:up` / `pnpm db:migrate` / `pnpm db:seed` | **NOT RUN** — Docker/Postgres unavailable |
 | Live coach + privacy HTTP / worker E2E | **NOT RUN** |
