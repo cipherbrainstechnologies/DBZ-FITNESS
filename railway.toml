@@ -1,31 +1,20 @@
-# Saiyan Ascend — Railway monorepo index (TEMPLATE ONLY — NOT DEPLOYED).
+# Saiyan Ascend — Railway monorepo index (documentation only).
 #
-# Railway config-as-code is per service. Do not treat this root file as a
-# multi-service orchestrator. Create five Railway services and attach the
-# configs documented below.
+# Do NOT put [build]/[deploy] here. A root railway.toml with dockerfilePath
+# causes EVERY GitHub-linked service to build the same image (previously
+# apps/api), which makes @saiyan/web and @saiyan/worker run the API binary.
 #
-# Service map (templates):
-#   api      → apps/api/railway.toml      + apps/api/Dockerfile
-#   web      → apps/web/railway.toml      + apps/web/Dockerfile
-#   worker   → apps/worker/railway.toml   + apps/worker/Dockerfile
-#   postgres → Railway PostgreSQL plugin (managed; no Dockerfile)
-#   redis    → Railway Redis plugin (managed; no Dockerfile)
+# Per-service Config as Code (set in Railway dashboard → Service → Settings):
+#   @saiyan/api    → /apps/api/railway.toml
+#   @saiyan/web    → /apps/web/railway.toml
+#   @saiyan/worker → /apps/worker/railway.toml
+#
+# Alternative: set service variable RAILWAY_DOCKERFILE_PATH=apps/<service>/Dockerfile
+# and leave Config as Code path empty.
 #
 # Shared monorepo rules:
-#   - Leave each app service Root Directory empty (repo root) so pnpm-workspace.yaml
-#     and pnpm-lock.yaml are visible.
-#   - Set Config as Code path to /apps/<service>/railway.toml for that service,
-#     OR set RAILWAY_DOCKERFILE_PATH=apps/<service>/Dockerfile.
+#   - Leave each app service Root Directory empty (repo root).
 #   - Inject DATABASE_URL / REDIS_URL from private networking references.
-#   - Mobile (apps/mobile) is NOT a Railway web service.
+#   - Mobile (apps/mobile) is NOT a Railway web service — remove if created by mistake.
 #
-# Status: scaffolding only. No staging or production deploy has been authorised.
-
-[build]
-builder = "DOCKERFILE"
-dockerfilePath = "apps/api/Dockerfile"
-
-[deploy]
-# Placeholder so a linked root service does not accidentally start without config.
-# Prefer attaching apps/*/railway.toml to named services instead of using this file.
-startCommand = "node -e \"console.error('Use apps/api|web|worker railway.toml — root railway.toml is an index only'); process.exit(1)\""
+# Status: production project sparkling-intuition is live; keep this file as an index only.
