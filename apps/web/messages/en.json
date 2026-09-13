@@ -26,7 +26,7 @@
   },
   "home": {
     "headline": "Your training arena starts here",
-    "supporting": "Sign in to reach today's mission shell. Programmes and workouts arrive in later milestones — no fabricated stats.",
+    "supporting": "Create an account, pick a motivational theme, and train with a plan that respects your time, equipment, and recovery.",
     "ctaLogin": "Sign in",
     "ctaRegister": "Create account"
   },
@@ -63,6 +63,9 @@
     "locale": "Locale",
     "timezone": "Time zone",
     "noStats": "No invented workout statistics are shown — only real planned sessions and logged sets. Meal intake appears only from meal logs.",
+    "character": {
+      "title": "Today’s theme"
+    },
     "openAdmin": "Open admin",
     "training": {
       "loading": "Loading today’s training…",
@@ -86,7 +89,8 @@
     },
     "media": {
       "title": "Today’s word",
-      "notAuthentic": "(Original app copy — not a Dragon Ball quotation.)"
+      "notAuthentic": "(Original app copy — not a Dragon Ball quotation.)",
+      "artAlt": "Original motivational arena artwork"
     }
   },
   "fuel": {
@@ -425,7 +429,9 @@
     "character": {
       "legend": "Motivational character theme",
       "disclaimer": "Your programme stays personalised to your goals, screening, equipment, and recovery. Character selection is a motivational theme only — it cannot override safety limits.",
-      "originalOnly": "Showing ORIGINAL published archetypes. These are product-owned themes, not Dragon Ball licensed assets.",
+      "originalOnly": "These are original product portraits and training-emphasis interpretations. They are not official Dragon Ball Z stills, and no franchise licence is claimed.",
+      "inspiredBy": "Training emphasis inspired by {name}",
+      "originalArt": "Original artwork — not official Dragon Ball Z images",
       "loading": "Loading characters…",
       "unavailable": "No character presentations are available in the active content mode.",
       "packOriginal": "ORIGINAL content pack"
@@ -520,10 +526,11 @@
   },
   "errors": {
     "generic": "Something went wrong. Please try again.",
-    "network": "Cannot reach the API. Confirm it is running and NEXT_PUBLIC_API_URL is set.",
+    "network": "Cannot reach the API. Confirm the API is running. The web app now uses a same-origin proxy at /api/v1.",
     "validation": "Check the highlighted fields and try again.",
     "conflict": "An account with this email already exists.",
     "unauthorized": "Email or password is incorrect.",
+    "sessionCookie": "Signed in on the server, but this browser could not keep the session. Allow cookies for this site and try again.",
     "forbidden": "You do not have permission for this action."
   },
   "a11y": {

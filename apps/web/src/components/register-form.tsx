@@ -6,6 +6,7 @@ import { RegisterRequestSchema } from '@saiyan/contracts';
 
 import { Link, useRouter } from '@/i18n/navigation';
 import { useAuth } from '@/lib/auth-context';
+import { api, ApiClientError } from '@/lib/api';
 import { mapApiError } from '@/lib/map-api-error';
 
 export function RegisterForm() {
@@ -50,6 +51,15 @@ export function RegisterForm() {
     setPending(true);
     try {
       await register(parsed.data);
+      try {
+        await api.getOnboarding();
+      } catch (afterAuth) {
+        if (afterAuth instanceof ApiClientError && afterAuth.status === 401) {
+          setError(t('errors.sessionCookie'));
+          return;
+        }
+        throw afterAuth;
+      }
       setSuccess(true);
       router.replace('/app/onboarding');
     } catch (err) {

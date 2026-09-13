@@ -118,7 +118,13 @@ export type AuthSuccessResponse = {
 };
 
 function apiBaseUrl(): string {
+  // Browser: same-origin BFF so auth cookies are first-party.
+  if (typeof window !== 'undefined') {
+    return '';
+  }
   const raw =
+    process.env.API_PROXY_TARGET ??
+    process.env.API_INTERNAL_URL ??
     process.env.NEXT_PUBLIC_API_URL ??
     process.env.NEXT_PUBLIC_API_BASE_URL ??
     'http://localhost:3001';
@@ -301,6 +307,12 @@ export const api = {
 
   listCharacters(): Promise<ListCharactersResponse> {
     return apiFetch<ListCharactersResponse>('/characters', { method: 'GET' });
+  },
+
+  getCharacterSelection(): Promise<{ selection: CharacterSelection | null }> {
+    return apiFetch<{ selection: CharacterSelection | null }>('/characters/selection', {
+      method: 'GET',
+    });
   },
 
   selectCharacter(

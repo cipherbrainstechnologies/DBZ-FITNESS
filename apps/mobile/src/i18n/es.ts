@@ -53,4 +53,27 @@ export const es: Record<MessageKey, string> = {
     'Error de red. Comprueba que la API esté en marcha y que EXPO_PUBLIC_API_URL sea correcto.',
   unknownError: 'Algo salió mal. Inténtalo de nuevo.',
   language: 'Idioma',
+  onboardingKicker: 'Configuración',
+  onboardingTitle: 'Definamos tu base de entrenamiento',
+  onboardingLoading: 'Cargando el alta…',
+  onboardingWelcome:
+    'Confirma que tienes 18 años y acepta los términos. El tema de personaje nunca anula la seguridad.',
+  onboardingConsent: 'Acepto los términos, la privacidad y el tratamiento de datos de salud.',
+  dateOfBirth: 'Fecha de nacimiento (AAAA-MM-DD)',
+  onboardingGoals: 'Elige un objetivo principal. Puedes cambiarlo después.',
+  onboardingExperience:
+    'Empezamos con un plan principiante en casa. La dificultad no depende del personaje.',
+  onboardingAvailability: 'Por defecto: unos 150 minutos por semana, sesiones de 45 minutos, peso corporal.',
+  onboardingScreening:
+    'Sin síntomas urgentes en este inicio rápido. Esto no es un diagnóstico.',
+  onboardingDiet: 'Patrón por defecto: no vegetariano. Puedes cambiarlo luego en Fuel.',
+  onboardingCharacter:
+    'Elige un tema motivacional. Retratos originales — no son imágenes oficiales de Dragon Ball Z.',
+  originalArtNote: 'Las etiquetas de énfasis son interpretaciones del producto, no una licencia.',
+  inspiredByPrefix: 'Énfasis de entrenamiento inspirado en',
+  onboardingConfirm: 'Termina para llegar a Hoy. El descanso cuenta como progreso.',
+  onboardingContinue: 'Continuar',
+  onboardingSaving: 'Guardando…',
+  validationOnboarding: 'Completa este paso antes de continuar.',
+  todayTheme: 'Tema de hoy',
 };

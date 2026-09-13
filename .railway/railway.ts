@@ -91,6 +91,7 @@ export default defineRailway(() => {
       COACH_PROVIDER: preserve(),
       CONTENT_MODE: preserve(),
       COOKIE_SECURE: preserve(),
+      COOKIE_SAMESITE: preserve(),
       CORS_ALLOWED_ORIGINS: preserve(),
       DATABASE_URL: preserve(),
       JWT_SECRET: preserve(),
@@ -98,6 +99,8 @@ export default defineRailway(() => {
       PORT: preserve(),
       REDIS_URL: preserve(),
       REFRESH_TOKEN_TTL_SECONDS: preserve(),
+      RUN_MIGRATIONS_ON_START: preserve(),
+      SEED_ON_BOOT: preserve(),
     },
   });
 
@@ -149,6 +152,8 @@ export default defineRailway(() => {
     env: {
       NEXT_PUBLIC_API_BASE_URL: preserve(),
       NEXT_PUBLIC_API_URL: preserve(),
+      API_PROXY_TARGET: preserve(),
+      API_INTERNAL_URL: preserve(),
       NEXT_TELEMETRY_DISABLED: preserve(),
       NODE_ENV: preserve(),
     },

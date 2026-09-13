@@ -44,7 +44,7 @@ export default function RegisterScreen() {
   const [pending, setPending] = useState(false);
 
   if (status === 'authenticated') {
-    return <Redirect href="/(tabs)/today" />;
+    return <Redirect href="/(onboarding)" />;
   }
 
   async function onSubmit() {
@@ -63,7 +63,7 @@ export default function RegisterScreen() {
     const ok = await register(trimmed, password, displayName.trim() || undefined);
     setPending(false);
     if (ok) {
-      router.replace('/(tabs)/today');
+      router.replace('/(onboarding)');
     }
   }
 

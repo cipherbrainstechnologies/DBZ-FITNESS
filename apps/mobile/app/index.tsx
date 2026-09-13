@@ -13,7 +13,7 @@ export default function Index() {
   }
 
   if (status === 'authenticated') {
-    return <Redirect href="/(tabs)/today" />;
+    return <Redirect href="/(onboarding)" />;
   }
 
   return <Redirect href="/(auth)/login" />;

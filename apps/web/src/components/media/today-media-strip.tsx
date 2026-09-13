@@ -1,6 +1,6 @@
 'use client';
 
-import type { QuoteSummary } from '@saiyan/contracts';
+import type { MediaAssetSummary, QuoteSummary } from '@saiyan/contracts';
 import { useTranslations } from 'next-intl';
 import { useCallback, useEffect, useState } from 'react';
 
@@ -21,22 +21,26 @@ export function TodayMediaStrip() {
 
   const [loadState, setLoadState] = useState<LoadState>('loading');
   const [quote, setQuote] = useState<QuoteSummary | null>(null);
+  const [art, setArt] = useState<MediaAssetSummary | null>(null);
 
   const refresh = useCallback(async () => {
     if (!user) return;
     setLoadState('loading');
     try {
       const content = await api.getContentToday(user.locale || 'en');
-      const first = content.quotes[0] ?? null;
-      setQuote(first);
-      setLoadState(first ? 'ready' : 'empty');
+      const firstQuote = content.quotes[0] ?? null;
+      const firstArt =
+        content.media.find((item) => item.type === 'IMAGE' && item.publicUrl) ?? null;
+      setQuote(firstQuote);
+      setArt(firstArt);
+      setLoadState(firstQuote || firstArt ? 'ready' : 'empty');
     } catch (err) {
       if (err instanceof ApiClientError && err.status === 401) {
         router.replace('/login');
         return;
       }
-      // Soft-fail: hide strip; workout UI remains usable.
       setQuote(null);
+      setArt(null);
       setLoadState('empty');
     }
   }, [router, user]);
@@ -45,20 +49,30 @@ export function TodayMediaStrip() {
     void refresh();
   }, [refresh]);
 
-  if (!user || loadState === 'loading' || loadState === 'empty' || !quote) {
+  if (!user || loadState === 'loading' || loadState === 'empty') {
     return null;
   }
 
   return (
     <div className="today-media" aria-label={t('today.media.title')}>
       <h2>{t('today.media.title')}</h2>
-      <blockquote className="today-media__quote">
-        <p>{quote.text}</p>
-        <footer>
-          <cite>{quote.attribution}</cite>
-          <span className="note"> {t('today.media.notAuthentic')}</span>
-        </footer>
-      </blockquote>
+      {/* eslint-disable-next-line @next/next/no-img-element */}
+      <img
+        className="today-media__art"
+        src="/media/motivational-card.png"
+        alt={art?.altText ?? t('today.media.artAlt')}
+        width={1280}
+        height={720}
+      />
+      {quote ? (
+        <blockquote className="today-media__quote">
+          <p>{quote.text}</p>
+          <footer>
+            <cite>{quote.attribution}</cite>
+            <span className="note"> {t('today.media.notAuthentic')}</span>
+          </footer>
+        </blockquote>
+      ) : null}
     </div>
   );
 }

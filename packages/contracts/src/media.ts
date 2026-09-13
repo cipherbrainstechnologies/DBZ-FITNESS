@@ -31,7 +31,9 @@ export const MediaAssetSummarySchema = z.object({
   durationSeconds: z.number().int().nullable(),
   publicationStatus: PublicationStatusSchema,
   /** Delivery is fixture/simulated until object storage is configured. */
-  deliveryMode: z.enum(['FIXTURE_SIMULATED', 'SIGNED_URL_STUB']),
+  deliveryMode: z.enum(['FIXTURE_SIMULATED', 'SIGNED_URL_STUB', 'STATIC_ORIGINAL']),
+  /** Browser-reachable original asset when STATIC_ORIGINAL; otherwise null. */
+  publicUrl: z.string().nullable(),
 });
 
 export const ContentTodayResponseSchema = z.object({
@@ -58,7 +60,7 @@ export const MediaAccessResponseSchema = z.object({
   mediaAssetId: UuidSchema,
   /** Fixture or stub URL — never claim real CDN delivery without storage. */
   url: z.string().min(1),
-  deliveryMode: z.enum(['FIXTURE_SIMULATED', 'SIGNED_URL_STUB']),
+  deliveryMode: z.enum(['FIXTURE_SIMULATED', 'SIGNED_URL_STUB', 'STATIC_ORIGINAL']),
   expiresAt: IsoDateTimeSchema.nullable(),
   label: z.string().min(1),
   eligible: z.boolean(),

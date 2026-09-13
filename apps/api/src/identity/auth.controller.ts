@@ -141,12 +141,15 @@ export class AuthController {
   }
 
   private cookieBase() {
+    const sameSite = this.env.COOKIE_SAMESITE;
+    const httpsApp = this.env.APP_URL.startsWith('https://');
     const secure =
-      this.env.COOKIE_SECURE ?? this.env.APP_ENV === 'production';
+      this.env.COOKIE_SECURE ??
+      (sameSite === 'none' || (this.env.APP_ENV === 'production' && httpsApp));
     return {
       httpOnly: true,
       secure,
-      sameSite: 'lax' as const,
+      sameSite,
       path: '/',
     };
   }
