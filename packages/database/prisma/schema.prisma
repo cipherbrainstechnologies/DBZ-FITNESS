@@ -1,0 +1,1306 @@
+// Prisma schema — M1–M7 + M8 coaching + M9 privacy (docs/09, docs/10).
+// Clients must not import this package.
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum UserStatus {
+  ACTIVE
+  DISABLED
+  PENDING_VERIFICATION
+}
+
+enum Role {
+  MEMBER
+  SUPPORT
+  CONTENT_EDITOR
+  FITNESS_REVIEWER
+  NUTRITION_REVIEWER
+  ADMIN
+}
+
+enum ContentPackMode {
+  ORIGINAL
+  DBZ_LICENSED
+}
+
+enum PublicationStatus {
+  DRAFT
+  UNAVAILABLE
+  PUBLISHED
+  WITHDRAWN
+}
+
+enum ScreeningOutcome {
+  CLEAR
+  ADAPTATIONS_REQUIRED
+  SPECIALIST_SUPPORT
+  TEMPORARY_TRAINING_PAUSE
+}
+
+enum ConsentPurpose {
+  TERMS_OF_SERVICE
+  PRIVACY_POLICY
+  HEALTH_DATA_PROCESSING
+  MARKETING
+  ANALYTICS
+}
+
+model User {
+  id              String     @id @default(uuid()) @db.Uuid
+  email           String     @unique
+  displayName     String?
+  status          UserStatus @default(PENDING_VERIFICATION)
+  locale          String     @default("en")
+  currentTimeZone String     @default("UTC")
+  createdAt       DateTime   @default(now())
+  updatedAt       DateTime   @updatedAt
+
+  credential         AuthCredential?
+  sessions           AuthSession[]
+  roles              UserRole[]
+  profiles           ProfileVersion[]
+  consents           ConsentRecord[]
+  screenings         ScreeningRecord[]
+  dietPreferences    DietPreference[]
+  characterSelection CharacterSelection?
+  onboardingProgress OnboardingProgress?
+  trainingPlans      TrainingPlan[]
+  planPreviews       TrainingPlanPreview[]
+  plannedSessions    PlannedSession[]
+  workoutSessions    WorkoutSession[]
+  idempotencyRecords IdempotencyRecord[]
+  nutritionTargets         NutritionTarget[]
+  nutritionTargetPreviews  NutritionTargetPreview[]
+  mealPlans                MealPlan[]
+  mealPlanPreviews         MealPlanPreview[]
+  plannedMeals             PlannedMeal[]
+  mealLogs                 MealLog[]
+  groceryLists             GroceryList[]
+  xpLedgerEntries          XpLedgerEntry[]
+  dailyXpCategories        DailyXpCategory[]
+  milestoneUnlocks         MilestoneUnlock[]
+  notificationPreference   NotificationPreference?
+  deviceRegistrations      DeviceRegistration[]
+  notificationIntents      NotificationIntent[]
+  inAppNotifications       InAppNotification[]
+  coachConversations       CoachConversation[]
+  coachMessages            CoachMessage[]
+  coachActionProposals     CoachActionProposal[]
+  dataExportJobs           DataExportJob[]
+  accountDeletionRequests  AccountDeletionRequest[]
+}
+
+model AuthCredential {
+  id           String   @id @default(uuid()) @db.Uuid
+  userId       String   @unique @db.Uuid
+  passwordHash String
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model AuthSession {
+  id          String    @id @default(uuid()) @db.Uuid
+  userId      String    @db.Uuid
+  tokenHash   String    @unique
+  expiresAt   DateTime
+  revokedAt   DateTime?
+  deviceLabel String?
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@index([expiresAt])
+}
+
+model UserRole {
+  id        String   @id @default(uuid()) @db.Uuid
+  userId    String   @db.Uuid
+  role      Role
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, role])
+  @@index([role])
+}
+
+model ProfileVersion {
+  id                String   @id @default(uuid()) @db.Uuid
+  userId            String   @db.Uuid
+  version           Int
+  goals             Json?
+  experience        String?
+  availability      Json?
+  equipment         Json?
+  accessPreferences Json?
+  effectiveAt       DateTime @default(now())
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, version])
+  @@index([userId, effectiveAt])
+}
+
+/// Consent grant/revoke history. Latest non-revoked row per purpose is authoritative.
+model ConsentRecord {
+  id            String         @id @default(uuid()) @db.Uuid
+  userId        String         @db.Uuid
+  purpose       ConsentPurpose
+  policyVersion String
+  grantedAt     DateTime
+  revokedAt     DateTime?
+  createdAt     DateTime       @default(now())
+  updatedAt     DateTime       @updatedAt
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId, purpose, grantedAt])
+}
+
+/// Screening outcome + restriction codes. answersRestricted is access-restricted;
+/// never return raw answers from member-facing list/detail APIs.
+model ScreeningRecord {
+  id                   String           @id @default(uuid()) @db.Uuid
+  userId               String           @db.Uuid
+  questionnaireVersion String
+  answersRestricted    Json?
+  outcome              ScreeningOutcome
+  restrictions         Json
+  effectiveAt          DateTime         @default(now())
+  createdAt            DateTime         @default(now())
+  updatedAt            DateTime         @updatedAt
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId, effectiveAt])
+}
+
+model DietPreference {
+  id                     String   @id @default(uuid()) @db.Uuid
+  userId                 String   @db.Uuid
+  version                Int
+  pattern                String
+  ingredientExclusions   Json?
+  allergyRestrictions    Json?
+  cuisinePreferences     Json?
+  budgetPreference       String?
+  preparationConstraints Json?
+  effectiveAt            DateTime @default(now())
+  createdAt              DateTime @default(now())
+  updatedAt              DateTime @updatedAt
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, version])
+  @@index([userId, effectiveAt])
+}
+
+model ContentPack {
+  id                   String            @id @default(uuid()) @db.Uuid
+  key                  String            @unique
+  name                 String
+  mode                 ContentPackMode
+  locale               String            @default("en")
+  version              Int               @default(1)
+  publicationStatus    PublicationStatus @default(DRAFT)
+  supportedTerritories Json?
+  rightsGrantIds       Json?
+  fallbackPackId       String?           @db.Uuid
+  /// Admin configuration notes (not member-facing).
+  adminNotes           String?
+  rightsVerifiedAt     DateTime?
+  createdAt            DateTime          @default(now())
+  updatedAt            DateTime          @updatedAt
+
+  fallbackPack  ContentPack?            @relation("ContentPackFallback", fields: [fallbackPackId], references: [id])
+  fallbackFor   ContentPack[]           @relation("ContentPackFallback")
+  presentations CharacterPresentation[]
+  mediaAssets   MediaAsset[]
+  quotes        Quote[]
+
+  @@index([mode, publicationStatus])
+}
+
+/// Training-style archetype. Keys are product originals (explorer, strategist, …).
+model CharacterArchetype {
+  id        String   @id @default(uuid()) @db.Uuid
+  key       String   @unique
+  emphasis  String
+  tone      String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  presentations CharacterPresentation[]
+}
+
+model CharacterPresentation {
+  id                   String            @id @default(uuid()) @db.Uuid
+  archetypeId          String            @db.Uuid
+  contentPackId        String            @db.Uuid
+  approvedName         String
+  artworkKey           String?
+  coachingStyleKey     String?
+  milestoneDefinitions Json?
+  publicationStatus    PublicationStatus @default(DRAFT)
+  sortOrder            Int               @default(0)
+  createdAt            DateTime          @default(now())
+  updatedAt            DateTime          @updatedAt
+
+  archetype    CharacterArchetype  @relation(fields: [archetypeId], references: [id], onDelete: Cascade)
+  contentPack  ContentPack         @relation(fields: [contentPackId], references: [id], onDelete: Cascade)
+  selections   CharacterSelection[]
+
+  @@unique([archetypeId, contentPackId])
+  @@index([contentPackId, publicationStatus])
+}
+
+model CharacterSelection {
+  id             String   @id @default(uuid()) @db.Uuid
+  userId         String   @unique @db.Uuid
+  presentationId String   @db.Uuid
+  selectedAt     DateTime @default(now())
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+
+  user         User                  @relation(fields: [userId], references: [id], onDelete: Cascade)
+  presentation CharacterPresentation @relation(fields: [presentationId], references: [id], onDelete: Restrict)
+
+  @@index([presentationId])
+}
+
+/// Resumable onboarding cursor. completedSteps is a JSON string array.
+model OnboardingProgress {
+  id             String    @id @default(uuid()) @db.Uuid
+  userId         String    @unique @db.Uuid
+  currentStep    String
+  completedSteps Json
+  /// Non-sensitive resume hints only (never screening answer payloads).
+  stepData       Json?
+  completedAt    DateTime?
+  createdAt      DateTime  @default(now())
+  updatedAt      DateTime  @updatedAt
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+// —— Milestone 3: Training engine ——
+
+enum ContentReviewStatus {
+  DRAFT
+  IN_REVIEW
+  APPROVED
+  REJECTED
+}
+
+enum TrainingPlanStatus {
+  ACTIVE
+  SUPERSEDED
+  CANCELLED
+}
+
+enum PlannedSessionStatus {
+  PLANNED
+  IN_PROGRESS
+  COMPLETED
+  SHORTENED
+  ABANDONED
+  CANCELLED
+}
+
+enum WorkoutSessionStatus {
+  IN_PROGRESS
+  COMPLETED
+  ABANDONED
+}
+
+/// Catalogue exercise. Original product content — no clinical claims.
+model Exercise {
+  id               String              @id @default(uuid()) @db.Uuid
+  key              String              @unique
+  name             String
+  movementPattern  String
+  /// Equipment tags required (e.g. BODYWEIGHT, DUMBBELL). Empty = none beyond body.
+  equipment        Json
+  difficulty       String
+  instructions     String
+  /// Hard exclusion / restriction codes (string[]).
+  restrictions     Json
+  adaptations      Json?
+  preferenceTags   Json?
+  reviewStatus     ContentReviewStatus @default(DRAFT)
+  publicationStatus PublicationStatus  @default(DRAFT)
+  createdAt        DateTime            @default(now())
+  updatedAt        DateTime            @updatedAt
+
+  templateExercises TemplateExercise[]
+  workoutSets       WorkoutSet[]
+
+  @@index([publicationStatus, reviewStatus])
+  @@index([movementPattern])
+}
+
+/// Versioned programme template. Each (key, version) is immutable once published.
+model ProgrammeTemplate {
+  id                String              @id @default(uuid()) @db.Uuid
+  key               String
+  version           Int
+  name              String
+  goalTags          Json
+  /// Eligibility constraints: experience, equipmentAllOf/AnyOf, daysAvailable, etc.
+  eligibility       Json
+  scheduleRules     Json
+  preferenceTags    Json?
+  reviewStatus      ContentReviewStatus @default(DRAFT)
+  publicationStatus PublicationStatus   @default(DRAFT)
+  createdAt         DateTime            @default(now())
+  updatedAt         DateTime            @updatedAt
+
+  sessions TemplateSession[]
+  plans    TrainingPlan[]
+
+  @@unique([key, version])
+  @@index([publicationStatus, reviewStatus])
+}
+
+model TemplateSession {
+  id                String   @id @default(uuid()) @db.Uuid
+  templateId        String   @db.Uuid
+  dayPattern        String
+  estimatedDuration Int
+  sortOrder         Int      @default(0)
+  isOptional        Boolean  @default(false)
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+
+  template  ProgrammeTemplate @relation(fields: [templateId], references: [id], onDelete: Cascade)
+  exercises TemplateExercise[]
+
+  @@index([templateId, sortOrder])
+}
+
+model TemplateExercise {
+  id               String   @id @default(uuid()) @db.Uuid
+  templateSessionId String  @db.Uuid
+  exerciseId       String   @db.Uuid
+  sortOrder        Int
+  /// Prescription: sets, repRange, restSeconds, priority (CORE|OPTIONAL), etc.
+  prescription     Json
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
+
+  session  TemplateSession @relation(fields: [templateSessionId], references: [id], onDelete: Cascade)
+  exercise Exercise        @relation(fields: [exerciseId], references: [id], onDelete: Restrict)
+
+  @@unique([templateSessionId, sortOrder])
+  @@index([exerciseId])
+}
+
+model TrainingPlan {
+  id               String             @id @default(uuid()) @db.Uuid
+  userId           String             @db.Uuid
+  version          Int
+  templateId       String             @db.Uuid
+  profileVersionId String             @db.Uuid
+  screeningRecordId String            @db.Uuid
+  characterArchetypeId String?        @db.Uuid
+  /// Snapshot of inputs + selected template at activation (immutable history).
+  inputSnapshot    Json
+  policyVersion    String
+  explanationCodes Json
+  effectiveFrom    DateTime
+  status           TrainingPlanStatus @default(ACTIVE)
+  createdAt        DateTime           @default(now())
+  updatedAt        DateTime           @updatedAt
+
+  user     User              @relation(fields: [userId], references: [id], onDelete: Cascade)
+  template ProgrammeTemplate @relation(fields: [templateId], references: [id], onDelete: Restrict)
+  sessions PlannedSession[]
+
+  @@unique([userId, version])
+  @@index([userId, status, effectiveFrom])
+  @@index([templateId])
+}
+
+/// Ephemeral preview token store (activation validates unchanged source versions).
+model TrainingPlanPreview {
+  id        String    @id @default(uuid()) @db.Uuid
+  token     String    @unique
+  userId    String    @db.Uuid
+  payload   Json
+  expiresAt DateTime
+  consumedAt DateTime?
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId, expiresAt])
+}
+
+model PlannedSession {
+  id             String               @id @default(uuid()) @db.Uuid
+  userId         String               @db.Uuid
+  planId         String               @db.Uuid
+  localDate      String
+  timeZone       String
+  durationBudget Int
+  /// Snapshot of prescribed exercises for this session (JSON).
+  prescriptionSnapshot Json
+  status         PlannedSessionStatus @default(PLANNED)
+  shortenedFromDuration Int?
+  explanationCodes Json?
+  createdAt      DateTime             @default(now())
+  updatedAt      DateTime             @updatedAt
+
+  user    User            @relation(fields: [userId], references: [id], onDelete: Cascade)
+  plan    TrainingPlan    @relation(fields: [planId], references: [id], onDelete: Cascade)
+  workout WorkoutSession?
+
+  @@index([userId, localDate])
+  @@index([planId, status])
+}
+
+model WorkoutSession {
+  id               String               @id @default(uuid()) @db.Uuid
+  userId           String               @db.Uuid
+  plannedSessionId String               @unique @db.Uuid
+  planVersion      Int
+  status           WorkoutSessionStatus @default(IN_PROGRESS)
+  startedAt        DateTime             @default(now())
+  finishedAt       DateTime?
+  actualDuration   Int?
+  version          Int                  @default(1)
+  createdAt        DateTime             @default(now())
+  updatedAt        DateTime             @updatedAt
+
+  user           User           @relation(fields: [userId], references: [id], onDelete: Cascade)
+  plannedSession PlannedSession @relation(fields: [plannedSessionId], references: [id], onDelete: Restrict)
+  sets           WorkoutSet[]
+
+  @@index([userId, startedAt])
+}
+
+model WorkoutSet {
+  id             String   @id @default(uuid()) @db.Uuid
+  sessionId      String   @db.Uuid
+  exerciseId     String   @db.Uuid
+  setIndex       Int
+  repetitions    Int?
+  resistanceKg   Decimal? @db.Decimal(8, 2)
+  durationSeconds Int?
+  effort         String?
+  completed      Boolean  @default(false)
+  version        Int      @default(1)
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+
+  session  WorkoutSession @relation(fields: [sessionId], references: [id], onDelete: Cascade)
+  exercise Exercise       @relation(fields: [exerciseId], references: [id], onDelete: Restrict)
+
+  @@unique([sessionId, exerciseId, setIndex])
+  @@index([sessionId])
+}
+
+/// Mutation idempotency (plan activation, session completion, meal-plan activation, …).
+model IdempotencyRecord {
+  id           String   @id @default(uuid()) @db.Uuid
+  userId       String   @db.Uuid
+  scope        String
+  key          String
+  requestHash  String
+  responseBody Json
+  statusCode   Int
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, scope, key])
+  @@index([createdAt])
+}
+
+// —— Milestone 4: Nutrition ——
+
+enum NutritionMode {
+  HABIT_ONLY
+  ESTIMATED_TARGET
+  PROFESSIONAL_TARGET
+}
+
+enum NutritionTargetStatus {
+  ACTIVE
+  SUPERSEDED
+  CANCELLED
+  REVIEW_REQUIRED
+}
+
+enum MealPlanStatus {
+  ACTIVE
+  SUPERSEDED
+  CANCELLED
+}
+
+enum MealType {
+  BREAKFAST
+  LUNCH
+  DINNER
+  SNACK
+}
+
+enum MealLogSource {
+  PLANNED
+  MANUAL
+  RESTAURANT_ESTIMATE
+}
+
+enum MealLogEstimateStatus {
+  PROVIDER
+  RECIPE_CALCULATED
+  MEMBER_ESTIMATE
+  UNKNOWN
+}
+
+enum FoodState {
+  RAW
+  COOKED
+  PREPARED
+}
+
+enum NutrientDataCompleteness {
+  COMPLETE
+  PARTIAL
+  UNKNOWN
+}
+
+/// Catalogue food. Nutrients are fixture/provider-labelled — never clinical approval.
+model Food {
+  id                String                   @id @default(uuid()) @db.Uuid
+  key               String                   @unique
+  provider          String
+  providerId        String
+  sourceVersion     String?
+  sourceRetrievedAt DateTime?
+  /// Traceable source label (e.g. fixture / USDA-style placeholder notes).
+  sourceLabel       String
+  name              String
+  aliases           Json?
+  state             FoodState
+  /// Nutrients per 100 g (energyKcal, proteinG, fatG, carbohydrateG, …).
+  nutrientsPer100g  Json
+  servingConversions Json?
+  /// Canonical allergen codes. Empty is meaningful only when allergensKnown=true.
+  allergens         Json
+  /// false => unknown allergen metadata; never treat as allergen-free.
+  allergensKnown    Boolean                  @default(false)
+  /// Categories: MEAT, POULTRY, FISH, SEAFOOD, EGG, DAIRY, HONEY, ANIMAL_OTHER, PLANT.
+  ingredientCategories Json
+  dataCompleteness  NutrientDataCompleteness @default(PARTIAL)
+  reviewStatus      ContentReviewStatus      @default(DRAFT)
+  publicationStatus PublicationStatus        @default(DRAFT)
+  createdAt         DateTime                 @default(now())
+  updatedAt         DateTime                 @updatedAt
+
+  recipeIngredients RecipeIngredient[]
+  groceryListItems  GroceryListItem[]
+
+  @@unique([provider, providerId])
+  @@index([publicationStatus, reviewStatus])
+}
+
+/// Versioned recipe. Nutrients derived from ingredients + cooked yield.
+model Recipe {
+  id                String              @id @default(uuid()) @db.Uuid
+  key               String
+  version           Int
+  name              String
+  instructions      String
+  cookedYieldGrams  Decimal             @db.Decimal(10, 2)
+  portions          Int
+  preparationTags   Json?
+  mealTypes         Json
+  cuisineTags       Json?
+  nutrientsPerPortion Json?
+  sourceLabel       String
+  reviewStatus      ContentReviewStatus @default(DRAFT)
+  publicationStatus PublicationStatus   @default(DRAFT)
+  createdAt         DateTime            @default(now())
+  updatedAt         DateTime            @updatedAt
+
+  ingredients  RecipeIngredient[]
+  plannedMeals PlannedMeal[]
+
+  @@unique([key, version])
+  @@index([publicationStatus, reviewStatus])
+}
+
+model RecipeIngredient {
+  id            String   @id @default(uuid()) @db.Uuid
+  recipeId      String   @db.Uuid
+  foodId        String   @db.Uuid
+  quantityGrams Decimal  @db.Decimal(10, 2)
+  sortOrder     Int      @default(0)
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  recipe Recipe @relation(fields: [recipeId], references: [id], onDelete: Cascade)
+  food   Food   @relation(fields: [foodId], references: [id], onDelete: Restrict)
+
+  @@index([recipeId, sortOrder])
+  @@index([foodId])
+}
+
+model NutritionTarget {
+  id                 String                 @id @default(uuid()) @db.Uuid
+  userId             String                 @db.Uuid
+  version            Int
+  mode               NutritionMode
+  calculationInputs  Json?
+  policyVersion      String
+  /// Optional energy target — never a calorie guarantee.
+  energyKcal         Decimal?               @db.Decimal(10, 2)
+  proteinG           Decimal?               @db.Decimal(10, 2)
+  fatG               Decimal?               @db.Decimal(10, 2)
+  carbohydrateG      Decimal?               @db.Decimal(10, 2)
+  explanationCodes   Json
+  warnings           Json?
+  dietPreferenceId   String?                @db.Uuid
+  profileVersionId   String?                @db.Uuid
+  effectiveFrom      DateTime
+  status             NutritionTargetStatus  @default(ACTIVE)
+  createdAt          DateTime               @default(now())
+  updatedAt          DateTime               @updatedAt
+
+  user      User       @relation(fields: [userId], references: [id], onDelete: Cascade)
+  mealPlans MealPlan[]
+
+  @@unique([userId, version])
+  @@index([userId, status, effectiveFrom])
+}
+
+model NutritionTargetPreview {
+  id         String    @id @default(uuid()) @db.Uuid
+  token      String    @unique
+  userId     String    @db.Uuid
+  payload    Json
+  expiresAt  DateTime
+  consumedAt DateTime?
+  createdAt  DateTime  @default(now())
+  updatedAt  DateTime  @updatedAt
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId, expiresAt])
+}
+
+model MealPlan {
+  id               String         @id @default(uuid()) @db.Uuid
+  userId           String         @db.Uuid
+  version          Int
+  targetId         String?        @db.Uuid
+  dietPreferenceId String         @db.Uuid
+  startLocalDate   String
+  timeZone         String
+  policyVersion    String
+  inputSnapshot    Json
+  explanationCodes Json
+  isPartial        Boolean        @default(false)
+  status           MealPlanStatus @default(ACTIVE)
+  effectiveFrom    DateTime
+  createdAt        DateTime       @default(now())
+  updatedAt        DateTime       @updatedAt
+
+  user         User          @relation(fields: [userId], references: [id], onDelete: Cascade)
+  target       NutritionTarget? @relation(fields: [targetId], references: [id], onDelete: SetNull)
+  meals        PlannedMeal[]
+  groceryLists GroceryList[]
+
+  @@unique([userId, version])
+  @@index([userId, status, effectiveFrom])
+  @@index([targetId])
+}
+
+model MealPlanPreview {
+  id         String    @id @default(uuid()) @db.Uuid
+  token      String    @unique
+  userId     String    @db.Uuid
+  payload    Json
+  expiresAt  DateTime
+  consumedAt DateTime?
+  createdAt  DateTime  @default(now())
+  updatedAt  DateTime  @updatedAt
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId, expiresAt])
+}
+
+model PlannedMeal {
+  id               String   @id @default(uuid()) @db.Uuid
+  mealPlanId       String   @db.Uuid
+  userId           String   @db.Uuid
+  localDate        String
+  mealType         MealType
+  recipeId         String   @db.Uuid
+  portions         Decimal  @db.Decimal(6, 2) @default(1)
+  nutrientSnapshot Json?
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
+
+  mealPlan MealPlan @relation(fields: [mealPlanId], references: [id], onDelete: Cascade)
+  recipe   Recipe   @relation(fields: [recipeId], references: [id], onDelete: Restrict)
+  user     User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([mealPlanId, localDate])
+  @@index([userId, localDate])
+}
+
+/// Actual consumption — independent of PlannedMeal (docs/05: planned vs logged).
+model MealLog {
+  id               String                 @id @default(uuid()) @db.Uuid
+  userId           String                 @db.Uuid
+  plannedMealId    String?                @db.Uuid
+  consumedAt       DateTime
+  localDate        String
+  timeZone         String
+  source           MealLogSource
+  mealType         MealType?
+  recipeId         String?                @db.Uuid
+  foodId           String?                @db.Uuid
+  portions         Decimal                @db.Decimal(6, 2) @default(1)
+  nutrientSnapshot Json
+  estimateStatus   MealLogEstimateStatus
+  notes            String?
+  version          Int                    @default(1)
+  createdAt        DateTime               @default(now())
+  updatedAt        DateTime               @updatedAt
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId, localDate])
+  @@index([plannedMealId])
+}
+
+model GroceryList {
+  id                String   @id @default(uuid()) @db.Uuid
+  userId            String   @db.Uuid
+  mealPlanId        String   @db.Uuid
+  version           Int
+  pantryAdjustments Json?
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+
+  user     User              @relation(fields: [userId], references: [id], onDelete: Cascade)
+  mealPlan MealPlan          @relation(fields: [mealPlanId], references: [id], onDelete: Cascade)
+  items    GroceryListItem[]
+
+  @@unique([userId, mealPlanId, version])
+  @@index([userId, mealPlanId])
+}
+
+model GroceryListItem {
+  id            String   @id @default(uuid()) @db.Uuid
+  groceryListId String   @db.Uuid
+  foodId        String   @db.Uuid
+  displayName   String
+  quantityGrams Decimal  @db.Decimal(12, 2)
+  excluded      Boolean  @default(false)
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  groceryList GroceryList @relation(fields: [groceryListId], references: [id], onDelete: Cascade)
+  food        Food        @relation(fields: [foodId], references: [id], onDelete: Restrict)
+
+  @@index([groceryListId])
+  @@index([foodId])
+}
+
+// --- Milestone 5: progression (append-only XP ledger) ---
+
+enum XpLedgerEventType {
+  WORKOUT_COMPLETE
+  REST_MISSION
+  CONSISTENCY_CHECK_IN
+  MEAL_REFLECTION
+  RECOVERY_CHECK_IN
+  WELLBEING_HABIT
+  /// Compensating correction — never silently rewrite history.
+  COMPENSATING_CORRECTION
+}
+
+enum XpAwardCategory {
+  MAIN_MISSION
+  MEAL_REFLECTION
+  RECOVERY_CHECK_IN
+  WELLBEING_HABIT
+}
+
+/// Append-only XP ledger. Uniqueness prevents duplicate awards for the same source event.
+model XpLedgerEntry {
+  id             String            @id @default(uuid()) @db.Uuid
+  userId         String            @db.Uuid
+  eventType      XpLedgerEventType
+  sourceEntityId String
+  delta          Int
+  category       XpAwardCategory
+  localDate      String
+  timeZone       String
+  policyVersion  Int
+  reason         String?
+  createdAt      DateTime          @default(now())
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, eventType, sourceEntityId, policyVersion])
+  @@index([userId, localDate])
+  @@index([userId, createdAt])
+}
+
+/// Daily category totals used to enforce caps across different source entities.
+model DailyXpCategory {
+  id            String          @id @default(uuid()) @db.Uuid
+  userId        String          @db.Uuid
+  localDate     String
+  category      XpAwardCategory
+  awardedAmount Int             @default(0)
+  policyVersion Int
+  createdAt     DateTime        @default(now())
+  updatedAt     DateTime        @updatedAt
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, localDate, category, policyVersion])
+  @@index([userId, localDate])
+}
+
+/// Cosmetic milestone unlocks. Character switching must not delete these or the XP ledger.
+model MilestoneUnlock {
+  id                    String   @id @default(uuid()) @db.Uuid
+  userId                String   @db.Uuid
+  milestoneDefinitionId String
+  unlockedAt            DateTime @default(now())
+  levelAtUnlock         Int?
+  totalXpAtUnlock       Int?
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, milestoneDefinitionId])
+  @@index([userId, unlockedAt])
+}
+
+// —— Milestone 6: Media and content ——
+
+enum MediaAssetType {
+  IMAGE
+  AUDIO
+  VIDEO
+  DOCUMENT
+}
+
+enum QuoteKind {
+  ORIGINAL_COPY
+  VERIFIED_LICENSED_QUOTE
+  LICENSED_AUDIO_DIALOGUE
+}
+
+/// Usage-specific rights grant. An admin checkbox is not evidence of a licence.
+model RightsGrant {
+  id                   String    @id @default(uuid()) @db.Uuid
+  key                  String    @unique
+  rightsHolder         String
+  /// Opaque evidence reference (document id / ticket) — never fabricate licences.
+  evidenceReference    String?
+  /// Permitted use codes (string[]), e.g. IN_APP_DISPLAY, MOTIVATIONAL_COPY.
+  permittedUses        Json
+  platforms            Json?
+  territories          Json?
+  validFrom            DateTime
+  validUntil           DateTime?
+  attributionText      String?
+  offlinePermission    Boolean   @default(false)
+  derivativePermission Boolean   @default(false)
+  reviewer             String?
+  reviewedAt           DateTime?
+  /// Admin workflow notes only — not proof of commercial clearance.
+  adminNotes           String?
+  createdAt            DateTime  @default(now())
+  updatedAt            DateTime  @updatedAt
+
+  publications ContentPublication[]
+}
+
+model MediaAsset {
+  id                String              @id @default(uuid()) @db.Uuid
+  key               String              @unique
+  type              MediaAssetType
+  storageKey        String
+  mimeType          String
+  checksum          String?
+  dimensions        Json?
+  durationSeconds   Int?
+  altText           String?
+  transcript        String?
+  characterTags     Json?
+  moodTags          Json?
+  activityTags      Json?
+  explicitContent   Boolean             @default(false)
+  /// Grant ids attached for eligibility checks (string[] of RightsGrant.id).
+  rightsGrantIds    Json?
+  contentPackId     String?             @db.Uuid
+  reviewStatus      ContentReviewStatus @default(DRAFT)
+  publicationStatus PublicationStatus   @default(DRAFT)
+  version           Int                 @default(1)
+  withdrawnAt       DateTime?
+  createdAt         DateTime            @default(now())
+  updatedAt         DateTime            @updatedAt
+
+  contentPack  ContentPack?          @relation(fields: [contentPackId], references: [id], onDelete: SetNull)
+  publications ContentPublication[]
+
+  @@index([publicationStatus, reviewStatus])
+  @@index([contentPackId])
+  @@index([type])
+}
+
+/// Motivational / dialogue copy. ORIGINAL_COPY must never be attributed as authentic DBZ dialogue.
+model Quote {
+  id                String              @id @default(uuid()) @db.Uuid
+  key               String              @unique
+  text              String
+  kind              QuoteKind
+  /// Honest attribution label (e.g. "Saiyan Ascend original copy").
+  attribution       String
+  locale            String              @default("en")
+  dubVersion        String?
+  sourceReference   String?
+  contextTags       Json?
+  rightsGrantIds    Json?
+  contentPackId     String?             @db.Uuid
+  reviewStatus      ContentReviewStatus @default(DRAFT)
+  publicationStatus PublicationStatus   @default(DRAFT)
+  version           Int                 @default(1)
+  withdrawnAt       DateTime?
+  createdAt         DateTime            @default(now())
+  updatedAt         DateTime            @updatedAt
+
+  contentPack  ContentPack?          @relation(fields: [contentPackId], references: [id], onDelete: SetNull)
+  publications ContentPublication[]
+
+  @@index([publicationStatus, reviewStatus, kind])
+  @@index([contentPackId])
+  @@index([locale])
+}
+
+/// Publication lifecycle for media or quotes (schedule, expiry, withdrawal).
+model ContentPublication {
+  id                String            @id @default(uuid()) @db.Uuid
+  mediaAssetId      String?           @db.Uuid
+  quoteId           String?           @db.Uuid
+  rightsGrantId     String?           @db.Uuid
+  publicationStatus PublicationStatus @default(DRAFT)
+  contentVersion    Int               @default(1)
+  publishedAt       DateTime?
+  scheduledPublishAt DateTime?
+  expiresAt         DateTime?
+  withdrawnAt       DateTime?
+  /// Admin-only notes (e.g. DBZ dialogue workflow pending rights — no fabricated licence).
+  adminNotes        String?
+  createdAt         DateTime          @default(now())
+  updatedAt         DateTime          @updatedAt
+
+  mediaAsset  MediaAsset?  @relation(fields: [mediaAssetId], references: [id], onDelete: Cascade)
+  quote       Quote?       @relation(fields: [quoteId], references: [id], onDelete: Cascade)
+  rightsGrant RightsGrant? @relation(fields: [rightsGrantId], references: [id], onDelete: SetNull)
+
+  @@index([publicationStatus, expiresAt])
+  @@index([mediaAssetId])
+  @@index([quoteId])
+}
+
+// —— Milestone 7: Notifications ——
+
+enum NotificationCategory {
+  WORKOUT_REMINDER
+  MEAL_REMINDER
+  WEEKLY_REVIEW
+  MOVEMENT_BREAK
+  MOTIVATION
+  ACCOUNT_SECURITY
+}
+
+enum NotificationIntentStatus {
+  PENDING
+  CLAIMED
+  SUBMITTED
+  DELIVERED_SIMULATED
+  FAILED
+  EXPIRED
+  SUPPRESSED
+  CANCELLED
+}
+
+enum NotificationDeliveryChannel {
+  IN_APP
+  PUSH_SIMULATED
+  EMAIL_TRANSACTIONAL
+}
+
+model NotificationPreference {
+  id                         String    @id @default(uuid()) @db.Uuid
+  userId                     String    @unique @db.Uuid
+  /// Category enable map (Record<NotificationCategory, boolean>).
+  categoriesEnabled          Json
+  preferredWorkoutReminderLocalTime String?
+  mealRemindersEnabled       Boolean   @default(false)
+  movementBreaksEnabled      Boolean   @default(false)
+  weeklyReviewEnabled        Boolean   @default(true)
+  tone                       String?
+  quietHoursStartLocal       String    @default("22:00")
+  quietHoursEndLocal         String    @default("08:00")
+  sleepWindowStartLocal      String?
+  sleepWindowEndLocal        String?
+  workWindowStartLocal       String?
+  workWindowEndLocal         String?
+  timeZone                   String    @default("UTC")
+  /// Motivational daily cap (default 3). Account security is excluded.
+  dailyReminderCap           Int       @default(3)
+  pauseUntil                 DateTime?
+  sensitiveLockScreenSafe    Boolean   @default(true)
+  version                    Int       @default(1)
+  createdAt                  DateTime  @default(now())
+  updatedAt                  DateTime  @updatedAt
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model DeviceRegistration {
+  id           String    @id @default(uuid()) @db.Uuid
+  userId       String    @db.Uuid
+  /// Opaque installation token (fixture / future FCM/APNs token).
+  deviceToken  String
+  platform     String
+  label        String?
+  pushEnabled  Boolean   @default(true)
+  /// Prefer this device for motivational push when true.
+  preferred    Boolean   @default(false)
+  lastSeenAt   DateTime  @default(now())
+  deactivatedAt DateTime?
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, deviceToken])
+  @@index([userId, deactivatedAt])
+}
+
+model NotificationIntent {
+  id                 String                    @id @default(uuid()) @db.Uuid
+  userId             String                    @db.Uuid
+  category           NotificationCategory
+  channel            NotificationDeliveryChannel @default(IN_APP)
+  sourceEntityId     String?
+  occurrenceKey      String?
+  scheduleVersion    Int                       @default(1)
+  scheduledLocalTime String?
+  timeZone           String
+  scheduledAtUtc     DateTime
+  expiresAt          DateTime?
+  contentVersion     String?
+  status             NotificationIntentStatus  @default(PENDING)
+  dedupeKey          String                    @unique
+  title              String
+  body               String
+  payload            Json?
+  claimedAt          DateTime?
+  claimExpiresAt     DateTime?
+  processedAt        DateTime?
+  failureReason      String?
+  /// Honest delivery mode label — SIMULATED until real push is configured.
+  deliveryMode       String                    @default("SIMULATED")
+  createdAt          DateTime                  @default(now())
+  updatedAt          DateTime                  @updatedAt
+
+  user             User                @relation(fields: [userId], references: [id], onDelete: Cascade)
+  inAppNotification InAppNotification?
+
+  @@index([status, scheduledAtUtc])
+  @@index([userId, status])
+  @@index([userId, category, scheduledAtUtc])
+}
+
+model InAppNotification {
+  id        String    @id @default(uuid()) @db.Uuid
+  userId    String    @db.Uuid
+  intentId  String?   @unique @db.Uuid
+  category  NotificationCategory
+  title     String
+  body      String
+  payload   Json?
+  /// Always labelled when originating from simulated dispatch.
+  deliveryMode String  @default("SIMULATED")
+  readAt    DateTime?
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+
+  user   User                @relation(fields: [userId], references: [id], onDelete: Cascade)
+  intent NotificationIntent? @relation(fields: [intentId], references: [id], onDelete: SetNull)
+
+  @@index([userId, createdAt])
+  @@index([userId, readAt])
+}
+
+// --- Milestone 8: AI coach ---
+
+enum CoachMessageRole {
+  USER
+  ASSISTANT
+  SYSTEM
+}
+
+enum CoachProposalStatus {
+  PENDING
+  CONFIRMED
+  REJECTED
+  EXPIRED
+  FAILED_SAFETY
+}
+
+model CoachConversation {
+  id        String   @id @default(uuid()) @db.Uuid
+  userId    String   @db.Uuid
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  user      User                  @relation(fields: [userId], references: [id], onDelete: Cascade)
+  messages  CoachMessage[]
+  proposals CoachActionProposal[]
+
+  @@index([userId, createdAt])
+}
+
+model CoachMessage {
+  id                 String           @id @default(uuid()) @db.Uuid
+  conversationId     String           @db.Uuid
+  userId             String           @db.Uuid
+  role               CoachMessageRole
+  messageText        String
+  /// Validated structured assistant payload (null for user turns).
+  structuredResponse Json?
+  providerMode       String?
+  safetyStatus       String?
+  createdAt          DateTime         @default(now())
+
+  conversation CoachConversation     @relation(fields: [conversationId], references: [id], onDelete: Cascade)
+  user         User                  @relation(fields: [userId], references: [id], onDelete: Cascade)
+  proposals    CoachActionProposal[]
+
+  @@index([conversationId, createdAt])
+  @@index([userId, createdAt])
+}
+
+model CoachActionProposal {
+  id               String              @id @default(uuid()) @db.Uuid
+  userId           String              @db.Uuid
+  conversationId   String?             @db.Uuid
+  messageId        String?             @db.Uuid
+  actionType       String
+  validatedPayload Json
+  sourceVersions   Json?
+  status           CoachProposalStatus @default(PENDING)
+  safetyStatus     String              @default("SAFE")
+  rejectionReason  String?
+  expiresAt        DateTime
+  confirmedAt      DateTime?
+  rejectedAt       DateTime?
+  createdAt        DateTime            @default(now())
+  updatedAt        DateTime            @updatedAt
+
+  user         User               @relation(fields: [userId], references: [id], onDelete: Cascade)
+  conversation CoachConversation? @relation(fields: [conversationId], references: [id], onDelete: SetNull)
+  message      CoachMessage?      @relation(fields: [messageId], references: [id], onDelete: SetNull)
+
+  @@index([userId, status])
+  @@index([userId, createdAt])
+}
+
+// --- Milestone 9: privacy export / deletion ---
+
+enum DataExportJobStatus {
+  PENDING
+  PROCESSING
+  READY_FIXTURE
+  FAILED
+  EXPIRED
+}
+
+enum AccountDeletionStatus {
+  PENDING
+  PROCESSING
+  SCHEDULED_FIXTURE
+  CANCELLED
+  COMPLETED_FIXTURE
+  FAILED
+}
+
+model DataExportJob {
+  id             String              @id @default(uuid()) @db.Uuid
+  userId         String              @db.Uuid
+  status         DataExportJobStatus @default(PENDING)
+  scope          String              @default("FULL_ACCOUNT")
+  requestedAt    DateTime            @default(now())
+  completedAt    DateTime?
+  expiresAt      DateTime?
+  downloadUrl    String?
+  /// Honest label — FIXTURE_DRY_RUN until object storage is ready.
+  downloadMode   String              @default("FIXTURE_DRY_RUN")
+  failureReason  String?
+  idempotencyKey String?
+  requestHash    String?
+  createdAt      DateTime            @default(now())
+  updatedAt      DateTime            @updatedAt
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, idempotencyKey])
+  @@index([status, requestedAt])
+  @@index([userId, requestedAt])
+}
+
+model AccountDeletionRequest {
+  id                 String                @id @default(uuid()) @db.Uuid
+  userId             String                @db.Uuid
+  status             AccountDeletionStatus @default(PENDING)
+  requestedAt        DateTime              @default(now())
+  passwordVerifiedAt DateTime?
+  scheduledFor       DateTime?
+  processedAt        DateTime?
+  /// Always dry-run/fixture until production wipe is authorised.
+  dryRun             Boolean               @default(true)
+  reason             String?
+  failureReason      String?
+  notes              String?
+  idempotencyKey     String?
+  requestHash        String?
+  createdAt          DateTime              @default(now())
+  updatedAt          DateTime              @updatedAt
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, idempotencyKey])
+  @@index([status, requestedAt])
+  @@index([userId, requestedAt])
+}

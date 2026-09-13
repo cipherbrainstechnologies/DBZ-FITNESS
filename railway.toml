@@ -1,0 +1,31 @@
+# Saiyan Ascend — Railway monorepo index (TEMPLATE ONLY — NOT DEPLOYED).
+#
+# Railway config-as-code is per service. Do not treat this root file as a
+# multi-service orchestrator. Create five Railway services and attach the
+# configs documented below.
+#
+# Service map (templates):
+#   api      → apps/api/railway.toml      + apps/api/Dockerfile
+#   web      → apps/web/railway.toml      + apps/web/Dockerfile
+#   worker   → apps/worker/railway.toml   + apps/worker/Dockerfile
+#   postgres → Railway PostgreSQL plugin (managed; no Dockerfile)
+#   redis    → Railway Redis plugin (managed; no Dockerfile)
+#
+# Shared monorepo rules:
+#   - Leave each app service Root Directory empty (repo root) so pnpm-workspace.yaml
+#     and pnpm-lock.yaml are visible.
+#   - Set Config as Code path to /apps/<service>/railway.toml for that service,
+#     OR set RAILWAY_DOCKERFILE_PATH=apps/<service>/Dockerfile.
+#   - Inject DATABASE_URL / REDIS_URL from private networking references.
+#   - Mobile (apps/mobile) is NOT a Railway web service.
+#
+# Status: scaffolding only. No staging or production deploy has been authorised.
+
+[build]
+builder = "DOCKERFILE"
+dockerfilePath = "apps/api/Dockerfile"
+
+[deploy]
+# Placeholder so a linked root service does not accidentally start without config.
+# Prefer attaching apps/*/railway.toml to named services instead of using this file.
+startCommand = "node -e \"console.error('Use apps/api|web|worker railway.toml — root railway.toml is an index only'); process.exit(1)\""

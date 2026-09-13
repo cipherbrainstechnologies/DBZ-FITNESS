@@ -1,0 +1,23 @@
+# Build context excludes — keep images lean and secret-free.
+.git
+.github
+.cursor
+**/node_modules
+**/dist
+**/.next
+**/.expo
+**/coverage
+**/*.md
+!README.md
+.env
+.env.*
+!.env.example
+apps/mobile
+docs
+memory-bank
+agent-transcripts
+IntialGPTFIle.md
+**/*.log
+**/tmp
+**/.turbo
+**/.cache

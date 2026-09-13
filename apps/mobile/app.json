@@ -1,0 +1,41 @@
+{
+  "expo": {
+    "name": "Saiyan Ascend",
+    "slug": "saiyan-ascend",
+    "version": "0.0.0",
+    "orientation": "portrait",
+    "icon": "./assets/images/icon.png",
+    "scheme": "saiyanascend",
+    "userInterfaceStyle": "dark",
+    "newArchEnabled": true,
+    "splash": {
+      "image": "./assets/images/splash-icon.png",
+      "resizeMode": "contain",
+      "backgroundColor": "#0B1020"
+    },
+    "ios": {
+      "supportsTablet": true,
+      "bundleIdentifier": "com.saiyanascend.app"
+    },
+    "android": {
+      "adaptiveIcon": {
+        "foregroundImage": "./assets/images/adaptive-icon.png",
+        "backgroundColor": "#0B1020"
+      },
+      "edgeToEdgeEnabled": true,
+      "package": "com.saiyanascend.app"
+    },
+    "web": {
+      "bundler": "metro",
+      "output": "static",
+      "favicon": "./assets/images/favicon.png"
+    },
+    "plugins": [
+      "expo-router",
+      "expo-secure-store"
+    ],
+    "experiments": {
+      "typedRoutes": true
+    }
+  }
+}

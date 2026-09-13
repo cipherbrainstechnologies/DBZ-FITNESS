@@ -1,0 +1,534 @@
+{
+  "meta": {
+    "title": "Saiyan Ascend",
+    "description": "Entraînez-vous avec concentration. Progressez avec constance. Montez à votre rythme."
+  },
+  "brand": {
+    "name": "Saiyan Ascend",
+    "tagline": "Entraînez-vous avec concentration. Progressez avec constance."
+  },
+  "nav": {
+    "login": "Connexion",
+    "register": "Créer un compte",
+    "logout": "Déconnexion",
+    "today": "Aujourd'hui",
+    "train": "Entraînement",
+    "fuel": "Nutrition",
+    "progress": "Progrès",
+    "admin": "Admin",
+    "home": "Accueil"
+  },
+  "locale": {
+    "label": "Langue",
+    "en": "English",
+    "fr": "Français",
+    "es": "Español"
+  },
+  "home": {
+    "headline": "Votre arène d'entraînement commence ici",
+    "supporting": "Connectez-vous pour accéder à l'espace du jour. Programmes et séances arriveront plus tard — aucune statistique inventée.",
+    "ctaLogin": "Connexion",
+    "ctaRegister": "Créer un compte"
+  },
+  "login": {
+    "title": "Connexion",
+    "subtitle": "Accédez à votre espace membre Saiyan Ascend.",
+    "email": "E-mail",
+    "password": "Mot de passe",
+    "submit": "Se connecter",
+    "submitting": "Connexion…",
+    "success": "Connecté. Redirection…",
+    "noAccount": "Pas encore de compte ?",
+    "registerLink": "Créer un compte"
+  },
+  "register": {
+    "title": "Créer un compte",
+    "subtitle": "Commencez avec un compte membre sécurisé. L'onboarding suivra.",
+    "email": "E-mail",
+    "password": "Mot de passe",
+    "passwordHint": "Au moins 10 caractères.",
+    "displayName": "Nom affiché (facultatif)",
+    "submit": "Créer le compte",
+    "submitting": "Création du compte…",
+    "success": "Compte créé. Redirection…",
+    "hasAccount": "Vous avez déjà un compte ?",
+    "loginLink": "Se connecter"
+  },
+  "today": {
+    "title": "Aujourd'hui",
+    "greeting": "Bon retour{name}",
+    "greetingNamed": ", {name}",
+    "signedInAs": "Connecté en tant que",
+    "roles": "Rôles",
+    "locale": "Locale",
+    "timezone": "Fuseau horaire",
+    "noStats": "Aucune statistique inventée n'est affichée — seulement les séances planifiées et les séries réellement enregistrées. L'apport nutritionnel n'apparaît qu'à partir des journaux de repas.",
+    "openAdmin": "Ouvrir l'admin",
+    "training": {
+      "loading": "Chargement de l'entraînement du jour…",
+      "missionTitle": "Séance du jour",
+      "missionBody": "Prévue le {date} · budget de {minutes} minutes",
+      "start": "Commencer la séance",
+      "resume": "Reprendre la séance",
+      "starting": "Ouverture de la séance…",
+      "openTrain": "Ouvrir Entraînement",
+      "setupPlan": "Prévisualiser et activer un plan",
+      "noPlanTitle": "Aucun plan d'entraînement actif",
+      "noPlanBody": "Vous n'avez pas encore de plan actif. Prévisualisez un plan à partir de votre profil et de votre dépistage, puis activez-le si vous êtes éligible.",
+      "restTitle": "Aucune séance prévue aujourd'hui",
+      "restBody": "Le repos et la constance durable comptent comme progression. Consultez Entraînement pour les prochaines séances."
+    },
+    "fuel": {
+      "title": "Prochain repas",
+      "nextMeal": "{meal} · {name} · {date}",
+      "view": "Ouvrir Nutrition",
+      "swap": "Échanger ou enregistrer dans Nutrition"
+    },
+    "media": {
+      "title": "Mot du jour",
+      "notAuthentic": "(Texte original de l’app — pas une citation Dragon Ball.)"
+    }
+  },
+  "fuel": {
+    "title": "Nutrition",
+    "subtitle": "Plans de repas, échanges et apports enregistrés — les repas planifiés restent distincts de ce que vous mangez vraiment.",
+    "loading": "Chargement de votre plan de repas…",
+    "retry": "Réessayer",
+    "backToToday": "Retour à Aujourd'hui",
+    "explanationsLabel": "Explications nutrition",
+    "recipeFallback": "Recette",
+    "mealType": {
+      "BREAKFAST": "Petit-déjeuner",
+      "LUNCH": "Déjeuner",
+      "DINNER": "Dîner",
+      "SNACK": "Collation"
+    },
+    "empty": {
+      "title": "Aucun plan de repas actif",
+      "body": "Il n'y a pas encore de plan de repas actif. Prévisualisez un plan de sept jours à partir de votre préférence alimentaire, puis activez-le si vous êtes éligible. Nous n'inventons pas de macros d'apport sans journaux de repas."
+    },
+    "targets": {
+      "title": "Objectifs nutritionnels",
+      "body": "Le mode habitudes est le défaut. Les calories n'apparaissent que si l'API renvoie un mode estimé ou professionnel — jamais comme garanties.",
+      "empty": "Aucun objectif activé durant cette visite. Vous pouvez prévisualiser un objectif habitudes ou activer un plan sans calories.",
+      "mode": "Mode",
+      "policy": "Version de politique",
+      "energyEstimate": "Estimation énergétique",
+      "kcal": "{value} kcal (estimation)",
+      "estimateDisclaimer": "Estimation seulement — ni garantie ni prescription clinique",
+      "habitOnlyNote": "Mode habitudes : aucun objectif calorique n'est affiché.",
+      "previewHabit": "Prévisualiser l'objectif habitudes",
+      "previewPending": "Prévisualisation…",
+      "previewMode": "Mode de prévisualisation",
+      "activate": "Activer cet objectif",
+      "activatePending": "Activation…",
+      "noToken": "L'activation nécessite un jeton de prévisualisation valide.",
+      "notActivatable": "Cette prévisualisation ne peut pas être activée."
+    },
+    "current": {
+      "title": "Plan de repas actif",
+      "start": "Début",
+      "policy": "Version de politique",
+      "status": "Statut",
+      "partial": "Ce plan est partiel — certains créneaux peuvent être vides.",
+      "nextMeal": "Prochain prévu : {meal} · {name} · {date}"
+    },
+    "planPreview": {
+      "cta": "Prévisualiser le plan de repas",
+      "replaceCta": "Prévisualiser un plan de remplacement",
+      "pending": "Prévisualisation…",
+      "success": "Prévisualisation du plan prête.",
+      "resultTitle": "Prévisualisation du plan de repas",
+      "eligibleCount": "{count} recettes éligibles après filtres régime et allergies",
+      "partial": "La prévisualisation est partielle — tous les créneaux n'ont pas pu être remplis.",
+      "moreSlots": "+{count} créneaux supplémentaires",
+      "notActivatable": "Cette prévisualisation ne peut pas être activée (pas de jeton)."
+    },
+    "activate": {
+      "cta": "Activer ce plan de repas",
+      "pending": "Activation…",
+      "success": "Plan de repas activé.",
+      "noToken": "L'activation nécessite un jeton de prévisualisation valide."
+    },
+    "planned": {
+      "title": "Repas planifiés",
+      "subtitle": "Ce sont des recettes planifiées — pas un apport enregistré tant que vous ne les marquez pas comme mangés.",
+      "empty": "Aucun repas planifié restant, ou tous ont été marqués mangés durant cette visite.",
+      "lane": "Planifié"
+    },
+    "consumed": {
+      "title": "Enregistrés cette visite",
+      "subtitle": "Seuls les journaux créés dans cette session navigateur sont listés. Aucun total d'apport inventé.",
+      "empty": "Aucun repas enregistré pour cette visite. Marquez un repas planifié comme mangé pour consigner l'apport.",
+      "lane": "Enregistré",
+      "untyped": "Repas",
+      "loggedMeal": "Repas enregistré",
+      "macrosNote": "Estimation enregistrée : {kcal} kcal (source recette/journal — pas une garantie)"
+    },
+    "log": {
+      "cta": "Marquer mangé",
+      "pending": "Enregistrement…",
+      "success": "Repas enregistré."
+    },
+    "swap": {
+      "cta": "Échanger",
+      "pending": "Chargement des échanges…",
+      "resultTitle": "Options d'échange",
+      "noCandidates": "Aucun candidat d'échange après filtres régime et allergies.",
+      "score": "Score {score}",
+      "confirm": "Utiliser cette recette",
+      "confirming": "Confirmation…",
+      "success": "Repas échangé. Liste d'épicerie actualisée si disponible.",
+      "cancel": "Annuler l'échange",
+      "noToken": "La confirmation d'échange nécessite un jeton valide."
+    },
+    "grocery": {
+      "title": "Liste d'épicerie",
+      "needsPlan": "Activez un plan de repas pour générer une liste d'épicerie.",
+      "empty": "Aucun article d'épicerie pour le plan actif.",
+      "grams": "{grams} g"
+    },
+    "explanations": {
+      "HABIT_ONLY_NO_ENERGY_TARGET": "Le mode habitudes ne définit pas d'objectif énergétique.",
+      "MEAL_PLAN_GENERATED": "Un plan de repas a été généré à partir des recettes éligibles.",
+      "MEAL_PLAN_PARTIAL": "Le plan n'a pas pu remplir tous les créneaux.",
+      "DIET_FILTER_APPLIED": "Le filtrage du régime a été appliqué.",
+      "ALLERGY_FILTER_APPLIED": "Les règles d'exclusion d'allergènes ont été appliquées.",
+      "SOFT_ENERGY_PROXIMITY": "La proximité énergétique douce n'a servi que de classement.",
+      "SWAP_CANDIDATES_RANKED": "Les candidats d'échange ont été classés.",
+      "NO_SWAP_CANDIDATES": "Aucun candidat d'échange après filtres."
+    }
+  },
+  "train": {
+    "title": "Entraînement",
+    "subtitle": "Prévisualisez, activez et réalisez des séances adaptées à vos contraintes — pas à un thème de personnage.",
+    "loading": "Chargement de votre plan d'entraînement…",
+    "retry": "Réessayer",
+    "backToToday": "Retour à Aujourd'hui",
+    "explanationsLabel": "Explications d'éligibilité",
+    "errors": {
+      "missingProfile": "La version de profil est manquante. Terminez l'onboarding, puis réessayez.",
+      "missingScreening": "Un enregistrement de dépistage est requis avant la prévisualisation. Terminez d'abord le dépistage."
+    },
+    "empty": {
+      "title": "Aucun plan actif",
+      "body": "Il n'y a pas encore de plan d'entraînement actif. Prévisualisez un candidat à partir de votre profil et de votre dépistage. Nous n'affichons que l'éligibilité expliquée par l'API — jamais de progression inventée."
+    },
+    "current": {
+      "title": "Plan actif",
+      "template": "Modèle",
+      "policy": "Version de politique",
+      "status": "Statut",
+      "effective": "Effectif depuis"
+    },
+    "preview": {
+      "cta": "Prévisualiser le plan",
+      "replaceCta": "Prévisualiser un plan de remplacement",
+      "refresh": "Actualiser la prévisualisation",
+      "pending": "Prévisualisation…",
+      "success": "Prévisualisation prête.",
+      "resultTitle": "Prévisualisation du plan",
+      "eligibility": "Éligibilité",
+      "candidate": "Programme candidat",
+      "weeklyMinutes": "Environ {minutes} minutes estimées cette semaine",
+      "noCandidate": "Aucun programme candidat n'est disponible pour vos contraintes actuelles.",
+      "notActivatable": "Cette prévisualisation ne peut pas être activée (pas de jeton). Résolvez d'abord l'éligibilité."
+    },
+    "activate": {
+      "cta": "Activer ce plan",
+      "pending": "Activation…",
+      "success": "Plan activé.",
+      "noToken": "L'activation nécessite un jeton de prévisualisation valide."
+    },
+    "eligibility": {
+      "GENERAL_PROGRAMME_ELIGIBLE": "Éligible à un programme général",
+      "ADAPTED_CONTENT_REQUIRED": "Un contenu adapté est requis",
+      "PROFESSIONAL_GUIDANCE_REQUIRED": "Un accompagnement professionnel est requis avant une planification automatisée",
+      "TEMPORARY_TRAINING_PAUSE": "Pause d'entraînement temporaire — plans automatisés bloqués"
+    },
+    "explanations": {
+      "SCREENING_BLOCKS_AUTOMATED_PLAN": "Le dépistage bloque la génération automatisée du plan.",
+      "ADAPTED_CONTENT_REQUIRED": "Votre dépistage exige un contenu adapté.",
+      "NO_ELIGIBLE_TEMPLATE": "Aucun modèle publié ne correspond à votre équipement, temps et dépistage.",
+      "TEMPLATE_SELECTED": "Un modèle a été sélectionné parmi les candidats éligibles.",
+      "TEMPLATE_KEY": "Clé du modèle sélectionné : {key}",
+      "SOME_EXERCISES_EXCLUDED_FOR_EQUIPMENT": "Certains exercices ont été exclus en raison de l'équipement disponible.",
+      "SOME_EXERCISES_EXCLUDED_FOR_SCREENING": "Certains exercices ont été exclus en raison des restrictions de dépistage.",
+      "CHARACTER_EMPHASIS_BIAS_ONLY": "Le thème de personnage peut seulement biaiser le classement des préférences.",
+      "CHARACTER_CANNOT_OVERRIDE_CONSTRAINTS": "Le thème de personnage ne peut pas outrepasser sécurité, récupération ou équipement.",
+      "BUSY_DAY_SHORTEN_APPLIED": "Le raccourcissement jour chargé a été appliqué.",
+      "BUSY_DAY_NO_SHORTEN_NEEDED": "Aucun raccourcissement n'était nécessaire pour la durée cible.",
+      "BUSY_DAY_DROPPED_OPTIONAL": "Les exercices optionnels ont été retirés pour un jour chargé.",
+      "BUSY_DAY_KEPT_MINIMUM_CORE": "Un noyau minimum a été conservé.",
+      "BUSY_DAY_TRIMMED_CORE": "Le volume principal a été réduit pour le temps.",
+      "BUSY_DAY_REST_PRESERVED": "Le repos entre les séries a été préservé.",
+      "SCHEDULED_FROM_TEMPLATE": "Planifié à partir du modèle activé."
+    },
+    "sessions": {
+      "title": "Séances planifiées",
+      "empty": "Aucune séance planifiée pour l'instant. Activez un plan pour programmer des entraînements.",
+      "duration": "Budget de {minutes} min",
+      "start": "Commencer",
+      "resume": "Reprendre",
+      "shorten": "Raccourcir (jour chargé)",
+      "shortenMinutes": "Durée cible (minutes)",
+      "status": {
+        "PLANNED": "Planifiée",
+        "IN_PROGRESS": "En cours",
+        "COMPLETED": "Terminée",
+        "SHORTENED": "Raccourcie",
+        "ABANDONED": "Abandonnée",
+        "CANCELLED": "Annulée"
+      }
+    },
+    "player": {
+      "title": "Séance",
+      "subtitle": "Enregistrez les séries honnêtement. Terminez ou abandonnez à la fin.",
+      "loading": "Ouverture de la séance…",
+      "noMedia": "Les démonstrations d'exercices ne sont pas présentées comme médias sous licence. Suivez uniquement les instructions écrites.",
+      "exerciseFallback": "Exercice",
+      "setLabel": "Série {index}",
+      "reps": "Répétitions",
+      "resistance": "Résistance (kg)",
+      "completed": "Terminée",
+      "saveSet": "Enregistrer la série",
+      "savingSet": "Enregistrement…",
+      "setSaved": "Série enregistrée.",
+      "complete": "Terminer la séance",
+      "abandon": "Abandonner la séance",
+      "finishing": "Enregistrement…",
+      "completeSuccess": "Séance terminée. L'XP est enregistrée dans Progrès (le niveau de jeu n'est pas un résultat de santé).",
+      "abandonSuccess": "Séance abandonnée.",
+      "finishedStatus": "Statut de la séance : {status}",
+      "backToTrain": "Retour à Entraînement"
+    }
+  },
+  "onboarding": {
+    "title": "Configurez votre profil d'entraînement",
+    "kicker": "Onboarding membre",
+    "subtitle": "Répondez sincèrement à chaque étape. Votre programme reste personnalisé — pas dicté par un thème de personnage.",
+    "loading": "Chargement de votre progression d'onboarding…",
+    "checking": "Vérification de l'onboarding…",
+    "progressLabel": "Étape {current} sur {total}",
+    "continue": "Enregistrer et continuer",
+    "finish": "Terminer l'onboarding",
+    "saving": "Enregistrement…",
+    "saveSuccess": "Étape enregistrée.",
+    "completeSuccess": "Onboarding terminé. Ouverture d'Aujourd'hui…",
+    "steps": {
+      "WELCOME": "Bienvenue",
+      "GOALS": "Objectifs",
+      "EXPERIENCE": "Expérience",
+      "AVAILABILITY": "Disponibilité",
+      "SCREENING": "Dépistage",
+      "DIET": "Alimentation",
+      "MEASUREMENTS": "Mesures",
+      "CHARACTER": "Personnage",
+      "NOTIFICATIONS": "Notifications",
+      "PLAN_PREVIEW": "Aperçu du plan",
+      "CONFIRM": "Confirmation"
+    },
+    "welcome": {
+      "legend": "Bienvenue et consentements",
+      "ageNote": "Vous devez être majeur pour utiliser Saiyan Ascend. Indiquez votre date de naissance.",
+      "dateOfBirth": "Date de naissance",
+      "consents": "Consentements requis",
+      "consent": {
+        "terms": "J'accepte les Conditions d'utilisation (tos-v1).",
+        "privacy": "J'accepte la Politique de confidentialité (privacy-v1).",
+        "health": "Je consens au traitement de données liées à la santé pour la sécurité de l'entraînement (health-data-v1)."
+      }
+    },
+    "goals": {
+      "legend": "Objectifs d'entraînement",
+      "hint": "Choisissez un ou plusieurs objectifs. Tout genre peut choisir tout objectif.",
+      "motivation": "Note de motivation (facultatif)",
+      "options": {
+        "strength": "Développer la force",
+        "conditioning": "Améliorer le conditionnement",
+        "consistency": "Construire une constance durable",
+        "mobility": "Améliorer la mobilité",
+        "body_composition": "Soutenir un changement de composition corporelle"
+      }
+    },
+    "experience": {
+      "legend": "Expérience d'entraînement",
+      "notes": "Notes d'activité actuelle (facultatif)",
+      "options": {
+        "BEGINNER": "Débutant",
+        "RETURNING": "Reprise après une pause",
+        "INTERMEDIATE": "Intermédiaire",
+        "ADVANCED": "Avancé"
+      }
+    },
+    "availability": {
+      "legend": "Disponibilité et équipement",
+      "weeklyMinutes": "Minutes d'entraînement par semaine",
+      "sessionMinutes": "Durée typique d'une séance (minutes)",
+      "days": "Jours disponibles",
+      "equipment": "Équipement disponible",
+      "day": {
+        "MON": "Lundi",
+        "TUE": "Mardi",
+        "WED": "Mercredi",
+        "THU": "Jeudi",
+        "FRI": "Vendredi",
+        "SAT": "Samedi",
+        "SUN": "Dimanche"
+      },
+      "equipmentOptions": {
+        "none": "Poids du corps uniquement",
+        "dumbbells": "Haltères",
+        "barbell": "Barre",
+        "bands": "Élastiques",
+        "pullup_bar": "Barre de traction",
+        "machines": "Machines de salle"
+      }
+    },
+    "screening": {
+      "legend": "Signaux de dépistage santé",
+      "disclaimer": "Signaux déclarés par le membre pour l'orientation sécurité — pas un diagnostic médical. Le dépistage prime toujours sur le thème de personnage.",
+      "reportsUrgentSymptoms": "J'ai des symptômes urgents qui rendent l'exercice dangereux maintenant",
+      "reportsChestPain": "J'ai des douleurs thoraciques liées à l'activité",
+      "reportsFainting": "J'ai perdu connaissance ou failli le faire à l'effort",
+      "reportsSevereBreathingDifficulty": "J'ai une difficulté respiratoire sévère à l'effort",
+      "reportsActiveInjuryAffectingExercise": "J'ai une blessure active qui affecte l'exercice",
+      "reportsClinicianRestriction": "Un clinicien a restreint mon exercice",
+      "requiresMovementAdaptations": "J'ai besoin d'adaptations de mouvement",
+      "requiresTemporaryPause": "J'ai besoin d'une pause temporaire d'entraînement",
+      "outcomeLabel": "Résultat actuel du dépistage",
+      "outcomes": {
+        "CLEAR": "Autorisé à poursuivre avec prudence",
+        "ADAPTATIONS_REQUIRED": "Adaptations requises",
+        "SPECIALIST_SUPPORT": "Soutien spécialisé recommandé",
+        "TEMPORARY_TRAINING_PAUSE": "Pause temporaire d'entraînement"
+      }
+    },
+    "diet": {
+      "legend": "Préférence alimentaire",
+      "exclusions": "Ingrédients exclus (séparés par des virgules, facultatif)",
+      "exclusionsHint": "ex. arachides, crustacés",
+      "options": {
+        "VEGETARIAN": "Végétarien",
+        "EGGETARIAN": "Ovo-végétarien",
+        "NON_VEGETARIAN": "Non végétarien",
+        "VEGAN": "Végan"
+      }
+    },
+    "measurements": {
+      "legend": "Mesures (facultatif)",
+      "hint": "Vous pouvez passer. Nous n'inventons jamais de valeurs nutritionnelles à partir de données manquantes.",
+      "skip": "Passer les mesures pour l'instant",
+      "height": "Taille (cm)",
+      "weight": "Poids (kg)"
+    },
+    "character": {
+      "legend": "Thème de personnage motivationnel",
+      "disclaimer": "Votre programme reste personnalisé selon vos objectifs, dépistage, équipement et récupération. Le personnage est un thème motivationnel uniquement — il ne peut pas outrepasser les limites de sécurité.",
+      "originalOnly": "Archétypes ORIGINAUX publiés. Thèmes appartenant au produit, pas des actifs sous licence Dragon Ball.",
+      "loading": "Chargement des personnages…",
+      "unavailable": "Aucune présentation de personnage disponible dans le mode de contenu actif.",
+      "packOriginal": "Pack de contenu ORIGINAL"
+    },
+    "notifications": {
+      "legend": "Préférences de notification",
+      "hint": "Facultatif. Modifiables plus tard.",
+      "push": "Activer les rappels push (quand la livraison sera configurée)",
+      "email": "Activer les rappels e-mail (quand la livraison sera configurée)",
+      "simulated": "Préférence uniquement — ce jalon n'envoie pas de push ni d'e-mail réels."
+    },
+    "planPreview": {
+      "legend": "Comment fonctionne la planification",
+      "body": "Les jalons suivants généreront entraînement et nutrition à partir de votre profil, dépistage et disponibilité. Le repos et la constance durable comptent comme progression.",
+      "noFakeStats": "Aucune statistique d'entraînement ou de repas ici — nous n'inventons pas de données membre ni de prédictions de transformation corporelle.",
+      "acknowledge": "Je comprends que les programmes sont personnalisés et que le thème de personnage ne change pas les règles de sécurité"
+    },
+    "confirm": {
+      "legend": "Confirmer et terminer",
+      "body": "Vérifiez que la configuration requise est enregistrée, puis terminez l'onboarding.",
+      "screening": "Dépistage",
+      "diet": "Préférence alimentaire",
+      "character": "Thème de personnage",
+      "saved": "Enregistré",
+      "pending": "Pas encore enregistré",
+      "noStats": "Aucune statistique d'entraînement ou de repas inventée n'apparaîtra après la suite.",
+      "acknowledge": "Je confirme mes réponses et souhaite terminer l'onboarding"
+    }
+  },
+  "admin": {
+    "title": "Administration",
+    "subtitle": "Espace admin protégé",
+    "body": "La gestion de contenu, la revue des programmes et les outils d'exploitation arriveront plus tard. Cet espace confirme uniquement l'accès ADMIN.",
+    "signedInAs": "Connecté en tant que",
+    "backToApp": "Retour à Aujourd'hui",
+    "deniedTitle": "Accès refusé",
+    "deniedBody": "Cette zone nécessite le rôle ADMIN. Les comptes membre ne peuvent pas y entrer."
+  },
+  "progress": {
+    "title": "Progrès",
+    "subtitle": "Points d'activité gagnés pour des actions durables. C'est un registre de jeu — pas un score de santé.",
+    "loading": "Chargement de votre progrès…",
+    "retry": "Réessayer",
+    "disclaimer": "Le niveau de jeu est une progression cosmétique uniquement. Ce n'est pas un résultat de santé, une transformation corporelle ni une prédiction médicale.",
+    "summary": {
+      "title": "Résumé XP",
+      "totalXp": "XP totale",
+      "gameLevel": "Niveau de jeu",
+      "towardNext": "Vers le niveau suivant",
+      "towardNextValue": "{current} / {perLevel} XP",
+      "today": "Aujourd'hui",
+      "todayValue": "{total} / {max} XP le {date}",
+      "policy": "Politique XP",
+      "categoriesTitle": "Aujourd'hui par catégorie"
+    },
+    "categories": {
+      "MAIN_MISSION": "Mission principale",
+      "MEAL_REFLECTION": "Réflexion repas",
+      "RECOVERY_CHECK_IN": "Bilan récupération",
+      "WELLBEING_HABIT": "Habitude bien-être"
+    },
+    "events": {
+      "WORKOUT_COMPLETE": "Séance terminée",
+      "REST_MISSION": "Mission repos",
+      "CONSISTENCY_CHECK_IN": "Bilan de constance",
+      "MEAL_REFLECTION": "Réflexion repas",
+      "RECOVERY_CHECK_IN": "Bilan récupération",
+      "WELLBEING_HABIT": "Habitude bien-être",
+      "COMPENSATING_CORRECTION": "Correction"
+    },
+    "milestones": {
+      "title": "Déblocages cosmétiques",
+      "body": "Les déblocages changent seulement la présentation. Changer de personnage conserve l'XP et l'historique.",
+      "atLevel": "au niveau de jeu {level}"
+    },
+    "ledger": {
+      "title": "Registre XP",
+      "body": "Attributions en ajout seulement. Les nouvelles tentatives et sources en double n'augmentent pas les totaux.",
+      "empty": "Aucune entrée XP pour l'instant. Terminez une mission principale durable (séance ou repos planifié) pour gagner des points."
+    },
+    "history": {
+      "title": "Jours récents",
+      "dayValue": "{xp} XP sur {count} entrées"
+    }
+  },
+  "auth": {
+    "loading": "Vérification de la session…",
+    "required": "Connectez-vous pour continuer.",
+    "sessionExpired": "Session expirée. Veuillez vous reconnecter.",
+    "logoutSuccess": "Déconnecté.",
+    "logoutError": "Déconnexion incomplète. Réessayez."
+  },
+  "errors": {
+    "generic": "Une erreur s'est produite. Réessayez.",
+    "network": "Impossible de joindre l'API. Vérifiez qu'elle tourne et que NEXT_PUBLIC_API_URL est défini.",
+    "validation": "Vérifiez les champs indiqués et réessayez.",
+    "conflict": "Un compte avec cet e-mail existe déjà.",
+    "unauthorized": "E-mail ou mot de passe incorrect.",
+    "forbidden": "Vous n'avez pas la permission pour cette action."
+  },
+  "a11y": {
+    "skipToContent": "Aller au contenu",
+    "formError": "Erreur de formulaire",
+    "success": "Succès"
+  }
+}

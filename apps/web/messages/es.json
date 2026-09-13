@@ -1,0 +1,534 @@
+{
+  "meta": {
+    "title": "Saiyan Ascend",
+    "description": "Entrena con enfoque. Progresa con constancia. Asciende a tu ritmo."
+  },
+  "brand": {
+    "name": "Saiyan Ascend",
+    "tagline": "Entrena con enfoque. Progresa con constancia."
+  },
+  "nav": {
+    "login": "Iniciar sesión",
+    "register": "Crear cuenta",
+    "logout": "Cerrar sesión",
+    "today": "Hoy",
+    "train": "Entrenar",
+    "fuel": "Nutrición",
+    "progress": "Progreso",
+    "admin": "Admin",
+    "home": "Inicio"
+  },
+  "locale": {
+    "label": "Idioma",
+    "en": "English",
+    "fr": "Français",
+    "es": "Español"
+  },
+  "home": {
+    "headline": "Tu arena de entrenamiento empieza aquí",
+    "supporting": "Inicia sesión para llegar al espacio de hoy. Programas y entrenamientos llegan después — sin estadísticas inventadas.",
+    "ctaLogin": "Iniciar sesión",
+    "ctaRegister": "Crear cuenta"
+  },
+  "login": {
+    "title": "Iniciar sesión",
+    "subtitle": "Continúa a tu espacio de miembro Saiyan Ascend.",
+    "email": "Correo",
+    "password": "Contraseña",
+    "submit": "Entrar",
+    "submitting": "Entrando…",
+    "success": "Sesión iniciada. Redirigiendo…",
+    "noAccount": "¿Aún no tienes cuenta?",
+    "registerLink": "Crear una"
+  },
+  "register": {
+    "title": "Crear cuenta",
+    "subtitle": "Empieza con una cuenta de miembro segura. El onboarding viene después.",
+    "email": "Correo",
+    "password": "Contraseña",
+    "passwordHint": "Al menos 10 caracteres.",
+    "displayName": "Nombre visible (opcional)",
+    "submit": "Crear cuenta",
+    "submitting": "Creando cuenta…",
+    "success": "Cuenta creada. Redirigiendo…",
+    "hasAccount": "¿Ya tienes cuenta?",
+    "loginLink": "Iniciar sesión"
+  },
+  "today": {
+    "title": "Hoy",
+    "greeting": "Bienvenido de nuevo{name}",
+    "greetingNamed": ", {name}",
+    "signedInAs": "Sesión como",
+    "roles": "Roles",
+    "locale": "Idioma",
+    "timezone": "Zona horaria",
+    "noStats": "No se muestran estadísticas inventadas — solo sesiones planificadas y series registradas de verdad. La ingesta de comidas solo aparece a partir de registros de comidas.",
+    "openAdmin": "Abrir admin",
+    "training": {
+      "loading": "Cargando el entrenamiento de hoy…",
+      "missionTitle": "Sesión de hoy",
+      "missionBody": "Planificada para {date} · presupuesto de {minutes} minutos",
+      "start": "Empezar entrenamiento",
+      "resume": "Reanudar entrenamiento",
+      "starting": "Abriendo entrenamiento…",
+      "openTrain": "Abrir Entrenar",
+      "setupPlan": "Previsualizar y activar un plan",
+      "noPlanTitle": "No hay plan de entrenamiento activo",
+      "noPlanBody": "Aún no tienes un plan activo. Previsualiza un plan desde tu perfil y cribado, y actívalo si eres elegible.",
+      "restTitle": "No hay sesión programada para hoy",
+      "restBody": "El descanso y la constancia sostenible cuentan como progreso. Revisa Entrenar para las próximas sesiones."
+    },
+    "fuel": {
+      "title": "Próxima comida",
+      "nextMeal": "{meal} · {name} · {date}",
+      "view": "Ver Nutrición",
+      "swap": "Cambiar o registrar en Nutrición"
+    },
+    "media": {
+      "title": "Palabra de hoy",
+      "notAuthentic": "(Copia original de la app — no es una cita de Dragon Ball.)"
+    }
+  },
+  "fuel": {
+    "title": "Nutrición",
+    "subtitle": "Planes de comidas, cambios y consumo registrado — lo planificado se mantiene aparte de lo que realmente comes.",
+    "loading": "Cargando tu plan de comidas…",
+    "retry": "Reintentar",
+    "backToToday": "Volver a Hoy",
+    "explanationsLabel": "Explicaciones de nutrición",
+    "recipeFallback": "Receta",
+    "mealType": {
+      "BREAKFAST": "Desayuno",
+      "LUNCH": "Comida",
+      "DINNER": "Cena",
+      "SNACK": "Tentempié"
+    },
+    "empty": {
+      "title": "No hay plan de comidas activo",
+      "body": "Aún no hay un plan de comidas activo. Previsualiza un plan de siete días desde tu preferencia dietética y actívalo si eres elegible. No inventamos macros de ingesta sin registros de comidas."
+    },
+    "targets": {
+      "title": "Objetivos nutricionales",
+      "body": "El modo solo hábitos es el predeterminado. Las calorías solo aparecen si la API devuelve un modo estimado o profesional — nunca como garantías.",
+      "empty": "Ningún objetivo activado en esta visita. Puedes previsualizar un objetivo solo hábitos o activar un plan sin calorías.",
+      "mode": "Modo",
+      "policy": "Versión de política",
+      "energyEstimate": "Estimación de energía",
+      "kcal": "{value} kcal (estimación)",
+      "estimateDisclaimer": "Solo estimación — no es garantía ni prescripción clínica",
+      "habitOnlyNote": "Modo solo hábitos: no se muestra objetivo calórico.",
+      "previewHabit": "Previsualizar objetivo solo hábitos",
+      "previewPending": "Previsualizando…",
+      "previewMode": "Modo de previsualización",
+      "activate": "Activar este objetivo",
+      "activatePending": "Activando…",
+      "noToken": "La activación requiere un token de previsualización válido.",
+      "notActivatable": "Esta previsualización no se puede activar."
+    },
+    "current": {
+      "title": "Plan de comidas activo",
+      "start": "Inicio",
+      "policy": "Versión de política",
+      "status": "Estado",
+      "partial": "Este plan es parcial — algunos huecos pueden estar vacíos.",
+      "nextMeal": "Próxima planificada: {meal} · {name} · {date}"
+    },
+    "planPreview": {
+      "cta": "Previsualizar plan de comidas",
+      "replaceCta": "Previsualizar un plan de reemplazo",
+      "pending": "Previsualizando…",
+      "success": "Previsualización del plan lista.",
+      "resultTitle": "Previsualización del plan de comidas",
+      "eligibleCount": "{count} recetas elegibles tras filtros de dieta y alergias",
+      "partial": "La previsualización es parcial — no se pudieron llenar todos los huecos.",
+      "moreSlots": "+{count} huecos más",
+      "notActivatable": "Esta previsualización no se puede activar (sin token)."
+    },
+    "activate": {
+      "cta": "Activar este plan de comidas",
+      "pending": "Activando…",
+      "success": "Plan de comidas activado.",
+      "noToken": "La activación requiere un token de previsualización válido."
+    },
+    "planned": {
+      "title": "Comidas planificadas",
+      "subtitle": "Son recetas programadas — no ingesta registrada hasta que las marques como comidas.",
+      "empty": "No quedan comidas planificadas, o todas se marcaron como comidas en esta visita.",
+      "lane": "Planificada"
+    },
+    "consumed": {
+      "title": "Registradas en esta visita",
+      "subtitle": "Solo se listan los registros creados en esta sesión del navegador. No hay un total de ingesta inventado.",
+      "empty": "Aún no hay comidas registradas en esta visita. Marca una comida planificada como comida para registrar la ingesta.",
+      "lane": "Registrada",
+      "untyped": "Comida",
+      "loggedMeal": "Comida registrada",
+      "macrosNote": "Estimación registrada: {kcal} kcal (fuente receta/registro — no es garantía)"
+    },
+    "log": {
+      "cta": "Marcar comida",
+      "pending": "Registrando…",
+      "success": "Comida registrada."
+    },
+    "swap": {
+      "cta": "Cambiar",
+      "pending": "Cargando cambios…",
+      "resultTitle": "Opciones de cambio",
+      "noCandidates": "No hay candidatos de cambio tras filtros de dieta y alergias.",
+      "score": "Puntuación {score}",
+      "confirm": "Usar esta receta",
+      "confirming": "Confirmando…",
+      "success": "Comida cambiada. Lista de la compra actualizada si está disponible.",
+      "cancel": "Cancelar cambio",
+      "noToken": "Confirmar el cambio requiere un token válido."
+    },
+    "grocery": {
+      "title": "Lista de la compra",
+      "needsPlan": "Activa un plan de comidas para generar una lista de la compra.",
+      "empty": "Aún no hay artículos de compra para el plan activo.",
+      "grams": "{grams} g"
+    },
+    "explanations": {
+      "HABIT_ONLY_NO_ENERGY_TARGET": "El modo solo hábitos no fija un objetivo energético.",
+      "MEAL_PLAN_GENERATED": "Se generó un plan de comidas a partir de recetas elegibles.",
+      "MEAL_PLAN_PARTIAL": "El plan no pudo llenar todos los huecos.",
+      "DIET_FILTER_APPLIED": "Se aplicó el filtro de patrón dietético.",
+      "ALLERGY_FILTER_APPLIED": "Se aplicaron las reglas estrictas de exclusión por alergias.",
+      "SOFT_ENERGY_PROXIMITY": "La proximidad energética suave solo se usó como pista de ranking.",
+      "SWAP_CANDIDATES_RANKED": "Los candidatos de cambio se ordenaron por encaje.",
+      "NO_SWAP_CANDIDATES": "No quedaron candidatos de cambio tras los filtros."
+    }
+  },
+  "train": {
+    "title": "Entrenar",
+    "subtitle": "Previsualiza, activa y realiza entrenamientos según tus límites — no según un tema de personaje.",
+    "loading": "Cargando tu plan de entrenamiento…",
+    "retry": "Reintentar",
+    "backToToday": "Volver a Hoy",
+    "explanationsLabel": "Explicaciones de elegibilidad",
+    "errors": {
+      "missingProfile": "Falta la versión de perfil. Termina el onboarding e inténtalo de nuevo.",
+      "missingScreening": "Se requiere un registro de cribado antes de la previsualización. Completa primero el cribado."
+    },
+    "empty": {
+      "title": "Sin plan activo",
+      "body": "Aún no hay un plan de entrenamiento activo. Previsualiza un candidato desde tu perfil y cribado. Solo mostramos elegibilidad explicada por la API — nunca progreso inventado."
+    },
+    "current": {
+      "title": "Plan activo",
+      "template": "Plantilla",
+      "policy": "Versión de política",
+      "status": "Estado",
+      "effective": "Vigente desde"
+    },
+    "preview": {
+      "cta": "Previsualizar plan",
+      "replaceCta": "Previsualizar un plan de reemplazo",
+      "refresh": "Actualizar previsualización",
+      "pending": "Previsualizando…",
+      "success": "Previsualización lista.",
+      "resultTitle": "Previsualización del plan",
+      "eligibility": "Elegibilidad",
+      "candidate": "Programa candidato",
+      "weeklyMinutes": "Unos {minutes} minutos estimados esta semana",
+      "noCandidate": "No hay programa candidato disponible para tus limitaciones actuales.",
+      "notActivatable": "Esta previsualización no se puede activar (sin token). Resuelve la elegibilidad primero."
+    },
+    "activate": {
+      "cta": "Activar este plan",
+      "pending": "Activando…",
+      "success": "Plan activado.",
+      "noToken": "La activación requiere un token de previsualización válido."
+    },
+    "eligibility": {
+      "GENERAL_PROGRAMME_ELIGIBLE": "Elegible para un programa general",
+      "ADAPTED_CONTENT_REQUIRED": "Se requiere contenido adaptado",
+      "PROFESSIONAL_GUIDANCE_REQUIRED": "Se requiere orientación profesional antes de la planificación automatizada",
+      "TEMPORARY_TRAINING_PAUSE": "Pausa temporal de entrenamiento — planes automatizados bloqueados"
+    },
+    "explanations": {
+      "SCREENING_BLOCKS_AUTOMATED_PLAN": "El cribado bloquea la generación automatizada del plan.",
+      "ADAPTED_CONTENT_REQUIRED": "Tu cribado requiere contenido adaptado.",
+      "NO_ELIGIBLE_TEMPLATE": "Ninguna plantilla publicada coincide con tu equipo, tiempo y cribado.",
+      "TEMPLATE_SELECTED": "Se seleccionó una plantilla entre candidatos elegibles.",
+      "TEMPLATE_KEY": "Clave de plantilla seleccionada: {key}",
+      "SOME_EXERCISES_EXCLUDED_FOR_EQUIPMENT": "Algunos ejercicios se excluyeron por el equipo disponible.",
+      "SOME_EXERCISES_EXCLUDED_FOR_SCREENING": "Algunos ejercicios se excluyeron por restricciones de cribado.",
+      "CHARACTER_EMPHASIS_BIAS_ONLY": "El tema de personaje solo puede sesgar el ranking de preferencias.",
+      "CHARACTER_CANNOT_OVERRIDE_CONSTRAINTS": "El tema de personaje no puede anular seguridad, recuperación ni equipo.",
+      "BUSY_DAY_SHORTEN_APPLIED": "Se aplicó el acortamiento de día ocupado.",
+      "BUSY_DAY_NO_SHORTEN_NEEDED": "No hizo falta acortar para la duración objetivo.",
+      "BUSY_DAY_DROPPED_OPTIONAL": "Se quitaron ejercicios opcionales por día ocupado.",
+      "BUSY_DAY_KEPT_MINIMUM_CORE": "Se mantuvo un núcleo mínimo.",
+      "BUSY_DAY_TRIMMED_CORE": "Se redujo el volumen principal por tiempo.",
+      "BUSY_DAY_REST_PRESERVED": "Se preservó el descanso entre series.",
+      "SCHEDULED_FROM_TEMPLATE": "Programado desde la plantilla activada."
+    },
+    "sessions": {
+      "title": "Sesiones planificadas",
+      "empty": "Aún no hay sesiones planificadas. Activa un plan para programar entrenamientos.",
+      "duration": "Presupuesto de {minutes} min",
+      "start": "Empezar",
+      "resume": "Reanudar",
+      "shorten": "Acortar (día ocupado)",
+      "shortenMinutes": "Duración objetivo (minutos)",
+      "status": {
+        "PLANNED": "Planificada",
+        "IN_PROGRESS": "En curso",
+        "COMPLETED": "Completada",
+        "SHORTENED": "Acortada",
+        "ABANDONED": "Abandonada",
+        "CANCELLED": "Cancelada"
+      }
+    },
+    "player": {
+      "title": "Entrenamiento",
+      "subtitle": "Registra las series con honestidad. Completa o abandona al terminar.",
+      "loading": "Abriendo la sesión…",
+      "noMedia": "No se muestran demos de ejercicios como medios con licencia. Sigue solo las instrucciones escritas.",
+      "exerciseFallback": "Ejercicio",
+      "setLabel": "Serie {index}",
+      "reps": "Repeticiones",
+      "resistance": "Resistencia (kg)",
+      "completed": "Completada",
+      "saveSet": "Guardar serie",
+      "savingSet": "Guardando…",
+      "setSaved": "Serie guardada.",
+      "complete": "Completar entrenamiento",
+      "abandon": "Abandonar entrenamiento",
+      "finishing": "Guardando…",
+      "completeSuccess": "Entrenamiento completado. La XP se registra en Progreso (el nivel de juego no es un resultado de salud).",
+      "abandonSuccess": "Entrenamiento abandonado.",
+      "finishedStatus": "Estado de la sesión: {status}",
+      "backToTrain": "Volver a Entrenar"
+    }
+  },
+  "onboarding": {
+    "title": "Configura tu perfil de entrenamiento",
+    "kicker": "Onboarding de miembro",
+    "subtitle": "Responde cada paso con honestidad. Tu programa permanece personalizado — no lo dicta un tema de personaje.",
+    "loading": "Cargando tu progreso de onboarding…",
+    "checking": "Comprobando el onboarding…",
+    "progressLabel": "Paso {current} de {total}",
+    "continue": "Guardar y continuar",
+    "finish": "Completar onboarding",
+    "saving": "Guardando…",
+    "saveSuccess": "Paso guardado.",
+    "completeSuccess": "Onboarding completo. Abriendo Hoy…",
+    "steps": {
+      "WELCOME": "Bienvenida",
+      "GOALS": "Objetivos",
+      "EXPERIENCE": "Experiencia",
+      "AVAILABILITY": "Disponibilidad",
+      "SCREENING": "Cribado",
+      "DIET": "Dieta",
+      "MEASUREMENTS": "Medidas",
+      "CHARACTER": "Personaje",
+      "NOTIFICATIONS": "Notificaciones",
+      "PLAN_PREVIEW": "Vista previa del plan",
+      "CONFIRM": "Confirmar"
+    },
+    "welcome": {
+      "legend": "Bienvenida y consentimientos",
+      "ageNote": "Debes ser adulto para usar Saiyan Ascend. Introduce tu fecha de nacimiento.",
+      "dateOfBirth": "Fecha de nacimiento",
+      "consents": "Consentimientos obligatorios",
+      "consent": {
+        "terms": "Acepto los Términos de servicio (tos-v1).",
+        "privacy": "Acepto la Política de privacidad (privacy-v1).",
+        "health": "Consiento el tratamiento de datos relacionados con la salud para la seguridad del entrenamiento (health-data-v1)."
+      }
+    },
+    "goals": {
+      "legend": "Objetivos de entrenamiento",
+      "hint": "Elige uno o más objetivos. Cualquier género puede elegir cualquier objetivo.",
+      "motivation": "Nota de motivación (opcional)",
+      "options": {
+        "strength": "Ganar fuerza",
+        "conditioning": "Mejorar el acondicionamiento",
+        "consistency": "Construir consistencia sostenible",
+        "mobility": "Mejorar la movilidad",
+        "body_composition": "Apoyar un cambio de composición corporal"
+      }
+    },
+    "experience": {
+      "legend": "Experiencia de entrenamiento",
+      "notes": "Notas de actividad actual (opcional)",
+      "options": {
+        "BEGINNER": "Principiante",
+        "RETURNING": "Retorno tras una pausa",
+        "INTERMEDIATE": "Intermedio",
+        "ADVANCED": "Avanzado"
+      }
+    },
+    "availability": {
+      "legend": "Disponibilidad y equipo",
+      "weeklyMinutes": "Minutos de entrenamiento semanales",
+      "sessionMinutes": "Duración típica de sesión (minutos)",
+      "days": "Días disponibles",
+      "equipment": "Equipo que puedes usar",
+      "day": {
+        "MON": "Lunes",
+        "TUE": "Martes",
+        "WED": "Miércoles",
+        "THU": "Jueves",
+        "FRI": "Viernes",
+        "SAT": "Sábado",
+        "SUN": "Domingo"
+      },
+      "equipmentOptions": {
+        "none": "Solo peso corporal",
+        "dumbbells": "Mancuernas",
+        "barbell": "Barra",
+        "bands": "Bandas de resistencia",
+        "pullup_bar": "Barra de dominadas",
+        "machines": "Máquinas de gimnasio"
+      }
+    },
+    "screening": {
+      "legend": "Señales de cribado de salud",
+      "disclaimer": "Señales declaradas por el miembro para seguridad — no es un diagnóstico médico. El cribado siempre prevalece sobre el tema de personaje.",
+      "reportsUrgentSymptoms": "Tengo síntomas urgentes que hacen inseguro el ejercicio ahora",
+      "reportsChestPain": "Tengo dolor en el pecho relacionado con la actividad",
+      "reportsFainting": "Me he desmayado o casi desmayado con el esfuerzo",
+      "reportsSevereBreathingDifficulty": "Tengo dificultad respiratoria grave con la actividad",
+      "reportsActiveInjuryAffectingExercise": "Tengo una lesión activa que afecta el ejercicio",
+      "reportsClinicianRestriction": "Un clínico ha restringido mi ejercicio",
+      "requiresMovementAdaptations": "Necesito adaptaciones de movimiento",
+      "requiresTemporaryPause": "Necesito una pausa temporal de entrenamiento",
+      "outcomeLabel": "Resultado actual del cribado",
+      "outcomes": {
+        "CLEAR": "Apto para continuar con cuidado",
+        "ADAPTATIONS_REQUIRED": "Adaptaciones requeridas",
+        "SPECIALIST_SUPPORT": "Se recomienda apoyo especializado",
+        "TEMPORARY_TRAINING_PAUSE": "Pausa temporal de entrenamiento"
+      }
+    },
+    "diet": {
+      "legend": "Preferencia dietética",
+      "exclusions": "Exclusiones de ingredientes (separadas por comas, opcional)",
+      "exclusionsHint": "p. ej. cacahuetes, mariscos",
+      "options": {
+        "VEGETARIAN": "Vegetariano",
+        "EGGETARIAN": "Ovolactovegetariano / eggetarian",
+        "NON_VEGETARIAN": "No vegetariano",
+        "VEGAN": "Vegano"
+      }
+    },
+    "measurements": {
+      "legend": "Medidas (opcional)",
+      "hint": "Puedes omitirlas. Nunca inventamos valores nutricionales a partir de datos faltantes.",
+      "skip": "Omitir medidas por ahora",
+      "height": "Altura (cm)",
+      "weight": "Peso (kg)"
+    },
+    "character": {
+      "legend": "Tema motivacional de personaje",
+      "disclaimer": "Tu programa permanece personalizado según tus objetivos, cribado, equipo y recuperación. El personaje es solo un tema motivacional — no puede anular los límites de seguridad.",
+      "originalOnly": "Arquetipos ORIGINAL publicados. Temas del producto, no activos con licencia de Dragon Ball.",
+      "loading": "Cargando personajes…",
+      "unavailable": "No hay presentaciones de personaje disponibles en el modo de contenido activo.",
+      "packOriginal": "Pack de contenido ORIGINAL"
+    },
+    "notifications": {
+      "legend": "Preferencias de notificación",
+      "hint": "Opcional. Puedes cambiarlas después.",
+      "push": "Activar recordatorios push (cuando la entrega esté configurada)",
+      "email": "Activar recordatorios por correo (cuando la entrega esté configurada)",
+      "simulated": "Solo preferencia — este hito no envía push ni correo reales."
+    },
+    "planPreview": {
+      "legend": "Cómo funciona la planificación",
+      "body": "Hitos posteriores generarán entrenamiento y nutrición a partir de tu perfil, cribado y disponibilidad. El descanso y la consistencia sostenible cuentan como progreso.",
+      "noFakeStats": "Aquí no se muestran estadísticas de entrenamiento ni comidas — no inventamos datos del miembro ni predicciones de transformación corporal.",
+      "acknowledge": "Entiendo que los programas son personalizados y que el tema de personaje no cambia las reglas de seguridad"
+    },
+    "confirm": {
+      "legend": "Confirmar y terminar",
+      "body": "Revisa que la configuración requerida esté guardada y termina el onboarding.",
+      "screening": "Cribado",
+      "diet": "Preferencia dietética",
+      "character": "Tema de personaje",
+      "saved": "Guardado",
+      "pending": "Aún no guardado",
+      "noStats": "No aparecerán estadísticas inventadas de entrenamiento o comidas al continuar.",
+      "acknowledge": "Confirmo mis respuestas y quiero completar el onboarding"
+    }
+  },
+  "admin": {
+    "title": "Administración",
+    "subtitle": "Espacio admin protegido",
+    "body": "La gestión de contenido, revisión de programas y herramientas operativas llegarán después. Este espacio solo confirma acceso ADMIN.",
+    "signedInAs": "Sesión como",
+    "backToApp": "Volver a Hoy",
+    "deniedTitle": "Acceso denegado",
+    "deniedBody": "Esta zona requiere el rol ADMIN. Las cuentas MEMBER no pueden entrar."
+  },
+  "progress": {
+    "title": "Progreso",
+    "subtitle": "Puntos de actividad por acciones sostenibles. Es un registro de juego — no una puntuación de salud.",
+    "loading": "Cargando tu progreso…",
+    "retry": "Reintentar",
+    "disclaimer": "El nivel de juego es solo progresión cosmética. No es un resultado de salud, transformación corporal ni predicción médica.",
+    "summary": {
+      "title": "Resumen de XP",
+      "totalXp": "XP total",
+      "gameLevel": "Nivel de juego",
+      "towardNext": "Hacia el siguiente nivel",
+      "towardNextValue": "{current} / {perLevel} XP",
+      "today": "Hoy",
+      "todayValue": "{total} / {max} XP el {date}",
+      "policy": "Política de XP",
+      "categoriesTitle": "Hoy por categoría"
+    },
+    "categories": {
+      "MAIN_MISSION": "Misión principal",
+      "MEAL_REFLECTION": "Reflexión de comida",
+      "RECOVERY_CHECK_IN": "Chequeo de recuperación",
+      "WELLBEING_HABIT": "Hábito de bienestar"
+    },
+    "events": {
+      "WORKOUT_COMPLETE": "Entrenamiento completado",
+      "REST_MISSION": "Misión de descanso",
+      "CONSISTENCY_CHECK_IN": "Chequeo de constancia",
+      "MEAL_REFLECTION": "Reflexión de comida",
+      "RECOVERY_CHECK_IN": "Chequeo de recuperación",
+      "WELLBEING_HABIT": "Hábito de bienestar",
+      "COMPENSATING_CORRECTION": "Corrección"
+    },
+    "milestones": {
+      "title": "Desbloqueos cosméticos",
+      "body": "Los desbloqueos solo cambian la presentación. Cambiar de personaje conserva la XP y el historial.",
+      "atLevel": "en nivel de juego {level}"
+    },
+    "ledger": {
+      "title": "Registro de XP",
+      "body": "Premios solo por adición. Los reintentos y fuentes duplicadas no inflan los totales.",
+      "empty": "Aún no hay entradas de XP. Completa una misión principal sostenible (entrenamiento o descanso planificado) para ganar puntos."
+    },
+    "history": {
+      "title": "Días recientes",
+      "dayValue": "{xp} XP en {count} entradas"
+    }
+  },
+  "auth": {
+    "loading": "Comprobando sesión…",
+    "required": "Inicia sesión para continuar.",
+    "sessionExpired": "Tu sesión expiró. Vuelve a iniciar sesión.",
+    "logoutSuccess": "Sesión cerrada.",
+    "logoutError": "No se pudo cerrar la sesión. Inténtalo de nuevo."
+  },
+  "errors": {
+    "generic": "Algo salió mal. Inténtalo de nuevo.",
+    "network": "No se puede alcanzar la API. Confirma que está en marcha y que NEXT_PUBLIC_API_URL está definido.",
+    "validation": "Revisa los campos marcados e inténtalo de nuevo.",
+    "conflict": "Ya existe una cuenta con este correo.",
+    "unauthorized": "Correo o contraseña incorrectos.",
+    "forbidden": "No tienes permiso para esta acción."
+  },
+  "a11y": {
+    "skipToContent": "Saltar al contenido",
+    "formError": "Error del formulario",
+    "success": "Éxito"
+  }
+}

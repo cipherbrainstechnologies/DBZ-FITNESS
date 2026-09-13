@@ -1,0 +1,534 @@
+{
+  "meta": {
+    "title": "Saiyan Ascend",
+    "description": "Train with focus. Progress with consistency. Ascend on your terms."
+  },
+  "brand": {
+    "name": "Saiyan Ascend",
+    "tagline": "Train with focus. Progress with consistency."
+  },
+  "nav": {
+    "login": "Sign in",
+    "register": "Create account",
+    "logout": "Sign out",
+    "today": "Today",
+    "train": "Train",
+    "fuel": "Fuel",
+    "progress": "Progress",
+    "admin": "Admin",
+    "home": "Home"
+  },
+  "locale": {
+    "label": "Language",
+    "en": "English",
+    "fr": "Français",
+    "es": "Español"
+  },
+  "home": {
+    "headline": "Your training arena starts here",
+    "supporting": "Sign in to reach today's mission shell. Programmes and workouts arrive in later milestones — no fabricated stats.",
+    "ctaLogin": "Sign in",
+    "ctaRegister": "Create account"
+  },
+  "login": {
+    "title": "Sign in",
+    "subtitle": "Continue to your Saiyan Ascend member shell.",
+    "email": "Email",
+    "password": "Password",
+    "submit": "Sign in",
+    "submitting": "Signing in…",
+    "success": "Signed in. Redirecting…",
+    "noAccount": "No account yet?",
+    "registerLink": "Create one"
+  },
+  "register": {
+    "title": "Create account",
+    "subtitle": "Start with a secure member account. Onboarding comes next.",
+    "email": "Email",
+    "password": "Password",
+    "passwordHint": "At least 10 characters.",
+    "displayName": "Display name (optional)",
+    "submit": "Create account",
+    "submitting": "Creating account…",
+    "success": "Account created. Redirecting…",
+    "hasAccount": "Already have an account?",
+    "loginLink": "Sign in"
+  },
+  "today": {
+    "title": "Today",
+    "greeting": "Welcome back{name}",
+    "greetingNamed": ", {name}",
+    "signedInAs": "Signed in as",
+    "roles": "Roles",
+    "locale": "Locale",
+    "timezone": "Time zone",
+    "noStats": "No invented workout statistics are shown — only real planned sessions and logged sets. Meal intake appears only from meal logs.",
+    "openAdmin": "Open admin",
+    "training": {
+      "loading": "Loading today’s training…",
+      "missionTitle": "Today’s session",
+      "missionBody": "Planned for {date} · {minutes} minute budget",
+      "start": "Start workout",
+      "resume": "Resume workout",
+      "starting": "Opening workout…",
+      "openTrain": "Open Train",
+      "setupPlan": "Preview and activate a plan",
+      "noPlanTitle": "No active training plan",
+      "noPlanBody": "You do not have an active plan yet. Preview a plan from your profile and screening, then activate it when eligible.",
+      "restTitle": "No session scheduled for today",
+      "restBody": "Rest and sustainable consistency count as progress. Check Train for upcoming planned sessions."
+    },
+    "fuel": {
+      "title": "Next meal",
+      "nextMeal": "{meal} · {name} · {date}",
+      "view": "View Fuel",
+      "swap": "Swap or log on Fuel"
+    },
+    "media": {
+      "title": "Today’s word",
+      "notAuthentic": "(Original app copy — not a Dragon Ball quotation.)"
+    }
+  },
+  "fuel": {
+    "title": "Fuel",
+    "subtitle": "Meal plans, swaps, and logged intake — planned meals stay separate from what you actually eat.",
+    "loading": "Loading your meal plan…",
+    "retry": "Try again",
+    "backToToday": "Back to Today",
+    "explanationsLabel": "Nutrition explanations",
+    "recipeFallback": "Recipe",
+    "mealType": {
+      "BREAKFAST": "Breakfast",
+      "LUNCH": "Lunch",
+      "DINNER": "Dinner",
+      "SNACK": "Snack"
+    },
+    "empty": {
+      "title": "No active meal plan",
+      "body": "There is no active meal plan yet. Preview a seven-day plan from your diet preference, then activate it when eligible. We do not invent intake macros without meal logs."
+    },
+    "targets": {
+      "title": "Nutrition targets",
+      "body": "Habit-only is the default. Calorie figures appear only when the API returns an estimated or professional target mode — never as guarantees.",
+      "empty": "No target activated in this visit. You can still preview a habit-only target or activate a meal plan without calorie targets.",
+      "mode": "Mode",
+      "policy": "Policy version",
+      "energyEstimate": "Energy estimate",
+      "kcal": "{value} kcal (estimate)",
+      "estimateDisclaimer": "Estimate only — not a guarantee or clinical prescription",
+      "habitOnlyNote": "Habit-only mode: no calorie target is shown.",
+      "previewHabit": "Preview habit-only target",
+      "previewPending": "Previewing target…",
+      "previewMode": "Preview mode",
+      "activate": "Activate this target",
+      "activatePending": "Activating…",
+      "noToken": "Activate requires a valid preview token.",
+      "notActivatable": "This preview cannot be activated."
+    },
+    "current": {
+      "title": "Active meal plan",
+      "start": "Starts",
+      "policy": "Policy version",
+      "status": "Status",
+      "partial": "This plan is partial — some meal slots may be empty.",
+      "nextMeal": "Next planned: {meal} · {name} · {date}"
+    },
+    "planPreview": {
+      "cta": "Preview meal plan",
+      "replaceCta": "Preview a replacement plan",
+      "pending": "Previewing…",
+      "success": "Meal plan preview ready.",
+      "resultTitle": "Meal plan preview",
+      "eligibleCount": "{count} eligible recipes after diet and allergy filters",
+      "partial": "Preview is partial — not every slot could be filled.",
+      "moreSlots": "+{count} more planned slots",
+      "notActivatable": "This preview cannot be activated (no preview token)."
+    },
+    "activate": {
+      "cta": "Activate this meal plan",
+      "pending": "Activating…",
+      "success": "Meal plan activated.",
+      "noToken": "Activate requires a valid preview token."
+    },
+    "planned": {
+      "title": "Planned meals",
+      "subtitle": "These are scheduled recipes — not recorded intake until you mark them eaten.",
+      "empty": "No remaining planned meals to show, or all listed meals were marked eaten this visit.",
+      "lane": "Planned"
+    },
+    "consumed": {
+      "title": "Logged this visit",
+      "subtitle": "Only meal logs created in this browser session are listed here. There is no invented daily intake total.",
+      "empty": "No meals logged yet this visit. Mark a planned meal as eaten to record intake.",
+      "lane": "Logged",
+      "untyped": "Meal",
+      "loggedMeal": "Logged meal",
+      "macrosNote": "Logged estimate: {kcal} kcal (from recipe/log source — not a guarantee)"
+    },
+    "log": {
+      "cta": "Mark eaten",
+      "pending": "Logging…",
+      "success": "Meal logged."
+    },
+    "swap": {
+      "cta": "Swap",
+      "pending": "Loading swaps…",
+      "resultTitle": "Swap options",
+      "noCandidates": "No eligible swap candidates after diet and allergy filters.",
+      "score": "Score {score}",
+      "confirm": "Use this recipe",
+      "confirming": "Confirming…",
+      "success": "Meal swapped. Grocery list refreshed when available.",
+      "cancel": "Cancel swap",
+      "noToken": "Swap confirm requires a valid preview token."
+    },
+    "grocery": {
+      "title": "Grocery list",
+      "needsPlan": "Activate a meal plan to generate a grocery list.",
+      "empty": "No grocery items for the active plan yet.",
+      "grams": "{grams} g"
+    },
+    "explanations": {
+      "HABIT_ONLY_NO_ENERGY_TARGET": "Habit-only mode does not set an energy target.",
+      "MEAL_PLAN_GENERATED": "A meal plan was generated from eligible recipes.",
+      "MEAL_PLAN_PARTIAL": "The meal plan could not fill every slot.",
+      "DIET_FILTER_APPLIED": "Diet pattern filtering was applied.",
+      "ALLERGY_FILTER_APPLIED": "Allergy exclusion hard rules were applied.",
+      "SOFT_ENERGY_PROXIMITY": "Soft energy proximity was used as a ranking hint only.",
+      "SWAP_CANDIDATES_RANKED": "Swap candidates were ranked by fit.",
+      "NO_SWAP_CANDIDATES": "No swap candidates remained after filters."
+    }
+  },
+  "train": {
+    "title": "Train",
+    "subtitle": "Preview, activate, and run workouts matched to your constraints — not to a character theme.",
+    "loading": "Loading your training plan…",
+    "retry": "Try again",
+    "backToToday": "Back to Today",
+    "explanationsLabel": "Eligibility explanations",
+    "errors": {
+      "missingProfile": "Your profile version is missing. Finish onboarding, then try again.",
+      "missingScreening": "A screening record is required before plan preview. Finish onboarding screening first."
+    },
+    "empty": {
+      "title": "No active plan",
+      "body": "There is no active training plan yet. Preview a candidate from your current profile and screening. We only show explainable eligibility from the API — never fabricated progress."
+    },
+    "current": {
+      "title": "Active plan",
+      "template": "Template",
+      "policy": "Policy version",
+      "status": "Status",
+      "effective": "Effective from"
+    },
+    "preview": {
+      "cta": "Preview plan",
+      "replaceCta": "Preview a replacement plan",
+      "refresh": "Refresh preview",
+      "pending": "Previewing…",
+      "success": "Preview ready.",
+      "resultTitle": "Plan preview",
+      "eligibility": "Eligibility",
+      "candidate": "Candidate programme",
+      "weeklyMinutes": "About {minutes} estimated minutes this week",
+      "noCandidate": "No candidate programme is available for your current constraints.",
+      "notActivatable": "This preview cannot be activated (no preview token). Resolve eligibility first."
+    },
+    "activate": {
+      "cta": "Activate this plan",
+      "pending": "Activating…",
+      "success": "Plan activated.",
+      "noToken": "Activate requires a valid preview token."
+    },
+    "eligibility": {
+      "GENERAL_PROGRAMME_ELIGIBLE": "Eligible for a general programme",
+      "ADAPTED_CONTENT_REQUIRED": "Adapted content is required",
+      "PROFESSIONAL_GUIDANCE_REQUIRED": "Professional guidance is required before automated planning",
+      "TEMPORARY_TRAINING_PAUSE": "Temporary training pause — automated plans are blocked"
+    },
+    "explanations": {
+      "SCREENING_BLOCKS_AUTOMATED_PLAN": "Screening blocks automated plan generation.",
+      "ADAPTED_CONTENT_REQUIRED": "Your screening requires adapted content.",
+      "NO_ELIGIBLE_TEMPLATE": "No published template matches your equipment, time, and screening constraints.",
+      "TEMPLATE_SELECTED": "A template was selected from eligible candidates.",
+      "TEMPLATE_KEY": "Selected template key: {key}",
+      "SOME_EXERCISES_EXCLUDED_FOR_EQUIPMENT": "Some exercises were excluded because of available equipment.",
+      "SOME_EXERCISES_EXCLUDED_FOR_SCREENING": "Some exercises were excluded because of screening restrictions.",
+      "CHARACTER_EMPHASIS_BIAS_ONLY": "Character theme may bias preference ranking only.",
+      "CHARACTER_CANNOT_OVERRIDE_CONSTRAINTS": "Character theme cannot override safety, recovery, or equipment limits.",
+      "BUSY_DAY_SHORTEN_APPLIED": "Busy-day shortening was applied.",
+      "BUSY_DAY_NO_SHORTEN_NEEDED": "No shortening was needed for the target duration.",
+      "BUSY_DAY_DROPPED_OPTIONAL": "Optional exercises were dropped for a busy day.",
+      "BUSY_DAY_KEPT_MINIMUM_CORE": "A minimum core set was kept.",
+      "BUSY_DAY_TRIMMED_CORE": "Core volume was trimmed for time.",
+      "BUSY_DAY_REST_PRESERVED": "Rest between sets was preserved.",
+      "SCHEDULED_FROM_TEMPLATE": "Scheduled from the activated template."
+    },
+    "sessions": {
+      "title": "Planned sessions",
+      "empty": "No planned sessions yet. Activate a plan to schedule workouts.",
+      "duration": "{minutes} min budget",
+      "start": "Start",
+      "resume": "Resume",
+      "shorten": "Busy-day shorten",
+      "shortenMinutes": "Target duration (minutes)",
+      "status": {
+        "PLANNED": "Planned",
+        "IN_PROGRESS": "In progress",
+        "COMPLETED": "Completed",
+        "SHORTENED": "Shortened",
+        "ABANDONED": "Abandoned",
+        "CANCELLED": "Cancelled"
+      }
+    },
+    "player": {
+      "title": "Workout",
+      "subtitle": "Log sets honestly. Complete or abandon when you finish.",
+      "loading": "Opening workout session…",
+      "noMedia": "Exercise demos are not shown as licensed media. Follow the written instructions only.",
+      "exerciseFallback": "Exercise",
+      "setLabel": "Set {index}",
+      "reps": "Repetitions",
+      "resistance": "Resistance (kg)",
+      "completed": "Completed",
+      "saveSet": "Save set",
+      "savingSet": "Saving…",
+      "setSaved": "Set saved.",
+      "complete": "Complete workout",
+      "abandon": "Abandon workout",
+      "finishing": "Saving…",
+      "completeSuccess": "Workout completed. Earned XP is recorded on Progress (game level is not a health outcome).",
+      "abandonSuccess": "Workout abandoned.",
+      "finishedStatus": "Session status: {status}",
+      "backToTrain": "Back to Train"
+    }
+  },
+  "onboarding": {
+    "title": "Set up your training profile",
+    "kicker": "Member onboarding",
+    "subtitle": "Answer each step honestly. Your programme stays personalised to you — not to a character theme.",
+    "loading": "Loading your onboarding progress…",
+    "checking": "Checking onboarding status…",
+    "progressLabel": "Step {current} of {total}",
+    "continue": "Save and continue",
+    "finish": "Complete onboarding",
+    "saving": "Saving…",
+    "saveSuccess": "Step saved.",
+    "completeSuccess": "Onboarding complete. Opening Today…",
+    "steps": {
+      "WELCOME": "Welcome",
+      "GOALS": "Goals",
+      "EXPERIENCE": "Experience",
+      "AVAILABILITY": "Availability",
+      "SCREENING": "Screening",
+      "DIET": "Diet",
+      "MEASUREMENTS": "Measurements",
+      "CHARACTER": "Character",
+      "NOTIFICATIONS": "Notifications",
+      "PLAN_PREVIEW": "Plan preview",
+      "CONFIRM": "Confirm"
+    },
+    "welcome": {
+      "legend": "Welcome and consent",
+      "ageNote": "You must be an adult to use Saiyan Ascend. Enter your date of birth.",
+      "dateOfBirth": "Date of birth",
+      "consents": "Required consents",
+      "consent": {
+        "terms": "I agree to the Terms of Service (tos-v1).",
+        "privacy": "I agree to the Privacy Policy (privacy-v1).",
+        "health": "I consent to health-related data processing for training safety (health-data-v1)."
+      }
+    },
+    "goals": {
+      "legend": "Training goals",
+      "hint": "Choose one or more goals. Any gender may choose any goal.",
+      "motivation": "Motivation note (optional)",
+      "options": {
+        "strength": "Build strength",
+        "conditioning": "Improve conditioning",
+        "consistency": "Build sustainable consistency",
+        "mobility": "Improve mobility",
+        "body_composition": "Support body composition change"
+      }
+    },
+    "experience": {
+      "legend": "Training experience",
+      "notes": "Current activity notes (optional)",
+      "options": {
+        "BEGINNER": "Beginner",
+        "RETURNING": "Returning after a break",
+        "INTERMEDIATE": "Intermediate",
+        "ADVANCED": "Advanced"
+      }
+    },
+    "availability": {
+      "legend": "Availability and equipment",
+      "weeklyMinutes": "Weekly training minutes",
+      "sessionMinutes": "Typical session length (minutes)",
+      "days": "Available days",
+      "equipment": "Equipment you can use",
+      "day": {
+        "MON": "Monday",
+        "TUE": "Tuesday",
+        "WED": "Wednesday",
+        "THU": "Thursday",
+        "FRI": "Friday",
+        "SAT": "Saturday",
+        "SUN": "Sunday"
+      },
+      "equipmentOptions": {
+        "none": "Bodyweight only",
+        "dumbbells": "Dumbbells",
+        "barbell": "Barbell",
+        "bands": "Resistance bands",
+        "pullup_bar": "Pull-up bar",
+        "machines": "Gym machines"
+      }
+    },
+    "screening": {
+      "legend": "Health screening signals",
+      "disclaimer": "These are member-reported signals for safety routing — not a medical diagnosis. Screening outcomes always override character themes.",
+      "reportsUrgentSymptoms": "I am experiencing urgent symptoms that make exercise unsafe right now",
+      "reportsChestPain": "I experience chest pain related to activity",
+      "reportsFainting": "I have fainted or nearly fainted with exertion",
+      "reportsSevereBreathingDifficulty": "I have severe breathing difficulty with activity",
+      "reportsActiveInjuryAffectingExercise": "I have an active injury that affects exercise",
+      "reportsClinicianRestriction": "A clinician has restricted my exercise",
+      "requiresMovementAdaptations": "I need movement adaptations",
+      "requiresTemporaryPause": "I need a temporary training pause",
+      "outcomeLabel": "Current screening outcome",
+      "outcomes": {
+        "CLEAR": "Clear to proceed with care",
+        "ADAPTATIONS_REQUIRED": "Adaptations required",
+        "SPECIALIST_SUPPORT": "Specialist support recommended",
+        "TEMPORARY_TRAINING_PAUSE": "Temporary training pause"
+      }
+    },
+    "diet": {
+      "legend": "Diet preference",
+      "exclusions": "Ingredient exclusions (comma-separated, optional)",
+      "exclusionsHint": "e.g. peanuts, shellfish",
+      "options": {
+        "VEGETARIAN": "Vegetarian",
+        "EGGETARIAN": "Eggetarian",
+        "NON_VEGETARIAN": "Non-vegetarian",
+        "VEGAN": "Vegan"
+      }
+    },
+    "measurements": {
+      "legend": "Measurements (optional)",
+      "hint": "You may skip. We never invent nutrition values from missing data.",
+      "skip": "Skip measurements for now",
+      "height": "Height (cm)",
+      "weight": "Weight (kg)"
+    },
+    "character": {
+      "legend": "Motivational character theme",
+      "disclaimer": "Your programme stays personalised to your goals, screening, equipment, and recovery. Character selection is a motivational theme only — it cannot override safety limits.",
+      "originalOnly": "Showing ORIGINAL published archetypes. These are product-owned themes, not Dragon Ball licensed assets.",
+      "loading": "Loading characters…",
+      "unavailable": "No character presentations are available in the active content mode.",
+      "packOriginal": "ORIGINAL content pack"
+    },
+    "notifications": {
+      "legend": "Notification preferences",
+      "hint": "Optional. You can change these later.",
+      "push": "Enable push reminders (when delivery is configured)",
+      "email": "Enable email reminders (when delivery is configured)",
+      "simulated": "Preference only — this milestone does not send real push or email."
+    },
+    "planPreview": {
+      "legend": "How planning works",
+      "body": "Later milestones will generate training and nutrition from your profile, screening, and availability. Rest and sustainable consistency count as progress.",
+      "noFakeStats": "No workout or meal statistics are shown here — we do not invent member data or body-transformation predictions.",
+      "acknowledge": "I understand programmes are personalised and character theme does not change safety rules"
+    },
+    "confirm": {
+      "legend": "Confirm and finish",
+      "body": "Review that required setup is saved, then finish onboarding.",
+      "screening": "Screening",
+      "diet": "Diet preference",
+      "character": "Character theme",
+      "saved": "Saved",
+      "pending": "Not saved yet",
+      "noStats": "No fabricated workout or meal stats will appear after you continue.",
+      "acknowledge": "I confirm my answers and want to complete onboarding"
+    }
+  },
+  "admin": {
+    "title": "Administration",
+    "subtitle": "Protected admin shell",
+    "body": "Content management, programme review, and operations tools arrive in later milestones. This shell confirms ADMIN access only.",
+    "signedInAs": "Signed in as",
+    "backToApp": "Back to Today",
+    "deniedTitle": "Access denied",
+    "deniedBody": "This area requires the ADMIN role. Member accounts cannot enter administration."
+  },
+  "progress": {
+    "title": "Progress",
+    "subtitle": "Earned activity points from sustainable actions. This is a game ledger — not a health score.",
+    "loading": "Loading your progress…",
+    "retry": "Try again",
+    "disclaimer": "Game level is cosmetic progression only. It is not a health outcome, body transformation, or medical prediction.",
+    "summary": {
+      "title": "XP summary",
+      "totalXp": "Total XP",
+      "gameLevel": "Game level",
+      "towardNext": "Toward next level",
+      "towardNextValue": "{current} / {perLevel} XP",
+      "today": "Today",
+      "todayValue": "{total} / {max} XP on {date}",
+      "policy": "XP policy",
+      "categoriesTitle": "Today by category"
+    },
+    "categories": {
+      "MAIN_MISSION": "Main mission",
+      "MEAL_REFLECTION": "Meal reflection",
+      "RECOVERY_CHECK_IN": "Recovery check-in",
+      "WELLBEING_HABIT": "Wellbeing habit"
+    },
+    "events": {
+      "WORKOUT_COMPLETE": "Workout completed",
+      "REST_MISSION": "Rest mission",
+      "CONSISTENCY_CHECK_IN": "Consistency check-in",
+      "MEAL_REFLECTION": "Meal reflection",
+      "RECOVERY_CHECK_IN": "Recovery check-in",
+      "WELLBEING_HABIT": "Wellbeing habit",
+      "COMPENSATING_CORRECTION": "Correction"
+    },
+    "milestones": {
+      "title": "Cosmetic unlocks",
+      "body": "Unlocks change presentation only. Switching character keeps your XP and unlock history.",
+      "atLevel": "at game level {level}"
+    },
+    "ledger": {
+      "title": "XP ledger",
+      "body": "Append-only awards. Retries and duplicate sources do not inflate totals.",
+      "empty": "No XP entries yet. Complete a sustainable main mission (workout or planned rest) to earn points."
+    },
+    "history": {
+      "title": "Recent days",
+      "dayValue": "{xp} XP across {count} entries"
+    }
+  },
+  "auth": {
+    "loading": "Checking session…",
+    "required": "Sign in to continue.",
+    "sessionExpired": "Your session expired. Please sign in again.",
+    "logoutSuccess": "Signed out.",
+    "logoutError": "Could not sign out cleanly. Try again."
+  },
+  "errors": {
+    "generic": "Something went wrong. Please try again.",
+    "network": "Cannot reach the API. Confirm it is running and NEXT_PUBLIC_API_URL is set.",
+    "validation": "Check the highlighted fields and try again.",
+    "conflict": "An account with this email already exists.",
+    "unauthorized": "Email or password is incorrect.",
+    "forbidden": "You do not have permission for this action."
+  },
+  "a11y": {
+    "skipToContent": "Skip to content",
+    "formError": "Form error",
+    "success": "Success"
+  }
+}

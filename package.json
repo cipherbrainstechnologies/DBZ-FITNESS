@@ -1,0 +1,26 @@
+{
+  "name": "saiyan-ascend",
+  "private": true,
+  "version": "0.0.0",
+  "description": "Saiyan Ascend fitness companion monorepo",
+  "packageManager": "pnpm@9.15.9",
+  "engines": {
+    "node": ">=20"
+  },
+  "scripts": {
+    "build": "pnpm -r --filter \"./packages/**\" run build",
+    "lint": "pnpm -r --filter \"./packages/**\" run lint",
+    "test": "pnpm -r --filter \"./packages/**\" run test",
+    "db:generate": "pnpm --filter @saiyan/database generate",
+    "db:migrate": "pnpm --filter @saiyan/database migrate:dev",
+    "db:seed": "pnpm --filter @saiyan/database seed",
+    "docker:up": "docker compose up -d",
+    "api:dev": "pnpm --filter @saiyan/api dev",
+    "web:dev": "pnpm --filter @saiyan/web dev",
+    "worker:dev": "pnpm --filter @saiyan/worker dev",
+    "mobile:dev": "pnpm --filter @saiyan/mobile dev"
+  },
+  "devDependencies": {
+    "typescript": "5.7.3"
+  }
+}
