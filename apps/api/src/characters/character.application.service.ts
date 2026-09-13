@@ -10,10 +10,11 @@ import {
   type ScreeningOutcome,
 } from '@saiyan/domain';
 
+import { esmForwardRef } from '../common/esm-forward-ref.js';
 import type { Env } from '../config/env.js';
 import { ENV } from '../config/tokens.js';
 import { PrismaService } from '../database/prisma.service.js';
-import { OnboardingFacade } from '../onboarding/onboarding.facade.js';
+import type { OnboardingFacade } from '../onboarding/onboarding.facade.js';
 
 export type CharacterPresentationSummary = {
   id: string;
@@ -62,7 +63,15 @@ export class CharacterApplicationService {
   constructor(
     private readonly prisma: PrismaService,
     @Inject(ENV) private readonly env: Env,
-    @Inject(forwardRef(() => OnboardingFacade))
+    @Inject(
+      forwardRef(
+        esmForwardRef<OnboardingFacade>(
+          import.meta.url,
+          '../onboarding/onboarding.facade.js',
+          'OnboardingFacade',
+        ),
+      ),
+    )
     private readonly onboarding: OnboardingFacade,
   ) {}
 

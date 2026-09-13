@@ -33,6 +33,7 @@ Milestone 11 release scaffolding remains in-repo and **NOT DEPLOYED**.
 - Added root **pnpm overrides** for transitive deps used by Railway services: `lodash@^4.18.1`, `multer@^2.3.0`, `postcss@^8.5.23`, `uuid@^11.1.1`, `decode-uri-component@^0.5.0`.
 - `pnpm audit`: **56 → 2** findings (remaining 2 high are `image-size` via Expo/mobile only — no upstream patch published; not included in API/web/worker Docker images).
 - Fixed API Docker image build: include and compile `packages/providers` (`@saiyan/providers` is required by coaching module).
+- Fixed API runtime ESM circular dependency (`OnboardingFacade` ↔ `CharacterFacade`) via lazy `esmForwardRef()` — resolves Railway crash `Cannot access 'OnboardingApplicationService' before initialization`.
 - Verified: `@saiyan/api`, `@saiyan/web`, `@saiyan/worker` production builds; API Docker build context simulation PASS; domain (63) + providers (3) tests PASS.
 
 ### Milestone 1–7 (prior)

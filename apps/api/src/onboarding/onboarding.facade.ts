@@ -1,11 +1,12 @@
 import { Inject, Injectable, forwardRef } from '@nestjs/common';
 import type { SaveOnboardingStep } from '@saiyan/contracts';
 
-import {
+import { esmForwardRef } from '../common/esm-forward-ref.js';
+import type {
   OnboardingApplicationService,
-  type DietPreferenceSummary,
-  type OnboardingProgressView,
-  type ScreeningSummary,
+  DietPreferenceSummary,
+  OnboardingProgressView,
+  ScreeningSummary,
 } from './onboarding.application.service.js';
 
 export type { DietPreferenceSummary };
@@ -17,7 +18,15 @@ export type { DietPreferenceSummary };
 @Injectable()
 export class OnboardingFacade {
   constructor(
-    @Inject(forwardRef(() => OnboardingApplicationService))
+    @Inject(
+      forwardRef(
+        esmForwardRef<OnboardingApplicationService>(
+          import.meta.url,
+          './onboarding.application.service.js',
+          'OnboardingApplicationService',
+        ),
+      ),
+    )
     private readonly onboarding: OnboardingApplicationService,
   ) {}
 
