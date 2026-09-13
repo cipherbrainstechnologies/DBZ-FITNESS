@@ -1,10 +1,11 @@
 import { Inject, Injectable, forwardRef } from '@nestjs/common';
 
-import {
+import { esmForwardRef } from '../common/esm-forward-ref.js';
+import type {
   CharacterApplicationService,
-  type CharacterArchetypeSummary,
-  type CharacterSelectionView,
-  type ListCharactersResult,
+  CharacterArchetypeSummary,
+  CharacterSelectionView,
+  ListCharactersResult,
 } from './character.application.service.js';
 
 /**
@@ -14,7 +15,15 @@ import {
 @Injectable()
 export class CharacterFacade {
   constructor(
-    @Inject(forwardRef(() => CharacterApplicationService))
+    @Inject(
+      forwardRef(
+        esmForwardRef<CharacterApplicationService>(
+          import.meta.url,
+          './character.application.service.js',
+          'CharacterApplicationService',
+        ),
+      ),
+    )
     private readonly characters: CharacterApplicationService,
   ) {}
 
