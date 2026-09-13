@@ -10,6 +10,7 @@ watchPatterns = [
   "packages/contracts/**",
   "packages/domain/**",
   "packages/database/**",
+  "packages/providers/**",
   "pnpm-lock.yaml",
   "package.json",
 ]

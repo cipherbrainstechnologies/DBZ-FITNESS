@@ -32,7 +32,8 @@ Milestone 11 release scaffolding remains in-repo and **NOT DEPLOYED**.
 - Upgraded **next-intl** `4.1.0` → `4.14.4` (open-redirect + prototype-pollution fixes).
 - Added root **pnpm overrides** for transitive deps used by Railway services: `lodash@^4.18.1`, `multer@^2.3.0`, `postcss@^8.5.23`, `uuid@^11.1.1`, `decode-uri-component@^0.5.0`.
 - `pnpm audit`: **56 → 2** findings (remaining 2 high are `image-size` via Expo/mobile only — no upstream patch published; not included in API/web/worker Docker images).
-- Verified: `@saiyan/api`, `@saiyan/web`, `@saiyan/worker` production builds; domain (63) + providers (3) tests PASS.
+- Fixed API Docker image build: include and compile `packages/providers` (`@saiyan/providers` is required by coaching module).
+- Verified: `@saiyan/api`, `@saiyan/web`, `@saiyan/worker` production builds; API Docker build context simulation PASS; domain (63) + providers (3) tests PASS.
 
 ### Milestone 1–7 (prior)
 

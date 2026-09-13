@@ -20,17 +20,20 @@ COPY apps/api/package.json apps/api/
 COPY packages/contracts/package.json packages/contracts/
 COPY packages/domain/package.json packages/domain/
 COPY packages/database/package.json packages/database/
+COPY packages/providers/package.json packages/providers/
 RUN pnpm install --frozen-lockfile --filter @saiyan/api...
 
 FROM deps AS build
 COPY packages/contracts packages/contracts
 COPY packages/domain packages/domain
 COPY packages/database packages/database
+COPY packages/providers packages/providers
 COPY apps/api apps/api
 RUN pnpm --filter @saiyan/database generate \
   && pnpm --filter @saiyan/contracts build \
   && pnpm --filter @saiyan/domain build \
   && pnpm --filter @saiyan/database build \
+  && pnpm --filter @saiyan/providers build \
   && pnpm --filter @saiyan/api build
 
 FROM base AS runner
