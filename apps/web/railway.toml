@@ -14,7 +14,7 @@ watchPatterns = [
 ]
 
 [deploy]
-startCommand = "pnpm exec next start --hostname 0.0.0.0 --port $PORT"
+startCommand = "node scripts/start-prod.mjs"
 healthcheckPath = "/health"
 healthcheckTimeout = 30
 restartPolicyType = "ON_FAILURE"
