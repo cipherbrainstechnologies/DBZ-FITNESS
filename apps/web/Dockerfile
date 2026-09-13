@@ -50,5 +50,5 @@ COPY --from=build --chown=saiyan:saiyan /app/packages ./packages
 USER saiyan
 EXPOSE 3000
 WORKDIR /app/apps/web
-# Bind to Railway-supplied PORT on all interfaces.
-CMD ["sh", "-c", "pnpm exec next start --hostname 0.0.0.0 --port ${PORT:-3000}"]
+# Run Next without pnpm/corepack at runtime (non-root user cannot write ~/.cache).
+CMD ["node", "scripts/start-prod.mjs"]
