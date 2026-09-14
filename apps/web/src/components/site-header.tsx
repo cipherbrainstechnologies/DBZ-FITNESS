@@ -24,6 +24,7 @@ export function SiteHeader({ variant = 'marketing' }: SiteHeaderProps) {
         <LocaleSwitcher />
         {variant === 'marketing' && status !== 'authenticated' && (
           <>
+            <Link href="/about">{t('about.title')}</Link>
             <Link href="/login">{t('nav.login')}</Link>
             <Link href="/register" className="btn btn-primary">
               {t('nav.register')}
@@ -36,6 +37,7 @@ export function SiteHeader({ variant = 'marketing' }: SiteHeaderProps) {
             <Link href="/app/train">{t('nav.train')}</Link>
             <Link href="/app/fuel">{t('nav.fuel')}</Link>
             <Link href="/app/progress">{t('nav.progress')}</Link>
+            <Link href="/app/profile">{t('nav.profile')}</Link>
             {user.roles.includes('ADMIN') && (
               <Link href="/admin">{t('nav.admin')}</Link>
             )}

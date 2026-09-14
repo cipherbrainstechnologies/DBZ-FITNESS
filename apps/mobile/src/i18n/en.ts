@@ -61,7 +61,8 @@ export const en = {
   onboardingAvailability: 'Default plan: about 150 minutes a week, 45-minute sessions, bodyweight equipment.',
   onboardingScreening: 'No urgent symptoms reported in this quick start. You can update screening later. This is not a diagnosis.',
   onboardingDiet: 'Default diet pattern is non-vegetarian. Change it later in Fuel if needed.',
-  onboardingCharacter: 'Choose a motivational theme. Original portraits — not official Dragon Ball Z images.',
+  onboardingCharacter:
+    'Pick the character who will guide your workouts, meals, and daily progress. You can change your coach later. Original portraits — not official Dragon Ball Z images.',
   originalArtNote: 'Training emphasis labels are product interpretations, not a franchise licence.',
   inspiredByPrefix: 'Training emphasis inspired by',
   onboardingConfirm: 'Finish setup to reach Today. Rest and consistency count as progress.',

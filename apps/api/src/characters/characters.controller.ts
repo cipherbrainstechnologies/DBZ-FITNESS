@@ -1,4 +1,11 @@
-import { Body, Controller, Get, Post, UseGuards } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  ForbiddenException,
+  Get,
+  Post,
+  UseGuards,
+} from '@nestjs/common';
 import {
   SelectCharacterRequestSchema,
   type SelectCharacterRequest,
@@ -21,6 +28,18 @@ export class CharactersController {
     return { selection };
   }
 
+  @Get('admin/content-readiness')
+  async contentReadiness(@CurrentUser() user: AuthenticatedUser) {
+    if (!user.roles.includes('ADMIN') && !user.roles.includes('CONTENT_EDITOR')) {
+      throw new ForbiddenException({
+        code: 'FORBIDDEN',
+        message: 'Admin or content editor role required',
+        retryable: false,
+      });
+    }
+    return this.characters.getContentReadiness();
+  }
+
   @Get()
   async listCharacters() {
     return this.characters.listAvailablePresentations();
@@ -35,6 +54,7 @@ export class CharactersController {
     const selection = await this.characters.selectPresentation(
       user.id,
       body.presentationId,
+      body.coachingTone,
     );
     return { selection };
   }

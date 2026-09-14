@@ -16,6 +16,7 @@
     "fuel": "Nutrition",
     "progress": "Progrès",
     "admin": "Admin",
+    "profile": "Mon coach",
     "home": "Accueil"
   },
   "locale": {
@@ -26,7 +27,7 @@
   },
   "home": {
     "headline": "Votre arène d'entraînement commence ici",
-    "supporting": "Créez un compte, choisissez un thème motivationnel et entraînez-vous avec un plan qui respecte votre temps, votre matériel et votre récupération.",
+    "supporting": "Créez un compte, choisissez votre coach personnel et entraînez-vous avec un plan qui respecte votre temps, votre matériel et votre récupération.",
     "ctaLogin": "Connexion",
     "ctaRegister": "Créer un compte"
   },
@@ -64,7 +65,12 @@
     "timezone": "Fuseau horaire",
     "noStats": "Aucune statistique inventée n'est affichée — seulement les séances planifiées et les séries réellement enregistrées. L'apport nutritionnel n'apparaît qu'à partir des journaux de repas.",
     "character": {
-      "title": "Thème du jour"
+      "title": "Votre coach",
+      "loading": "Chargement de votre coach…",
+      "myCoach": "Mon coach",
+      "askCoach": "Parler au coach",
+      "send": "Envoyer",
+      "sending": "Envoi…"
     },
     "openAdmin": "Ouvrir l'admin",
     "training": {
@@ -259,7 +265,7 @@
       "SOME_EXERCISES_EXCLUDED_FOR_EQUIPMENT": "Certains exercices ont été exclus en raison de l'équipement disponible.",
       "SOME_EXERCISES_EXCLUDED_FOR_SCREENING": "Certains exercices ont été exclus en raison des restrictions de dépistage.",
       "CHARACTER_EMPHASIS_BIAS_ONLY": "Le thème de personnage peut seulement biaiser le classement des préférences.",
-      "CHARACTER_CANNOT_OVERRIDE_CONSTRAINTS": "Le thème de personnage ne peut pas outrepasser sécurité, récupération ou équipement.",
+      "CHARACTER_CANNOT_OVERRIDE_CONSTRAINTS": "Votre coach ne peut pas outrepasser la sécurité, la récupération ou l’équipement.",
       "BUSY_DAY_SHORTEN_APPLIED": "Le raccourcissement jour chargé a été appliqué.",
       "BUSY_DAY_NO_SHORTEN_NEEDED": "Aucun raccourcissement n'était nécessaire pour la durée cible.",
       "BUSY_DAY_DROPPED_OPTIONAL": "Les exercices optionnels ont été retirés pour un jour chargé.",
@@ -427,14 +433,14 @@
       "weight": "Poids (kg)"
     },
     "character": {
-      "legend": "Thème de personnage motivationnel",
-      "disclaimer": "Votre programme reste personnalisé selon vos objectifs, dépistage, équipement et récupération. Le personnage est un thème motivationnel uniquement — il ne peut pas outrepasser les limites de sécurité.",
-      "originalOnly": "Portraits originaux du produit et interprétations d’emphase d’entraînement. Ce ne sont pas des images officielles Dragon Ball Z, et aucune licence n’est revendiquée.",
-      "inspiredBy": "Emphase d’entraînement inspirée de {name}",
+      "legend": "Votre coach personnel",
+      "disclaimer": "Votre programme reste personnalisé selon vos objectifs, dépistage, équipement et récupération. Le coach explique ces règles — il ne peut pas outrepasser les limites de sécurité.",
+      "originalOnly": "Langage d’entraînement original et portraits du produit. Pas d’images officielles Dragon Ball Z ni de citations authentiques.",
+      "inspiredBy": "{name}",
       "originalArt": "Illustration originale — pas des images officielles Dragon Ball Z",
-      "loading": "Chargement des personnages…",
-      "unavailable": "Aucune présentation de personnage disponible dans le mode de contenu actif.",
-      "packOriginal": "Pack de contenu ORIGINAL"
+      "loading": "Chargement des coaches…",
+      "unavailable": "Impossible de charger vos coaches. Réessayez.",
+      "packOriginal": "Coach personnel"
     },
     "notifications": {
       "legend": "Préférences de notification",
@@ -447,14 +453,14 @@
       "legend": "Comment fonctionne la planification",
       "body": "Les jalons suivants généreront entraînement et nutrition à partir de votre profil, dépistage et disponibilité. Le repos et la constance durable comptent comme progression.",
       "noFakeStats": "Aucune statistique d'entraînement ou de repas ici — nous n'inventons pas de données membre ni de prédictions de transformation corporelle.",
-      "acknowledge": "Je comprends que les programmes sont personnalisés et que le thème de personnage ne change pas les règles de sécurité"
+      "acknowledge": "Je comprends que les programmes sont personnalisés et que mon coach ne change pas les règles de sécurité"
     },
     "confirm": {
       "legend": "Confirmer et terminer",
       "body": "Vérifiez que la configuration requise est enregistrée, puis terminez l'onboarding.",
       "screening": "Dépistage",
       "diet": "Préférence alimentaire",
-      "character": "Thème de personnage",
+      "character": "Coach personnel",
       "saved": "Enregistré",
       "pending": "Pas encore enregistré",
       "noStats": "Aucune statistique d'entraînement ou de repas inventée n'apparaîtra après la suite.",
@@ -468,7 +474,53 @@
     "signedInAs": "Connecté en tant que",
     "backToApp": "Retour à Aujourd'hui",
     "deniedTitle": "Accès refusé",
-    "deniedBody": "Cette zone nécessite le rôle ADMIN. Les comptes membre ne peuvent pas y entrer."
+    "deniedBody": "Cette zone nécessite le rôle ADMIN. Les comptes membre ne peuvent pas y entrer.",
+    "contentReadiness": "Disponibilité du catalogue",
+    "mode": "Mode de contenu actif",
+    "locale": "Locale",
+    "pack": "Clé du pack",
+    "publishedCoaches": "Coaches publiés",
+    "diagnostic": "Code diagnostic",
+    "repair": "Action de réparation",
+    "missing": "Introuvable",
+    "none": "Aucun",
+    "loadingReadiness": "Chargement des diagnostics…"
+  },
+  "coach": {
+    "title": "Choisissez votre coach personnel",
+    "supporting": "Choisissez le personnage qui guidera vos séances, repas et progrès. Vous pourrez changer plus tard.",
+    "start": "Commencer l'entraînement",
+    "startWith": "Commencer l'entraînement avec {name}",
+    "saving": "Enregistrement du coach…",
+    "loading": "Chargement des coaches…",
+    "retry": "Réessayer",
+    "catalogueError": "Impossible de charger vos coaches. Réessayez.",
+    "saveError": "Impossible d’enregistrer votre coach. Votre choix est conservé — réessayez.",
+    "chooseToContinue": "Choisissez un coach pour continuer.",
+    "replacementRequired": "Ce coach n’est plus disponible. Choisissez un remplacement. Votre historique est conservé.",
+    "samplePreview": "Exemple de salutation (aperçu, pas votre historique)",
+    "toneLegend": "Ton d’encouragement",
+    "tones": {
+      "GENTLE": "Doux",
+      "BALANCED": "Équilibré",
+      "DIRECT": "Direct"
+    },
+    "aiDisclosure": "Ceci est un coach IA présenté via un persona. Ce n’est ni un humain, ni le personnage fictif, ni un service officiel de la franchise."
+  },
+  "profile": {
+    "coachTitle": "Mon coach",
+    "chooseCoach": "Choisir votre coach",
+    "changeCoach": "Changer de coach",
+    "historyKept": "Changer de coach met à jour les messages futurs. Séances, repas, XP et plan actuel restent inchangés.",
+    "memoryTitle": "Notes de coaching",
+    "memoryEmpty": "Aucune note enregistrée.",
+    "deleteMemory": "Supprimer"
+  },
+  "about": {
+    "title": "À propos de Saiyan Ascend",
+    "ai": "Les messages de coaching viennent de l’adaptateur IA s’il est configuré, sinon d’un repli déterministe. Langage original du produit — pas de citations authentiques, pas un entraîneur humain.",
+    "health": "Dépistage, récupération, équipement, temps et restrictions alimentaires restent autoritaires. Le personnage choisi les explique ; il ne peut pas les outrepasser.",
+    "content": "Les portraits sont des illustrations originales. Aucune licence de franchise n’est revendiquée."
   },
   "progress": {
     "title": "Progrès",

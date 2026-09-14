@@ -2,31 +2,29 @@
 
 ## Character catalogue
 
-The following training emphases are product interpretations, not claims
-about canonical workout programmes.
+The member chooses a first-party personal coach presented through these
+character identities. These are original product interpretations, not
+canonical dialogue, official stills, or a franchise service.
 
-| Inspiration | Product emphasis | Coaching tone |
+| Coach | Product emphasis | Coaching voice |
 | --- | --- | --- |
-| Goku | Balanced strength and conditioning | Optimistic and curious |
-| Vegeta | Structured strength and discipline | Direct and focused |
-| Gohan | Sustainable strength around work and family | Calm and encouraging |
-| Future Trunks | Athletic conditioning and adaptability | Practical and determined |
-| Broly | Controlled strength and muscle development | Powerful and composed |
+| Goku | Balanced strength and conditioning | Upbeat, curious, enthusiastic about achievable improvement |
+| Vegeta | Structured strength and discipline | Concise, disciplined, direct, focused on controlled progress |
+| Gohan | Sustainable strength around work and family | Thoughtful, reassuring, practical |
+| Future Trunks | Athletic conditioning and adaptability | Clear, adaptable, solution-focused when plans change |
+| Broly | Controlled strength and muscle development | Grounded, encouraging controlled effort and composure |
 
-All characters support beginner adaptations.
+All coaches support beginner adaptations.
 Selecting Broly must never automatically select an advanced programme.
+Any gender may choose any available coach.
 
-Support the requested DBZ characters through DBZ_LICENSED content.
-Create corresponding original archetypes for ORIGINAL mode:
+`CONTENT_MODE=ORIGINAL` publishes these named coaches with original
+artwork and original coaching copy. Missing optional media falls back to
+an accessible text card; coaches remain selectable.
 
-- Explorer.
-- Strategist.
-- Scholar.
-- Guardian.
-- Titan.
-
-Original artwork must have its own identity rather than being a renamed
-copy of franchise artwork.
+`DBZ_LICENSED` remains DRAFT/UNAVAILABLE until commercial rights are
+verified (`DEP-M2-001`). Do not force licensed mode to repair ORIGINAL
+catalogue gaps.
 
 ## Inclusive choice
 
@@ -39,12 +37,14 @@ copy of franchise artwork.
 
 ## What character choice changes
 
-- Interface accent.
-- Available licensed artwork.
-- Coaching voice and wording.
-- Preferred content and music tags.
+- Persistent coaching persona (voice, briefing, chat fallback, reminder copy).
+- Display name, portrait or fallback card, and optional media tags.
+- Interface accent when configured.
 - Training-emphasis preference within safe limits.
 - Narrative milestones and cosmetic unlocks.
+
+Character selection does **not** exist only as a portrait or quotation.
+The saved coach must be reused after refresh and across devices.
 
 ## What character choice cannot change
 

@@ -17,13 +17,10 @@ const DEFAULT_APPROVED: CoachApprovedContent = {
   recipeIds: [],
 };
 
-const FALLBACK_MESSAGE =
-  'I can help explain your existing plan, suggest a shorter approved session, or find eligible recipes. I cannot invent nutrition numbers, override screening, or remove allergies.';
-
 function pickTone(context?: CoachMemberContext): string {
-  const tone = context?.tone?.trim();
+  const tone = context?.coachingTone?.trim() || context?.tone?.trim();
   if (tone && tone.length > 0) return tone;
-  return 'calm';
+  return 'BALANCED';
 }
 
 function lower(text: string): string {
@@ -34,6 +31,16 @@ function containsAny(text: string, needles: readonly string[]): boolean {
   const hay = lower(text);
   return needles.some((n) => hay.includes(n));
 }
+
+function personaLine(context: CoachMemberContext | undefined, approved: CoachApprovedContent): string {
+  const named = context?.coachDisplayName
+    ? approved.motivationalLines.find((line) => line.length > 0)
+    : null;
+  return named ?? approved.motivationalLines[0] ?? FALLBACK_MESSAGE;
+}
+
+const FALLBACK_MESSAGE =
+  'I can help explain your existing plan, suggest a shorter approved session, or find eligible recipes. I cannot invent nutrition numbers, override screening, or remove allergies.';
 
 /**
  * Fixture coach — structured safe responses from approved content only.
@@ -125,7 +132,7 @@ export class FixtureCoachProvider implements CoachProvider {
         proposedAction:
           approved.exerciseIds.length > 0
             ? {
-                actionType: 'SELECT_SHORT_SESSION',
+                actionType: 'PREVIEW_SHORTER_SESSION',
                 payload: { reason: 'pain_safe_shorten' },
               }
             : null,
@@ -215,22 +222,53 @@ export class FixtureCoachProvider implements CoachProvider {
     }
 
     // Short session help.
-    if (containsAny(message, ['ten minutes', '10 minutes', 'short session', 'busy day', 'no time'])) {
-      const line =
-        approved.motivationalLines.find((l) => lower(l).includes('time')) ??
-        approved.motivationalLines[0] ??
-        FALLBACK_MESSAGE;
+    if (containsAny(message, ['ten minutes', '10 minutes', 'fifteen minutes', '15 minutes', 'short session', 'busy day', 'no time'])) {
+      const line = personaLine(request.context, approved);
+      const eligible = request.context?.hasEligibleShortSession === true;
+      const plannedSessionId = request.context?.plannedSessionId ?? null;
       return this.safe({
-        messageText: `${line} I can propose a shorter approved session for your confirmation — I will not invent a new programme.`,
+        messageText: eligible
+          ? `${line} I can propose a shorter approved session for your confirmation — I will not invent a new programme.`
+          : `${line} I will not assume a shorter session exists until your plan confirms an eligible option. We can open Train to check, or reschedule.`,
         tone,
         safetyStatus: 'SAFE',
         limitations,
         approved,
-        proposedAction: {
-          actionType: 'SELECT_SHORT_SESSION',
-          payload: { reason: 'busy_day', maxMinutes: 10 },
-        },
+        proposedAction: eligible
+          ? {
+              actionType: 'PREVIEW_SHORTER_SESSION',
+              payload: {
+                reason: 'busy_day',
+                maxMinutes: 15,
+                ...(plannedSessionId ? { plannedSessionId } : {}),
+              },
+            }
+          : {
+              actionType: 'RESCHEDULE_SESSION',
+              payload: { reason: 'busy_day' },
+            },
         referencedExerciseIds: approved.exerciseIds.slice(0, 3),
+      });
+    }
+
+    if (containsAny(message, ['skipped', 'i skipped', 'missed my workout'])) {
+      const line = personaLine(request.context, approved);
+      return this.safe({
+        messageText: `${line} I don't see a workout logged yet — that is not the same as skipping. Start the planned session, or check in.`,
+        tone,
+        safetyStatus: 'SAFE',
+        limitations,
+        approved,
+        proposedAction: request.context?.hasPlannedSession
+          ? {
+              actionType: 'START_WORKOUT',
+              payload: {
+                ...(request.context.plannedSessionId
+                  ? { plannedSessionId: request.context.plannedSessionId }
+                  : {}),
+              },
+            }
+          : { actionType: 'LOG_CHECK_IN', payload: { reason: 'unlogged' } },
       });
     }
 
@@ -254,7 +292,7 @@ export class FixtureCoachProvider implements CoachProvider {
         proposedAction:
           recipeIds.length > 0
             ? {
-                actionType: 'SWAP_MEAL',
+                actionType: 'PREVIEW_MEAL_SWAP',
                 payload: { candidateRecipeIds: recipeIds },
               }
             : null,

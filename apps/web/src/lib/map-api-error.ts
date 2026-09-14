@@ -24,7 +24,7 @@ export function mapApiError(
         fieldErrors: error.fieldErrors,
       };
     }
-    return { message: t('errors.validation') };
+    return { message: error.message || t('errors.generic') };
   }
 
   if (error.status === 401 || error.code === 'UNAUTHORIZED') {

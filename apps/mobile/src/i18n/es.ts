@@ -68,7 +68,7 @@ export const es: Record<MessageKey, string> = {
     'Sin síntomas urgentes en este inicio rápido. Esto no es un diagnóstico.',
   onboardingDiet: 'Patrón por defecto: no vegetariano. Puedes cambiarlo luego en Fuel.',
   onboardingCharacter:
-    'Elige un tema motivacional. Retratos originales — no son imágenes oficiales de Dragon Ball Z.',
+    'Elige el personaje que guiará tus entrenamientos, comidas y progreso diario. Puedes cambiar de coach más tarde. Retratos originales — no son imágenes oficiales de Dragon Ball Z.',
   originalArtNote: 'Las etiquetas de énfasis son interpretaciones del producto, no una licencia.',
   inspiredByPrefix: 'Énfasis de entrenamiento inspirado en',
   onboardingConfirm: 'Termina para llegar a Hoy. El descanso cuenta como progreso.',

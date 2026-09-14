@@ -76,43 +76,52 @@ const ORIGINAL_ARCHETYPES = [
     key: 'explorer',
     emphasis: 'Balanced strength and conditioning',
     tone: 'Optimistic and curious',
-    approvedName: 'Explorer',
-    coachingStyleKey: 'explorer-coach-v1',
+    approvedName: 'Goku',
+    coachingStyleKey: 'goku-coach-v1',
     sortOrder: 1,
   },
   {
     key: 'strategist',
     emphasis: 'Structured strength and discipline',
     tone: 'Direct and focused',
-    approvedName: 'Strategist',
-    coachingStyleKey: 'strategist-coach-v1',
+    approvedName: 'Vegeta',
+    coachingStyleKey: 'vegeta-coach-v1',
     sortOrder: 2,
   },
   {
     key: 'scholar',
     emphasis: 'Sustainable strength around work and family',
     tone: 'Calm and encouraging',
-    approvedName: 'Scholar',
-    coachingStyleKey: 'scholar-coach-v1',
+    approvedName: 'Gohan',
+    coachingStyleKey: 'gohan-coach-v1',
     sortOrder: 3,
   },
   {
     key: 'guardian',
     emphasis: 'Athletic conditioning and adaptability',
     tone: 'Practical and determined',
-    approvedName: 'Guardian',
-    coachingStyleKey: 'guardian-coach-v1',
+    approvedName: 'Future Trunks',
+    coachingStyleKey: 'trunks-coach-v1',
     sortOrder: 4,
   },
   {
     key: 'titan',
     emphasis: 'Controlled strength and muscle development',
     tone: 'Powerful and composed',
-    approvedName: 'Titan',
-    coachingStyleKey: 'titan-coach-v1',
+    approvedName: 'Broly',
+    coachingStyleKey: 'broly-coach-v1',
     sortOrder: 5,
   },
 ] as const;
+
+/** Seed remaps these first-party display names to Goku–Broly; custom admin names are left intact. */
+const LEGACY_ORIGINAL_DISPLAY_NAMES = new Set([
+  'Explorer',
+  'Strategist',
+  'Scholar',
+  'Guardian',
+  'Titan',
+]);
 
 /**
  * Placeholder rows for a future authorised DBZ_LICENSED pack.
@@ -278,24 +287,33 @@ async function upsertArchetypes() {
 }
 
 async function upsertOriginalPack(archetypeIds: Map<string, string>) {
+  const existingPack = await prisma.contentPack.findUnique({
+    where: { key: 'original-en-v1' },
+  });
   const pack = await prisma.contentPack.upsert({
     where: { key: 'original-en-v1' },
     create: {
       key: 'original-en-v1',
-      name: 'Saiyan Ascend Original',
+      name: 'Saiyan Ascend Original Coaches',
       mode: 'ORIGINAL',
       locale: 'en',
       version: 1,
       publicationStatus: 'PUBLISHED',
       supportedTerritories: ['*'],
       rightsGrantIds: [],
-      adminNotes: 'Original product archetypes; no franchise licence required.',
+      adminNotes:
+        'First-party coaching personas (Goku, Vegeta, Gohan, Future Trunks, Broly) with original artwork and original coaching copy. Not an official franchise service. Licensed stills remain gated in the DBZ_LICENSED pack.',
       rightsVerifiedAt: new Date('2026-09-13T00:00:00.000Z'),
     },
     update: {
-      name: 'Saiyan Ascend Original',
-      publicationStatus: 'PUBLISHED',
-      adminNotes: 'Original product archetypes; no franchise licence required.',
+      name: 'Saiyan Ascend Original Coaches',
+      mode: 'ORIGINAL',
+      locale: existingPack?.locale ?? 'en',
+      adminNotes:
+        'First-party coaching personas (Goku, Vegeta, Gohan, Future Trunks, Broly) with original artwork and original coaching copy. Not an official franchise service. Licensed stills remain gated in the DBZ_LICENSED pack.',
+      ...(existingPack?.publicationStatus === 'WITHDRAWN'
+        ? {}
+        : { publicationStatus: 'PUBLISHED' as const }),
     },
   });
 
@@ -304,6 +322,14 @@ async function upsertOriginalPack(archetypeIds: Map<string, string>) {
     if (!archetypeId) {
       throw new Error(`Missing archetype ${archetype.key}`);
     }
+    const existingPresentation = await prisma.characterPresentation.findUnique({
+      where: {
+        archetypeId_contentPackId: {
+          archetypeId,
+          contentPackId: pack.id,
+        },
+      },
+    });
     await prisma.characterPresentation.upsert({
       where: {
         archetypeId_contentPackId: {
@@ -322,12 +348,16 @@ async function upsertOriginalPack(archetypeIds: Map<string, string>) {
         sortOrder: archetype.sortOrder,
       },
       update: {
-        approvedName: archetype.approvedName,
-        artworkKey: `characters/${archetype.key}.png`,
         coachingStyleKey: archetype.coachingStyleKey,
+        artworkKey: existingPresentation?.artworkKey ?? `characters/${archetype.key}.png`,
         milestoneDefinitions: COSMETIC_MILESTONE_DEFINITIONS,
-        publicationStatus: 'PUBLISHED',
         sortOrder: archetype.sortOrder,
+        ...(!existingPresentation ||
+        LEGACY_ORIGINAL_DISPLAY_NAMES.has(existingPresentation.approvedName) ||
+        existingPresentation.approvedName === archetype.approvedName
+          ? { approvedName: archetype.approvedName }
+          : {}),
+        // Do not republish presentations an administrator withdrew.
       },
     });
   }

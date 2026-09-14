@@ -4,9 +4,15 @@
  */
 
 export const COACH_ACTION_TYPES = [
-  'RESCHEDULE_SESSION',
+  'START_WORKOUT',
+  'PREVIEW_SHORTER_SESSION',
   'SELECT_SHORT_SESSION',
+  'RESCHEDULE_SESSION',
+  'PREVIEW_MEAL_SWAP',
   'SWAP_MEAL',
+  'LOG_CHECK_IN',
+  'REVIEW_WEEK',
+  'PROPOSE_FUTURE_PLAN_ADJUSTMENT',
   'UPDATE_NEXT_WEEK_AVAILABILITY',
 ] as const;
 
@@ -29,6 +35,13 @@ export type CoachMemberContext = {
   allergies?: readonly string[];
   dietaryPattern?: string | null;
   tone?: string | null;
+  personaKey?: string | null;
+  coachDisplayName?: string | null;
+  coachingTone?: string | null;
+  hasEligibleShortSession?: boolean;
+  hasPlannedSession?: boolean;
+  hasEligibleMealSwap?: boolean;
+  plannedSessionId?: string | null;
 };
 
 export type CoachMessageRequest = {

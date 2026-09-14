@@ -71,6 +71,7 @@ model User {
   dietPreferences    DietPreference[]
   characterSelection CharacterSelection?
   onboardingProgress OnboardingProgress?
+  coachingMemoryEntries CoachingMemoryEntry[]
   trainingPlans      TrainingPlan[]
   planPreviews       TrainingPlanPreview[]
   plannedSessions    PlannedSession[]
@@ -272,6 +273,9 @@ model CharacterSelection {
   id             String   @id @default(uuid()) @db.Uuid
   userId         String   @unique @db.Uuid
   presentationId String   @db.Uuid
+  personaVersion Int      @default(1)
+  /// GENTLE | BALANCED | DIRECT — independent of character identity.
+  coachingTone   String?
   selectedAt     DateTime @default(now())
   createdAt      DateTime @default(now())
   updatedAt      DateTime @updatedAt
@@ -280,6 +284,23 @@ model CharacterSelection {
   presentation CharacterPresentation @relation(fields: [presentationId], references: [id], onDelete: Restrict)
 
   @@index([presentationId])
+}
+
+/// Member-editable coaching notes. Never store full screening answers or photos.
+model CoachingMemoryEntry {
+  id         String   @id @default(uuid()) @db.Uuid
+  userId     String   @db.Uuid
+  key        String
+  valueText  String
+  sourceRef  String?
+  occurredAt DateTime @default(now())
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, key])
+  @@index([userId, occurredAt])
 }
 
 /// Resumable onboarding cursor. completedSteps is a JSON string array.

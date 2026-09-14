@@ -8,6 +8,7 @@ import { CurrentUser } from '../common/decorators/current-user.decorator.js';
 import { ZodValidationPipe } from '../common/pipes/zod-validation.pipe.js';
 import type { AuthenticatedUser } from '../identity/auth.types.js';
 import { JwtAuthGuard } from '../identity/jwt-auth.guard.js';
+import { journeyFromProgress } from './onboarding.application.service.js';
 import { OnboardingFacade } from './onboarding.facade.js';
 
 @Controller('onboarding')
@@ -18,7 +19,13 @@ export class OnboardingController {
   @Get()
   async getOnboarding(@CurrentUser() user: AuthenticatedUser) {
     const progress = await this.onboarding.getProgress(user.id);
-    return { progress };
+    return { progress, journey: journeyFromProgress(progress) };
+  }
+
+  @Get('journey')
+  async getJourney(@CurrentUser() user: AuthenticatedUser) {
+    const journey = await this.onboarding.getJourney(user.id);
+    return { journey };
   }
 
   @Put()
@@ -27,12 +34,12 @@ export class OnboardingController {
     @Body(new ZodValidationPipe(SaveOnboardingStepSchema)) body: SaveOnboardingStep,
   ) {
     const progress = await this.onboarding.saveStep(user.id, body);
-    return { progress };
+    return { progress, journey: journeyFromProgress(progress) };
   }
 
   @Post('complete')
   async completeOnboarding(@CurrentUser() user: AuthenticatedUser) {
     const progress = await this.onboarding.complete(user.id);
-    return { progress, completed: true as const };
+    return { progress, journey: journeyFromProgress(progress), completed: true as const };
   }
 }

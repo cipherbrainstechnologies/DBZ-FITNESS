@@ -44,10 +44,10 @@ export function LoginForm() {
     setPending(true);
     try {
       await login(parsed.data);
-      let next: '/app' | '/app/onboarding' = '/app';
+      let next = '/app/onboarding';
       try {
-        const { progress } = await api.getOnboarding();
-        next = progress.completedAt ? '/app' : '/app/onboarding';
+        const { journey } = await api.getOnboarding();
+        next = journey.path;
       } catch (afterAuth) {
         if (afterAuth instanceof ApiClientError && afterAuth.status === 401) {
           setError(t('errors.sessionCookie'));

@@ -5,6 +5,7 @@ import { esmForwardRef } from '../common/esm-forward-ref.js';
 import type {
   OnboardingApplicationService,
   DietPreferenceSummary,
+  MemberJourneyView,
   OnboardingProgressView,
   ScreeningSummary,
 } from './onboarding.application.service.js';
@@ -32,6 +33,10 @@ export class OnboardingFacade {
 
   getProgress(userId: string): Promise<OnboardingProgressView> {
     return this.onboarding.getProgress(userId);
+  }
+
+  getJourney(userId: string): Promise<MemberJourneyView> {
+    return this.onboarding.getJourney(userId);
   }
 
   saveStep(userId: string, body: SaveOnboardingStep): Promise<OnboardingProgressView> {

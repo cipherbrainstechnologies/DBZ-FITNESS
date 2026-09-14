@@ -5,6 +5,7 @@ import type {
   CharacterApplicationService,
   CharacterArchetypeSummary,
   CharacterSelectionView,
+  ContentReadinessView,
   ListCharactersResult,
 } from './character.application.service.js';
 
@@ -31,6 +32,10 @@ export class CharacterFacade {
     return this.characters.listAvailablePresentations();
   }
 
+  getContentReadiness(): Promise<ContentReadinessView> {
+    return this.characters.getContentReadiness();
+  }
+
   getSelection(userId: string): Promise<CharacterSelectionView | null> {
     return this.characters.getSelection(userId);
   }
@@ -38,8 +43,9 @@ export class CharacterFacade {
   selectPresentation(
     userId: string,
     presentationId: string,
+    coachingTone?: string,
   ): Promise<CharacterSelectionView> {
-    return this.characters.selectPresentation(userId, presentationId);
+    return this.characters.selectPresentation(userId, presentationId, coachingTone);
   }
 
   getArchetypeSummary(archetypeId: string): Promise<CharacterArchetypeSummary | null> {

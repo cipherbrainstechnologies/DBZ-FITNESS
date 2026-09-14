@@ -5,13 +5,13 @@
 
 export const ONBOARDING_STEPS = [
   'WELCOME',
+  'CHARACTER',
   'GOALS',
   'EXPERIENCE',
   'AVAILABILITY',
   'SCREENING',
   'DIET',
   'MEASUREMENTS',
-  'CHARACTER',
   'NOTIFICATIONS',
   'PLAN_PREVIEW',
   'CONFIRM',
@@ -89,12 +89,12 @@ export function withStepCompleted(
 /** Required steps before POST /onboarding/complete. */
 export const ONBOARDING_REQUIRED_BEFORE_COMPLETE: readonly OnboardingStep[] = [
   'WELCOME',
+  'CHARACTER',
   'GOALS',
   'EXPERIENCE',
   'AVAILABILITY',
   'SCREENING',
   'DIET',
-  'CHARACTER',
   'CONFIRM',
 ];
 

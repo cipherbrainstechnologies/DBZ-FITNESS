@@ -4,13 +4,13 @@ import type {
   PostCoachMessageRequest,
   PostCoachMessageResponse,
   RejectCoachActionResponse,
+  UpsertCoachMemoryRequest,
 } from '@saiyan/contracts';
 
 import { CoachingApplicationService } from './coaching.application.service.js';
 
 /**
- * Cross-module façade for AI coach conversations and action proposals.
- * Training/Nutrition plan mutations are not owned here.
+ * Cross-module façade for AI coach conversations, briefings, and action proposals.
  */
 @Injectable()
 export class CoachingFacade {
@@ -36,5 +36,25 @@ export class CoachingFacade {
     proposalId: string,
   ): Promise<RejectCoachActionResponse> {
     return this.coaching.rejectProposal(userId, proposalId);
+  }
+
+  getContext(userId: string, timeZone: string) {
+    return this.coaching.getContext(userId, timeZone);
+  }
+
+  getBriefing(userId: string, timeZone: string) {
+    return this.coaching.getBriefing(userId, timeZone);
+  }
+
+  listMemory(userId: string) {
+    return this.coaching.listMemory(userId);
+  }
+
+  upsertMemory(userId: string, body: UpsertCoachMemoryRequest) {
+    return this.coaching.upsertMemory(userId, body);
+  }
+
+  deleteMemory(userId: string, id: string) {
+    return this.coaching.deleteMemory(userId, id);
   }
 }

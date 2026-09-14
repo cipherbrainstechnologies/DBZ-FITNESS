@@ -11,20 +11,22 @@ import {
   ONBOARDING_FIRST_STEP,
   canSaveOnboardingStep,
   evaluateAdultAgeGate,
+  evaluateSavedCoachValidity,
   isOnboardingComplete,
   isOnboardingStep,
   missingStepsForComplete,
   nextIncompleteStep,
   parseCompletedSteps,
+  pathForAuthenticatedJourney,
+  resolveAuthenticatedMemberJourney,
   resolveScreeningOutcome,
   withStepCompleted,
+  type AuthenticatedJourneyDestination,
   type OnboardingStep,
   type ScreeningOutcome,
 } from '@saiyan/domain';
 
 import { esmForwardRef } from '../common/esm-forward-ref.js';
-import type { Env } from '../config/env.js';
-import { ENV } from '../config/tokens.js';
 import type { CharacterFacade } from '../characters/character.facade.js';
 import { PrismaService } from '../database/prisma.service.js';
 import { ProfileFacade } from '../profiles/profile.facade.js';
@@ -60,7 +62,20 @@ export type OnboardingProgressView = {
   screeningRecordId: string | null;
   hasDietPreference: boolean;
   hasCharacterSelection: boolean;
-  contentMode: 'ORIGINAL' | 'DBZ_LICENSED';
+  welcomeComplete: boolean;
+  onboardingComplete: boolean;
+  hasValidCoachSelection: boolean;
+  coachReplacementRequired: boolean;
+};
+
+export type MemberJourneyView = {
+  destination: AuthenticatedJourneyDestination;
+  path: '/app/coach' | '/app/onboarding' | '/app';
+  nextOnboardingStep: OnboardingStep | null;
+  welcomeComplete: boolean;
+  hasValidCoachSelection: boolean;
+  coachReplacementRequired: boolean;
+  onboardingComplete: boolean;
 };
 
 /**
@@ -82,12 +97,16 @@ export class OnboardingApplicationService {
       ),
     )
     private readonly characters: CharacterFacade,
-    @Inject(ENV) private readonly env: Env,
   ) {}
 
   async getProgress(userId: string): Promise<OnboardingProgressView> {
     const progress = await this.ensureProgress(userId);
     return this.toView(userId, progress);
+  }
+
+  async getJourney(userId: string): Promise<MemberJourneyView> {
+    const progress = await this.getProgress(userId);
+    return journeyFromProgress(progress);
   }
 
   async getLatestScreeningSummary(userId: string): Promise<ScreeningSummary | null> {
@@ -374,7 +393,11 @@ export class OnboardingApplicationService {
         return;
       }
       case 'CHARACTER': {
-        await this.characters.selectPresentation(userId, body.payload.presentationId);
+        await this.characters.selectPresentation(
+          userId,
+          body.payload.presentationId,
+          body.payload.coachingTone,
+        );
         return;
       }
       case 'NOTIFICATIONS':
@@ -419,9 +442,10 @@ export class OnboardingApplicationService {
     },
   ): Promise<OnboardingProgressView> {
     const completedSteps = parseCompletedSteps(progress.completedSteps);
-    const currentStep: OnboardingStep = isOnboardingStep(progress.currentStep)
-      ? progress.currentStep
-      : (nextIncompleteStep(completedSteps) ?? ONBOARDING_FIRST_STEP);
+    const next = nextIncompleteStep(completedSteps);
+    const currentStep: OnboardingStep = progress.completedAt
+      ? 'CONFIRM'
+      : (next ?? (isOnboardingStep(progress.currentStep) ? progress.currentStep : ONBOARDING_FIRST_STEP));
 
     const [screening, diet, selection] = await Promise.all([
       this.getLatestScreeningSummary(userId),
@@ -432,6 +456,15 @@ export class OnboardingApplicationService {
       }),
       this.characters.getSelection(userId),
     ]);
+
+    const validity = evaluateSavedCoachValidity({
+      hasSelection: Boolean(selection),
+      publicationStatus: selection?.presentation.publicationStatus,
+    });
+    const welcomeComplete =
+      completedSteps.includes('WELCOME') || Boolean(progress.completedAt);
+    const onboardingComplete =
+      Boolean(progress.completedAt) && isOnboardingComplete(completedSteps);
 
     return {
       userId,
@@ -444,7 +477,10 @@ export class OnboardingApplicationService {
       screeningRecordId: screening?.id ?? null,
       hasDietPreference: Boolean(diet),
       hasCharacterSelection: Boolean(selection),
-      contentMode: this.env.CONTENT_MODE,
+      welcomeComplete,
+      onboardingComplete,
+      hasValidCoachSelection: validity.hasValidCoachSelection,
+      coachReplacementRequired: validity.coachReplacementRequired,
     };
   }
 
@@ -539,4 +575,22 @@ function mergeStepData(
   }
 
   return base;
+}
+
+export function journeyFromProgress(progress: OnboardingProgressView): MemberJourneyView {
+  const destination = resolveAuthenticatedMemberJourney({
+    welcomeComplete: progress.welcomeComplete,
+    hasValidCoachSelection: progress.hasValidCoachSelection,
+    coachReplacementRequired: progress.coachReplacementRequired,
+    onboardingComplete: progress.onboardingComplete,
+  });
+  return {
+    destination,
+    path: pathForAuthenticatedJourney(destination),
+    nextOnboardingStep: progress.completedAt ? null : progress.currentStep,
+    welcomeComplete: progress.welcomeComplete,
+    hasValidCoachSelection: progress.hasValidCoachSelection,
+    coachReplacementRequired: progress.coachReplacementRequired,
+    onboardingComplete: progress.onboardingComplete,
+  };
 }

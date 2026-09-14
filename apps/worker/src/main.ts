@@ -8,6 +8,7 @@
 import { createPrismaClient } from '@saiyan/database';
 import {
   CAP_COUNTED_CATEGORIES,
+  composeReminderCopy,
   evaluateDispatchEligibility,
   localDateInTimeZone,
   type NotificationCategoryValue,
@@ -151,14 +152,33 @@ async function processNotificationIntents(
         continue;
       }
 
+      let title = intent.title;
+      let body = intent.body;
+      const personaCategories = new Set(['MOTIVATION', 'WORKOUT_REMINDER', 'WEEKLY_REVIEW', 'MEAL_REMINDER']);
+      if (personaCategories.has(intent.category)) {
+        const selection = await prisma.characterSelection.findUnique({
+          where: { userId: intent.userId },
+          include: { presentation: { include: { archetype: true } } },
+        });
+        if (selection) {
+          const copy = composeReminderCopy({
+            archetypeKey: selection.presentation.archetype.key,
+            coachingTone: selection.coachingTone,
+            category: intent.category,
+          });
+          title = copy.title;
+          body = copy.body;
+        }
+      }
+
       await prisma.$transaction(async (tx) => {
         await tx.inAppNotification.create({
           data: {
             userId: intent.userId,
             intentId: intent.id,
             category: intent.category,
-            title: intent.title,
-            body: intent.body,
+            title,
+            body,
             ...(intent.payload != null ? { payload: intent.payload } : {}),
             deliveryMode: 'SIMULATED',
           },

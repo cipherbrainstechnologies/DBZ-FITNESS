@@ -33,6 +33,9 @@ export default async function HomePage({
             <Link href="/register" className="btn btn-ghost">
               {t('home.ctaRegister')}
             </Link>
+            <Link href="/about" className="btn btn-ghost">
+              {t('about.title')}
+            </Link>
           </div>
         </section>
       </main>
