@@ -6,6 +6,7 @@ import { useCallback, useEffect, useState } from 'react';
 
 import { TodayFuelSnippet } from '@/components/fuel/today-fuel-snippet';
 import { TodayMediaStrip } from '@/components/media/today-media-strip';
+import { TodayCharacterBanner } from '@/components/today-character-banner';
 import { Link, useRouter } from '@/i18n/navigation';
 import { api, ApiClientError } from '@/lib/api';
 import { mapApiError } from '@/lib/map-api-error';
@@ -78,6 +79,8 @@ export function TodayTrainingPanel() {
     <section className="app-panel" aria-labelledby="today-title">
       <h1 id="today-title">{t('today.title')}</h1>
       <p>{t('today.greeting', { name: nameSuffix })}</p>
+
+      <TodayCharacterBanner />
 
       {loadState === 'loading' ? (
         <div className="loading-block loading-block--compact" role="status" aria-live="polite">

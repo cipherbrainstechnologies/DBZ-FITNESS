@@ -23,9 +23,6 @@ import type { Env } from '../config/env.js';
 import { ENV } from '../config/tokens.js';
 import { PrismaService } from '../database/prisma.service.js';
 
-const FIXTURE_DELIVERY_LABEL =
-  'FIXTURE_SIMULATED URL — not a production CDN object; object storage PENDING';
-
 /**
  * Owns MediaAsset, Quote, RightsGrant, ContentPublication.
  */
@@ -104,7 +101,7 @@ export class MediaApplicationService {
 
     return {
       assets: rows.map((m) => this.toMediaSummary(m)),
-      note: 'Published ORIGINAL media only. Access URLs are fixture/simulated until object storage is configured.',
+      note: 'Published ORIGINAL media only. Image URLs are original static files from this API, not licensed Dragon Ball stills.',
     };
   }
 
@@ -186,25 +183,24 @@ export class MediaApplicationService {
       });
     }
 
-    const deliveryMode =
-      this.env.APP_ENV === 'production'
-        ? ('SIGNED_URL_STUB' as const)
-        : ('FIXTURE_SIMULATED' as const);
-
+    const publicUrl = this.staticOriginalUrl(asset.storageKey);
     const stubExpires = new Date(Date.now() + 15 * 60_000);
 
     return {
       mediaAssetId: asset.id,
-      url:
-        deliveryMode === 'FIXTURE_SIMULATED'
-          ? `fixture://media/${asset.key}?storageKey=${encodeURIComponent(asset.storageKey)}`
-          : `https://signed-url-stub.invalid/media/${asset.id}?exp=${stubExpires.getTime()}`,
-      deliveryMode,
+      url: publicUrl,
+      deliveryMode: 'STATIC_ORIGINAL',
       expiresAt: stubExpires.toISOString(),
-      label: FIXTURE_DELIVERY_LABEL,
+      label:
+        'Original product artwork served by this API — not a licensed Dragon Ball Z still or CDN object-storage grant',
       eligible: true,
       reasons: [],
     };
+  }
+
+  private staticOriginalUrl(storageKey: string): string {
+    const origin = this.env.API_URL.replace(/\/$/, '');
+    return `${origin}/static/${storageKey.replace(/^\/+/, '')}`;
   }
 
   private toMediaSummary(m: {
@@ -215,6 +211,7 @@ export class MediaApplicationService {
     altText: string | null;
     durationSeconds: number | null;
     publicationStatus: 'DRAFT' | 'UNAVAILABLE' | 'PUBLISHED' | 'WITHDRAWN';
+    storageKey: string;
   }): MediaAssetSummary {
     return {
       id: m.id,
@@ -224,7 +221,8 @@ export class MediaApplicationService {
       altText: m.altText,
       durationSeconds: m.durationSeconds,
       publicationStatus: m.publicationStatus,
-      deliveryMode: 'FIXTURE_SIMULATED',
+      deliveryMode: 'STATIC_ORIGINAL',
+      publicUrl: this.staticOriginalUrl(m.storageKey),
     };
   }
 }

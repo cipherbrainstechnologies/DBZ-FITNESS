@@ -4,6 +4,7 @@ import { Redirect, Tabs } from 'expo-router';
 import { LoadingBlock } from '@/src/components/ui';
 import { useAuth } from '@/src/auth/AuthContext';
 import { useI18n } from '@/src/i18n';
+import { useOnboardingStatus } from '@/src/onboarding/useOnboardingStatus';
 import { colors, fonts } from '@/src/theme';
 
 function TabIcon(props: { name: React.ComponentProps<typeof FontAwesome>['name']; color: string }) {
@@ -13,13 +14,18 @@ function TabIcon(props: { name: React.ComponentProps<typeof FontAwesome>['name']
 export default function TabsLayout() {
   const { status } = useAuth();
   const { t } = useI18n();
+  const onboarding = useOnboardingStatus();
 
-  if (status === 'loading') {
+  if (status === 'loading' || onboarding === 'loading') {
     return <LoadingBlock label={t('todayLoading')} />;
   }
 
   if (status !== 'authenticated') {
     return <Redirect href="/(auth)/login" />;
+  }
+
+  if (onboarding === 'incomplete') {
+    return <Redirect href="/(onboarding)" />;
   }
 
   return (

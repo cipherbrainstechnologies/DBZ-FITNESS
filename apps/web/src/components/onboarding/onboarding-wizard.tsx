@@ -11,6 +11,7 @@ import type {
 import { useTranslations } from 'next-intl';
 import { useCallback, useEffect, useMemo, useState, type FormEvent } from 'react';
 
+import { CharacterPortrait } from '@/components/character-portrait';
 import { useRouter } from '@/i18n/navigation';
 import { api, ApiClientError } from '@/lib/api';
 import { mapApiError } from '@/lib/map-api-error';
@@ -810,7 +811,20 @@ export function OnboardingWizard() {
                       onChange={() => setPresentationId(item.id)}
                     />
                     <span className="character-option-body">
+                      <CharacterPortrait
+                        className="character-portrait"
+                        archetypeKey={item.archetypeKey}
+                        artworkUrl={item.artworkUrl}
+                        name={item.approvedName}
+                      />
                       <span className="character-name">{item.approvedName}</span>
+                      {item.inspiredByLabel ? (
+                        <span className="character-inspired">
+                          {t('onboarding.character.inspiredBy', {
+                            name: item.inspiredByLabel,
+                          })}
+                        </span>
+                      ) : null}
                       <span className="character-meta">
                         {item.emphasis} · {item.tone}
                       </span>

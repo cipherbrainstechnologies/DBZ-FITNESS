@@ -1,5 +1,6 @@
 import { getTranslations, setRequestLocale } from 'next-intl/server';
 
+import { CharacterStrip } from '@/components/character-strip';
 import { SiteHeader } from '@/components/site-header';
 import { Link } from '@/i18n/navigation';
 
@@ -24,6 +25,7 @@ export default async function HomePage({
             Saiyan <em>Ascend</em>
           </h1>
           <p className="hero-copy">{t('home.supporting')}</p>
+          <CharacterStrip />
           <div className="cta-row">
             <Link href="/login" className="btn btn-primary">
               {t('home.ctaLogin')}

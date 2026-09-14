@@ -19,6 +19,10 @@ export const CharacterPresentationSummarySchema = z.object({
   tone: z.string().min(1),
   coachingStyleKey: z.string().nullable(),
   artworkKey: z.string().nullable(),
+  /** Absolute URL to original product artwork, or null when none is published. */
+  artworkUrl: z.string().nullable(),
+  /** Training-emphasis inspiration label — not a licensed character identity. */
+  inspiredByLabel: z.string().nullable(),
   contentPackMode: ContentPackModeSchema,
   publicationStatus: PublicationStatusSchema,
   sortOrder: z.number().int(),

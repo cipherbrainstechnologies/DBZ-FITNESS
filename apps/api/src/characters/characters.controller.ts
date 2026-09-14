@@ -15,6 +15,12 @@ import { CharacterFacade } from './character.facade.js';
 export class CharactersController {
   constructor(private readonly characters: CharacterFacade) {}
 
+  @Get('selection')
+  async getSelection(@CurrentUser() user: AuthenticatedUser) {
+    const selection = await this.characters.getSelection(user.id);
+    return { selection };
+  }
+
   @Get()
   async listCharacters() {
     return this.characters.listAvailablePresentations();

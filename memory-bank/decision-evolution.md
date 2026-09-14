@@ -33,7 +33,16 @@
 - Summary: Milestone 1 web uses Next.js 15 App Router, calls API with `credentials: 'include'` and `Accept: application/json; auth=cookie`, and ships next-intl dictionaries for en/fr/es.
 - Reason: Aligns with API cookie mode; production-first i18n without blocking M1 on a full CMS.
 - Affected Modules: Web
-- Reversal Conditions: Introduce BFF same-origin cookie proxy if cross-port cookie issues appear in target browsers
+- Reversal Conditions: None while first-party BFF remains the web session path
+- Status: Active
+
+### Decision #016 – Same-origin web BFF + original character portraits
+- Date: 2026-09-13
+- Author: Cursor Agent
+- Summary: Browser calls `/api/v1` on the Next.js host; the route handler proxies to the API and rebinds cookies to the web origin. ORIGINAL portraits are product-owned illustrations with honest inspiration labels — not official Dragon Ball Z stills.
+- Reason: Split Railway domains dropped cross-site auth cookies after register; third-party cookie blocking made SameSite=Lax on the API host unusable. Licensed franchise artwork remains PENDING (`DEP-M2-001`).
+- Affected Modules: Web auth, Identity cookies, Characters, Media static, Mobile onboarding
+- Reversal Conditions: Collapse web+API onto one origin with first-party cookies, or obtain verified DBZ grants before publishing licensed stills
 - Status: Active
 
 ### Decision #005 – Expo SDK 53 mobile shell

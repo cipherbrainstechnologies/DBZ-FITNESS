@@ -1,5 +1,6 @@
 import { getTranslations, setRequestLocale } from 'next-intl/server';
 
+import { CharacterStrip } from '@/components/character-strip';
 import { LoginForm } from '@/components/login-form';
 import { SiteHeader } from '@/components/site-header';
 
@@ -25,6 +26,7 @@ export default async function LoginPage({
               Saiyan <em>Ascend</em>
             </h1>
             <p className="hero-copy">{t('brand.tagline')}</p>
+            <CharacterStrip />
           </section>
           <section className="auth-panel" aria-labelledby="login-title">
             <h2 id="login-title">{t('login.title')}</h2>

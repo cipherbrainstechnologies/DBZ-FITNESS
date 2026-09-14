@@ -1,30 +1,38 @@
 # Build Status — Saiyan Ascend
 
-Last updated: 2026-09-13 (security dependency refresh)
+Last updated: 2026-09-13 (auth BFF + original character art)
 
 ## Current milestone
 
-Milestones 8 (AI coach) and 9 (privacy export/deletion) — **thin slices implemented in-repo**. Live Docker Compose / migrate / seed / HTTP E2E remain **BLOCKED**: Docker Desktop engine cannot start without an elevated Docker service / healthy engine on this Windows host.
+Member login/session on split web/API hosts, original character portraits, production boot migrate/seed, and a usable mobile onboarding path are **implemented in-repo**. Railway production still serves the previous build until the owner authorises a redeploy.
 
-Milestone 11 release scaffolding remains in-repo and **NOT DEPLOYED**.
+Local Docker Compose / Postgres on this Windows host remains **BLOCKED**. Browser verification used the Next.js same-origin proxy against the live Railway API.
 
 ## Milestone status summary
 
 | Milestone | Code status | Runtime / Docker verification |
 | --- | --- | --- |
-| M1 Foundation | Implemented | **BLOCKED** — Docker/Postgres/Redis E2E not run |
-| M2 Onboarding + characters | Implemented | **BLOCKED** — DB E2E not run |
+| M1 Foundation | Implemented + session BFF | Browser: register/login via proxy PASS; local Docker/Postgres E2E still BLOCKED |
+| M2 Onboarding + characters | Implemented + original portraits | Browser: post-login onboarding PASS; portraits on login/register |
 | M3 Training | Implemented | **BLOCKED** (`DEP-M3-002`) |
 | M4 Nutrition | Implemented | **BLOCKED** (`DEP-M4-002`) |
 | M5 Progression | Implemented | **BLOCKED** (`DEP-M5-001`) |
-| M6 Media | Foundational slice implemented | **BLOCKED** (`DEP-M6-003`) |
+| M6 Media | ORIGINAL static images served | Local public PNG PASS; licensed DBZ stills **not** claimed |
 | M7 Notifications | Foundational slice (SIMULATED delivery) | **BLOCKED** (`DEP-M7-002`) |
 | M8 AI coach | Thin slice implemented (fixture provider) | **BLOCKED** (`DEP-M8-002`); OpenAI **PENDING** (`DEP-M8-001`) |
 | M9 Privacy export/deletion | Thin slice (FIXTURE_DRY_RUN; no DB wipe) | **BLOCKED** (`DEP-M9-003`); storage/wipe **PENDING** |
 | M10 Admin | Not started | — |
-| M11 Release scaffolding | Templates in-repo | **NOT DEPLOYED**; image builds not verified without Docker |
+| M11 Release scaffolding | Templates in-repo; boot migrate/seed | **NOT REDEPLOYED** — owner authorisation required |
 
 ## Completed behaviour
+
+### Auth BFF, original character art, production boot (2026-09-13)
+
+- Web browser calls same-origin `/api/v1/*`. Next.js proxies to `API_PROXY_TARGET` / `API_INTERNAL_URL` and rebinds `Set-Cookie` to the web host (fixes register-success then bounce back to login on split Railway domains / third-party cookie blocking).
+- After login/register the client confirms `GET /onboarding` before navigating; a missing cookie shows an honest session error instead of a silent loop.
+- API production boot runs `prisma migrate deploy` + idempotent content seed when `APP_ENV=production` (override with `RUN_MIGRATIONS_ON_START` / `SEED_ON_BOOT`). Static original portraits at `/static/characters/*.png`.
+- ORIGINAL character cards show product-owned portraits with “training emphasis inspired by Goku/Vegeta/Gohan/Trunks/Broly” labels. **Not official Dragon Ball Z stills; no licence is claimed** (`DEP-M2-001` still PENDING).
+- Mobile: Android emulator API default `10.0.2.2`, onboarding wizard with portraits, Today theme card, tabs gate until onboarding completes.
 
 ### Railway security dependency refresh (2026-09-13)
 
@@ -66,34 +74,29 @@ Milestone 11 release scaffolding remains in-repo and **NOT DEPLOYED**.
 
 ## Files or modules changed
 
-### M8/M9 (this update)
+### Auth BFF + original art (this update)
 
-- `packages/providers` — coach port + FixtureCoachProvider + nutrition-invention tests
-- `packages/domain` — coaching safety + tests
-- `packages/contracts` — coach + privacy Zod contracts
-- `packages/database` — schema + migration `20260913210000_m8_coach_m9_privacy`
-- `apps/api` — `coaching/*`, `privacy/*`, env `COACH_PROVIDER` / `OPENAI_API_KEY`, AuthService re-auth, AppModule wiring, `@saiyan/providers` dep
-- `apps/worker` — privacy queue + FIXTURE_DRY_RUN processors; `PRIVACY_POLL_EVERY_MS`
-- `.env.example`, `docs/16`, `docs/BUILD_STATUS.md`, `memory-bank/**`
+- `apps/web/src/app/api/v1/[...path]/route.ts` — same-origin cookie BFF
+- `apps/web/src/lib/api.ts`, login/register forms, character UI, public portraits
+- `apps/api` — static `/static`, boot migrate/seed, character `artworkUrl` / `inspiredByLabel`, `GET /characters/selection`
+- `packages/contracts`, `packages/database` seed + prisma CLI as runtime dependency
+- `apps/mobile` — onboarding, portraits, Today theme, Android API default
+- `.env.example`, `.railway/railway.ts`, `docs/BUILD_STATUS.md`, `memory-bank/**`
 
 ## Commands run and actual results
 
 | Command | Result |
 | --- | --- |
 | `pnpm install` | PASS |
-| `pnpm --filter @saiyan/database generate` | PASS — Prisma Client 6.5.0 |
-| `pnpm --filter @saiyan/domain build` | PASS |
 | `pnpm --filter @saiyan/contracts build` | PASS |
-| `pnpm --filter @saiyan/providers build` | PASS |
-| `pnpm --filter @saiyan/domain test` | PASS — **63 tests** (incl. 6 coach safety) |
-| `pnpm --filter @saiyan/providers test` | PASS — **3 tests** (fixture never invents nutrition numbers) |
+| `pnpm --filter @saiyan/domain build` | PASS |
+| `pnpm --filter @saiyan/database build` | PASS |
 | `pnpm --filter @saiyan/api build` | PASS |
 | `pnpm --filter @saiyan/web build` | PASS (Next.js 15.5.25) |
-| `pnpm --filter @saiyan/worker build` | PASS |
-| `pnpm audit` | 2 high (mobile-only `image-size`; no patch) — down from 56 (3 critical) |
-| `pnpm --filter @saiyan/worker lint` | PASS |
-| `pnpm docker:up` / `pnpm db:migrate` / `pnpm db:seed` | **NOT RUN** — Docker/Postgres unavailable |
-| Live coach + privacy HTTP / worker E2E | **NOT RUN** |
+| `pnpm --filter @saiyan/mobile exec tsc -p tsconfig.json --noEmit` | PASS |
+| `pnpm --filter @saiyan/domain test` | PASS — **63 tests** |
+| Browser: register → onboarding; logout → login → onboarding via same-origin proxy to Railway API | PASS |
+| `pnpm docker:up` / local Postgres `:5432` | **NOT RUN / refused** on this host |
 
 ## What was simulated (honest modes)
 
@@ -108,7 +111,8 @@ Milestone 11 release scaffolding remains in-repo and **NOT DEPLOYED**.
 - DEP-M8-001 OpenAI PENDING; DEP-M8-002 / DEP-M9-003 Postgres (+ Redis) E2E blocked.
 - DEP-M9-001 export storage PENDING; DEP-M9-002 authorised wipe PENDING.
 - Prior DEP-M3/M4/M5/M6/M7 Postgres E2E blockers still open.
-- DEP-M11-001 Railway access + deploy authorisation PENDING.
+- DEP-M11-001 Railway access + deploy authorisation PENDING. Redeploy web with `API_PROXY_TARGET` (private or public API URL) and API with `APP_ENV=production` so migrate/seed and portraits go live. Live Railway still serves the previous build.
+- Official Dragon Ball Z stills / names-as-licensed-identity remain PENDING (`DEP-M2-001`). Original portraits are the current production fallback.
 - After Docker is healthy: `pnpm docker:up` → `pnpm db:migrate` → `pnpm db:seed` → smoke coach messages + export/deletion fixture paths.
 
 ## External dependencies

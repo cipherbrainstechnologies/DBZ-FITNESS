@@ -22,11 +22,11 @@
     "seed": "node --experimental-strip-types prisma/seed.ts"
   },
   "dependencies": {
-    "@prisma/client": "6.5.0"
+    "@prisma/client": "6.5.0",
+    "prisma": "6.5.0"
   },
   "devDependencies": {
     "@types/node": "22.13.10",
-    "prisma": "6.5.0",
     "typescript": "5.7.3"
   },
   "prisma": {

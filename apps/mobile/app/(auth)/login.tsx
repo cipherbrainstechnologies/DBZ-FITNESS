@@ -43,7 +43,7 @@ export default function LoginScreen() {
   const [pending, setPending] = useState(false);
 
   if (status === 'authenticated') {
-    return <Redirect href="/(tabs)/today" />;
+    return <Redirect href="/(onboarding)" />;
   }
 
   async function onSubmit() {
@@ -62,7 +62,7 @@ export default function LoginScreen() {
     const ok = await login(trimmed, password);
     setPending(false);
     if (ok) {
-      router.replace('/(tabs)/today');
+      router.replace('/(onboarding)');
     }
   }
 

@@ -24,6 +24,8 @@ export type CharacterPresentationSummary = {
   tone: string;
   coachingStyleKey: string | null;
   artworkKey: string | null;
+  artworkUrl: string | null;
+  inspiredByLabel: string | null;
   contentPackMode: 'ORIGINAL' | 'DBZ_LICENSED';
   publicationStatus: 'DRAFT' | 'UNAVAILABLE' | 'PUBLISHED' | 'WITHDRAWN';
   sortOrder: number;
@@ -258,11 +260,27 @@ export class CharacterApplicationService {
       tone: row.archetype.tone,
       coachingStyleKey: row.coachingStyleKey,
       artworkKey: row.artworkKey,
+      artworkUrl: originalArtworkUrl(this.env.API_URL, row.archetype.key),
+      inspiredByLabel: THEME_INSPIRATION[row.archetype.key] ?? null,
       contentPackMode: row.contentPack.mode as 'ORIGINAL' | 'DBZ_LICENSED',
       publicationStatus: row.publicationStatus as CharacterPresentationSummary['publicationStatus'],
       sortOrder: row.sortOrder,
     };
   }
+}
+
+/** Training-emphasis inspiration labels from docs/03 — not licensed identities. */
+const THEME_INSPIRATION: Record<string, string> = {
+  explorer: 'Goku',
+  strategist: 'Vegeta',
+  scholar: 'Gohan',
+  guardian: 'Trunks',
+  titan: 'Broly',
+};
+
+function originalArtworkUrl(apiUrl: string, archetypeKey: string): string {
+  const origin = apiUrl.replace(/\/$/, '');
+  return `${origin}/static/characters/${archetypeKey}.png`;
 }
 
 /** Soft tags only — never used as hard equipment or screening overrides. */

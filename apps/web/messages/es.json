@@ -26,7 +26,7 @@
   },
   "home": {
     "headline": "Tu arena de entrenamiento empieza aquí",
-    "supporting": "Inicia sesión para llegar al espacio de hoy. Programas y entrenamientos llegan después — sin estadísticas inventadas.",
+    "supporting": "Crea una cuenta, elige un tema motivacional y entrena con un plan que respeta tu tiempo, tu equipo y tu recuperación.",
     "ctaLogin": "Iniciar sesión",
     "ctaRegister": "Crear cuenta"
   },
@@ -63,6 +63,9 @@
     "locale": "Idioma",
     "timezone": "Zona horaria",
     "noStats": "No se muestran estadísticas inventadas — solo sesiones planificadas y series registradas de verdad. La ingesta de comidas solo aparece a partir de registros de comidas.",
+    "character": {
+      "title": "Tema de hoy"
+    },
     "openAdmin": "Abrir admin",
     "training": {
       "loading": "Cargando el entrenamiento de hoy…",
@@ -86,7 +89,8 @@
     },
     "media": {
       "title": "Palabra de hoy",
-      "notAuthentic": "(Copia original de la app — no es una cita de Dragon Ball.)"
+      "notAuthentic": "(Copia original de la app — no es una cita de Dragon Ball.)",
+      "artAlt": "Ilustración original del arena motivacional"
     }
   },
   "fuel": {
@@ -425,7 +429,9 @@
     "character": {
       "legend": "Tema motivacional de personaje",
       "disclaimer": "Tu programa permanece personalizado según tus objetivos, cribado, equipo y recuperación. El personaje es solo un tema motivacional — no puede anular los límites de seguridad.",
-      "originalOnly": "Arquetipos ORIGINAL publicados. Temas del producto, no activos con licencia de Dragon Ball.",
+      "originalOnly": "Retratos originales del producto e interpretaciones de énfasis de entrenamiento. No son imágenes oficiales de Dragon Ball Z y no se reclama ninguna licencia.",
+      "inspiredBy": "Énfasis de entrenamiento inspirado en {name}",
+      "originalArt": "Arte original — no son imágenes oficiales de Dragon Ball Z",
       "loading": "Cargando personajes…",
       "unavailable": "No hay presentaciones de personaje disponibles en el modo de contenido activo.",
       "packOriginal": "Pack de contenido ORIGINAL"
@@ -520,10 +526,11 @@
   },
   "errors": {
     "generic": "Algo salió mal. Inténtalo de nuevo.",
-    "network": "No se puede alcanzar la API. Confirma que está en marcha y que NEXT_PUBLIC_API_URL está definido.",
+    "network": "No se puede alcanzar la API. Confirma que está en marcha. La web ahora usa un proxy same-origin en /api/v1.",
     "validation": "Revisa los campos marcados e inténtalo de nuevo.",
     "conflict": "Ya existe una cuenta con este correo.",
     "unauthorized": "Correo o contraseña incorrectos.",
+    "sessionCookie": "El servidor aceptó el inicio de sesión, pero este navegador no pudo guardar la sesión. Permite cookies para este sitio e inténtalo de nuevo.",
     "forbidden": "No tienes permiso para esta acción."
   },
   "a11y": {

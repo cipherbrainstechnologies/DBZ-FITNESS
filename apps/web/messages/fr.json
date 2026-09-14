@@ -26,7 +26,7 @@
   },
   "home": {
     "headline": "Votre arène d'entraînement commence ici",
-    "supporting": "Connectez-vous pour accéder à l'espace du jour. Programmes et séances arriveront plus tard — aucune statistique inventée.",
+    "supporting": "Créez un compte, choisissez un thème motivationnel et entraînez-vous avec un plan qui respecte votre temps, votre matériel et votre récupération.",
     "ctaLogin": "Connexion",
     "ctaRegister": "Créer un compte"
   },
@@ -63,6 +63,9 @@
     "locale": "Locale",
     "timezone": "Fuseau horaire",
     "noStats": "Aucune statistique inventée n'est affichée — seulement les séances planifiées et les séries réellement enregistrées. L'apport nutritionnel n'apparaît qu'à partir des journaux de repas.",
+    "character": {
+      "title": "Thème du jour"
+    },
     "openAdmin": "Ouvrir l'admin",
     "training": {
       "loading": "Chargement de l'entraînement du jour…",
@@ -86,7 +89,8 @@
     },
     "media": {
       "title": "Mot du jour",
-      "notAuthentic": "(Texte original de l’app — pas une citation Dragon Ball.)"
+      "notAuthentic": "(Texte original de l’app — pas une citation Dragon Ball.)",
+      "artAlt": "Illustration originale d’arène motivationnelle"
     }
   },
   "fuel": {
@@ -425,7 +429,9 @@
     "character": {
       "legend": "Thème de personnage motivationnel",
       "disclaimer": "Votre programme reste personnalisé selon vos objectifs, dépistage, équipement et récupération. Le personnage est un thème motivationnel uniquement — il ne peut pas outrepasser les limites de sécurité.",
-      "originalOnly": "Archétypes ORIGINAUX publiés. Thèmes appartenant au produit, pas des actifs sous licence Dragon Ball.",
+      "originalOnly": "Portraits originaux du produit et interprétations d’emphase d’entraînement. Ce ne sont pas des images officielles Dragon Ball Z, et aucune licence n’est revendiquée.",
+      "inspiredBy": "Emphase d’entraînement inspirée de {name}",
+      "originalArt": "Illustration originale — pas des images officielles Dragon Ball Z",
       "loading": "Chargement des personnages…",
       "unavailable": "Aucune présentation de personnage disponible dans le mode de contenu actif.",
       "packOriginal": "Pack de contenu ORIGINAL"
@@ -520,10 +526,11 @@
   },
   "errors": {
     "generic": "Une erreur s'est produite. Réessayez.",
-    "network": "Impossible de joindre l'API. Vérifiez qu'elle tourne et que NEXT_PUBLIC_API_URL est défini.",
+    "network": "Impossible de joindre l'API. Vérifiez qu'elle tourne. L'app web utilise maintenant un proxy same-origin /api/v1.",
     "validation": "Vérifiez les champs indiqués et réessayez.",
     "conflict": "Un compte avec cet e-mail existe déjà.",
     "unauthorized": "E-mail ou mot de passe incorrect.",
+    "sessionCookie": "Connexion réussie côté serveur, mais ce navigateur n'a pas pu conserver la session. Autorisez les cookies pour ce site, puis réessayez.",
     "forbidden": "Vous n'avez pas la permission pour cette action."
   },
   "a11y": {

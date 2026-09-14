@@ -6,6 +6,7 @@ import { LoginRequestSchema } from '@saiyan/contracts';
 
 import { Link, useRouter } from '@/i18n/navigation';
 import { useAuth } from '@/lib/auth-context';
+import { api, ApiClientError } from '@/lib/api';
 import { mapApiError } from '@/lib/map-api-error';
 
 export function LoginForm() {
@@ -43,8 +44,19 @@ export function LoginForm() {
     setPending(true);
     try {
       await login(parsed.data);
+      let next: '/app' | '/app/onboarding' = '/app';
+      try {
+        const { progress } = await api.getOnboarding();
+        next = progress.completedAt ? '/app' : '/app/onboarding';
+      } catch (afterAuth) {
+        if (afterAuth instanceof ApiClientError && afterAuth.status === 401) {
+          setError(t('errors.sessionCookie'));
+          return;
+        }
+        throw afterAuth;
+      }
       setSuccess(true);
-      router.replace('/app');
+      router.replace(next);
     } catch (err) {
       const mapped = mapApiError(err, t);
       setError(mapped.message);

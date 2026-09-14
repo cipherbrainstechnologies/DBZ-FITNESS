@@ -53,4 +53,27 @@ export const fr: Record<MessageKey, string> = {
     'Erreur réseau. Vérifiez que l’API tourne et que EXPO_PUBLIC_API_URL est correct.',
   unknownError: 'Une erreur est survenue. Réessayez.',
   language: 'Langue',
+  onboardingKicker: 'Configuration',
+  onboardingTitle: 'Définissons votre base d’entraînement',
+  onboardingLoading: 'Chargement de l’onboarding…',
+  onboardingWelcome:
+    'Confirmez que vous avez 18 ans et acceptez les conditions. Le thème personnage ne remplace jamais la sécurité.',
+  onboardingConsent: 'J’accepte les conditions, la confidentialité et le traitement des données de santé.',
+  dateOfBirth: 'Date de naissance (AAAA-MM-JJ)',
+  onboardingGoals: 'Choisissez un objectif principal. Modifiable plus tard.',
+  onboardingExperience:
+    'Plan débutant à domicile. La difficulté reste indépendante du thème personnage.',
+  onboardingAvailability: 'Par défaut : environ 150 minutes par semaine, séances de 45 minutes, poids du corps.',
+  onboardingScreening:
+    'Aucun symptôme urgent déclaré dans ce démarrage rapide. Ce n’est pas un diagnostic.',
+  onboardingDiet: 'Régime par défaut : non végétarien. Modifiable plus tard dans Fuel.',
+  onboardingCharacter:
+    'Choisissez un thème motivationnel. Portraits originaux — pas des images officielles Dragon Ball Z.',
+  originalArtNote: 'Les libellés d’emphase sont des interprétations produit, pas une licence.',
+  inspiredByPrefix: 'Emphase d’entraînement inspirée de',
+  onboardingConfirm: 'Terminez pour accéder à Aujourd’hui. Le repos compte comme du progrès.',
+  onboardingContinue: 'Continuer',
+  onboardingSaving: 'Enregistrement…',
+  validationOnboarding: 'Terminez cette étape avant de continuer.',
+  todayTheme: 'Thème du jour',
 };

@@ -1,3 +1,5 @@
+import { Platform } from 'react-native';
+
 import {
   clearTokens,
   getAccessToken,
@@ -5,11 +7,18 @@ import {
   saveTokens,
 } from '@/src/auth/tokenStorage';
 
-export const API_URL =
-  (typeof process !== 'undefined' && process.env.EXPO_PUBLIC_API_URL
+function defaultApiUrl(): string {
+  if (Platform.OS === 'android') {
+    return 'http://10.0.2.2:3001/api/v1';
+  }
+  return 'http://localhost:3001/api/v1';
+}
+
+export const API_URL = (
+  typeof process !== 'undefined' && process.env.EXPO_PUBLIC_API_URL
     ? process.env.EXPO_PUBLIC_API_URL
-    : 'http://localhost:3001/api/v1'
-  ).replace(/\/$/, '');
+    : defaultApiUrl()
+).replace(/\/$/, '');
 
 export type SessionUser = {
   id: string;
@@ -188,4 +197,64 @@ export async function logout(): Promise<void> {
 
 export async function fetchMe(): Promise<MeResponse> {
   return apiRequest<MeResponse>('/me', { method: 'GET' }, { auth: true });
+}
+
+export type OnboardingProgress = {
+  currentStep: string;
+  completedSteps: string[];
+  completedAt: string | null;
+  screeningRecordId: string | null;
+  hasCharacterSelection: boolean;
+};
+
+export type CharacterPresentation = {
+  id: string;
+  archetypeKey: string;
+  approvedName: string;
+  emphasis: string;
+  tone: string;
+  artworkUrl: string | null;
+  inspiredByLabel: string | null;
+};
+
+export async function getOnboarding(): Promise<{ progress: OnboardingProgress }> {
+  return apiRequest<{ progress: OnboardingProgress }>('/onboarding', { method: 'GET' }, { auth: true });
+}
+
+export async function saveOnboardingStep(body: unknown): Promise<{ progress: OnboardingProgress }> {
+  return apiRequest<{ progress: OnboardingProgress }>(
+    '/onboarding',
+    { method: 'PUT', body: JSON.stringify(body) },
+    { auth: true },
+  );
+}
+
+export async function completeOnboarding(): Promise<{ progress: OnboardingProgress }> {
+  return apiRequest<{ progress: OnboardingProgress }>(
+    '/onboarding/complete',
+    { method: 'POST', body: JSON.stringify({}) },
+    { auth: true },
+  );
+}
+
+export async function listCharacters(): Promise<{
+  presentations: CharacterPresentation[];
+  unavailable: boolean;
+  message?: string;
+}> {
+  return apiRequest('/characters', { method: 'GET' }, { auth: true });
+}
+
+export async function getCharacterSelection(): Promise<{
+  selection: { presentation: CharacterPresentation } | null;
+}> {
+  return apiRequest('/characters/selection', { method: 'GET' }, { auth: true });
+}
+
+export async function selectCharacter(presentationId: string): Promise<unknown> {
+  return apiRequest(
+    '/characters/select',
+    { method: 'POST', body: JSON.stringify({ presentationId }) },
+    { auth: true },
+  );
 }
