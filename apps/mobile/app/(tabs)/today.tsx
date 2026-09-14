@@ -53,12 +53,7 @@ export default function TodayScreen() {
           <View style={styles.themeCopy}>
             <Text style={styles.kicker}>{t('todayTheme')}</Text>
             <Text style={styles.cardTitle}>{theme.approvedName}</Text>
-            {theme.inspiredByLabel ? (
-              <Text style={styles.inspired}>
-                {t('inspiredByPrefix')} {theme.inspiredByLabel}
-              </Text>
-            ) : null}
-            <Text style={styles.cardBody}>{theme.emphasis}</Text>
+            <Text style={styles.cardBody}>{theme.coachingDescription ?? theme.emphasis}</Text>
             <Text style={styles.note}>{t('originalArtNote')}</Text>
           </View>
         </View>

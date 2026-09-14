@@ -18,9 +18,9 @@ export function useOnboardingStatus(): 'loading' | 'complete' | 'incomplete' {
     }
     let cancelled = false;
     void getOnboarding()
-      .then(({ progress }) => {
+      .then(({ progress, journey }) => {
         if (!cancelled) {
-          setState(progress.completedAt ? 'complete' : 'incomplete');
+          setState(progress.completedAt || journey?.destination === 'TODAY' ? 'complete' : 'incomplete');
         }
       })
       .catch(() => {

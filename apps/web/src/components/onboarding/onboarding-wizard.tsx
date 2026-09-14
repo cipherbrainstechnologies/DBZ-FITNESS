@@ -1,8 +1,6 @@
 'use client';
 
 import type {
-  CharacterPresentationSummary,
-  ListCharactersResponse,
   OnboardingProgress,
   OnboardingStep,
   SaveOnboardingStep,
@@ -11,7 +9,6 @@ import type {
 import { useTranslations } from 'next-intl';
 import { useCallback, useEffect, useMemo, useState, type FormEvent } from 'react';
 
-import { CharacterPortrait } from '@/components/character-portrait';
 import { useRouter } from '@/i18n/navigation';
 import { api, ApiClientError } from '@/lib/api';
 import { mapApiError } from '@/lib/map-api-error';
@@ -19,13 +16,13 @@ import { mapApiError } from '@/lib/map-api-error';
 /** Mirrors packages/domain onboarding step order. */
 const ONBOARDING_STEPS = [
   'WELCOME',
+  'CHARACTER',
   'GOALS',
   'EXPERIENCE',
   'AVAILABILITY',
   'SCREENING',
   'DIET',
   'MEASUREMENTS',
-  'CHARACTER',
   'NOTIFICATIONS',
   'PLAN_PREVIEW',
   'CONFIRM',
@@ -142,12 +139,6 @@ export function OnboardingWizard() {
   const [heightCm, setHeightCm] = useState('');
   const [weightKg, setWeightKg] = useState('');
 
-  // CHARACTER
-  const [characters, setCharacters] = useState<ListCharactersResponse | null>(null);
-  const [charactersLoading, setCharactersLoading] = useState(false);
-  const [charactersError, setCharactersError] = useState<string | null>(null);
-  const [presentationId, setPresentationId] = useState<string | null>(null);
-
   // NOTIFICATIONS
   const [enablePush, setEnablePush] = useState(false);
   const [enableEmail, setEnableEmail] = useState(false);
@@ -161,6 +152,10 @@ export function OnboardingWizard() {
     setProgress(next);
     if (next.completedAt) {
       router.replace('/app');
+      return next;
+    }
+    if (next.currentStep === 'CHARACTER' || (!next.hasValidCoachSelection && next.welcomeComplete)) {
+      router.replace('/app/coach');
       return next;
     }
     setActiveStep(next.currentStep);
@@ -189,35 +184,6 @@ export function OnboardingWizard() {
     };
   }, [loadProgress, router, t]);
 
-  useEffect(() => {
-    if (activeStep !== 'CHARACTER') return;
-    let cancelled = false;
-    async function loadCharacters() {
-      setCharactersLoading(true);
-      setCharactersError(null);
-      try {
-        const list = await api.listCharacters();
-        if (cancelled) return;
-        setCharacters(list);
-        const first = list.presentations[0];
-        if (first && !presentationId) {
-          setPresentationId(first.id);
-        }
-      } catch (err) {
-        if (cancelled) return;
-        setCharactersError(mapApiError(err, t).message);
-      } finally {
-        if (!cancelled) setCharactersLoading(false);
-      }
-    }
-    void loadCharacters();
-    return () => {
-      cancelled = true;
-    };
-    // presentationId intentionally omitted — only seed once when entering step
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [activeStep, t]);
-
   const completedSet = useMemo(
     () => new Set(progress?.completedSteps ?? []),
     [progress],
@@ -235,6 +201,12 @@ export function OnboardingWizard() {
       setProgress(next);
       setSaveStatus('success');
       setSaveSuccess(t('onboarding.saveSuccess'));
+      if (next.currentStep === 'CHARACTER' || body.step === 'WELCOME') {
+        if (!next.hasValidCoachSelection && next.welcomeComplete) {
+          router.replace('/app/coach');
+          return next;
+        }
+      }
       setActiveStep(next.currentStep);
       return next;
     } catch (err) {
@@ -373,16 +345,8 @@ export function OnboardingWizard() {
           break;
         }
         case 'CHARACTER': {
-          if (!presentationId) {
-            setSaveStatus('error');
-            setSaveError(t('errors.validation'));
-            return;
-          }
-          await persistStep({
-            step: 'CHARACTER',
-            payload: { presentationId },
-          });
-          break;
+          router.replace('/app/coach');
+          return;
         }
         case 'NOTIFICATIONS': {
           await persistStep({
@@ -769,73 +733,16 @@ export function OnboardingWizard() {
         ) : null}
 
         {activeStep === 'CHARACTER' ? (
-          <fieldset className="step-fieldset" disabled={pending}>
-            <legend>{t('onboarding.character.legend')}</legend>
-            <p className="character-disclaimer" role="note">
-              {t('onboarding.character.disclaimer')}
-            </p>
-            <p className="note">{t('onboarding.character.originalOnly')}</p>
-            {charactersLoading ? (
-              <div className="loading-block compact" role="status">
-                <div className="spinner" aria-hidden="true" />
-                <p>{t('onboarding.character.loading')}</p>
-              </div>
-            ) : null}
-            {charactersError ? (
-              <div className="form-status" data-tone="error" role="alert">
-                {charactersError}
-              </div>
-            ) : null}
-            {characters?.unavailable ? (
-              <div className="form-status" data-tone="error" role="alert">
-                {characters.message ?? t('onboarding.character.unavailable')}
-              </div>
-            ) : null}
-            {characters && !characters.unavailable ? (
-              <div
-                className="character-grid"
-                role="radiogroup"
-                aria-label={t('onboarding.character.legend')}
-              >
-                {characters.presentations.map((item: CharacterPresentationSummary) => (
-                  <label
-                    key={item.id}
-                    className="character-option"
-                    data-selected={presentationId === item.id ? 'true' : 'false'}
-                  >
-                    <input
-                      type="radio"
-                      name="character"
-                      value={item.id}
-                      checked={presentationId === item.id}
-                      onChange={() => setPresentationId(item.id)}
-                    />
-                    <span className="character-option-body">
-                      <CharacterPortrait
-                        className="character-portrait"
-                        archetypeKey={item.archetypeKey}
-                        artworkUrl={item.artworkUrl}
-                        name={item.approvedName}
-                      />
-                      <span className="character-name">{item.approvedName}</span>
-                      {item.inspiredByLabel ? (
-                        <span className="character-inspired">
-                          {t('onboarding.character.inspiredBy', {
-                            name: item.inspiredByLabel,
-                          })}
-                        </span>
-                      ) : null}
-                      <span className="character-meta">
-                        {item.emphasis} · {item.tone}
-                      </span>
-                      <span className="character-pack">
-                        {t('onboarding.character.packOriginal')}
-                      </span>
-                    </span>
-                  </label>
-                ))}
-              </div>
-            ) : null}
+          <fieldset className="step-fieldset">
+            <legend>{t('coach.title')}</legend>
+            <p>{t('coach.supporting')}</p>
+            <button
+              type="button"
+              className="btn btn-primary"
+              onClick={() => router.replace('/app/coach')}
+            >
+              {t('coach.title')}
+            </button>
           </fieldset>
         ) : null}
 
@@ -867,9 +774,6 @@ export function OnboardingWizard() {
           <fieldset className="step-fieldset" disabled={pending}>
             <legend>{t('onboarding.planPreview.legend')}</legend>
             <p className="note">{t('onboarding.planPreview.body')}</p>
-            <p className="character-disclaimer" role="note">
-              {t('onboarding.character.disclaimer')}
-            </p>
             <p className="note">{t('onboarding.planPreview.noFakeStats')}</p>
             <label className="choice-row">
               <input

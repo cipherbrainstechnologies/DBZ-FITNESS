@@ -1,3 +1,5 @@
+import { coerceMemberJourney } from '@/lib/member-journey';
+
 import type {
   AbandonWorkoutSessionRequest,
   AbandonWorkoutSessionResponse,
@@ -8,7 +10,10 @@ import type {
   ActivateTrainingPlanRequest,
   ActivateTrainingPlanResponse,
   CharacterSelection,
+  CoachBriefingResponse,
+  CoachMemberContextView,
   CompleteOnboardingResponse,
+  ContentReadinessResponse,
   CompleteWorkoutSessionRequest,
   CompleteWorkoutSessionResponse,
   ContentTodayResponse,
@@ -23,12 +28,16 @@ import type {
   ListMediaResponse,
   ListNotificationsResponse,
   ListPlannedSessionsResponse,
+  ListCoachMemoryResponse,
   ListRecipesResponse,
   LoginRequest,
   MarkNotificationReadResponse,
   MediaAccessRequest,
   MediaAccessResponse,
   OnboardingProgress,
+  MemberJourney,
+  PostCoachMessageRequest,
+  PostCoachMessageResponse,
   PreviewMealPlanRequest,
   PreviewMealPlanResponse,
   PreviewNutritionTargetRequest,
@@ -51,6 +60,8 @@ import type {
   SwapMealConfirmResponse,
   SwapMealPreviewRequest,
   SwapMealPreviewResponse,
+  UpsertCoachMemoryRequest,
+  ConfirmCoachActionResponse,
   UpdateNotificationPreferencesRequest,
   UpdateWorkoutSetRequest,
   UpdateWorkoutSetResponse,
@@ -283,19 +294,31 @@ export const api = {
     return apiFetch<MeResponse>('/me', { method: 'GET' });
   },
 
-  getOnboarding(): Promise<{ progress: OnboardingProgress }> {
-    return apiFetch<{ progress: OnboardingProgress }>('/onboarding', {
-      method: 'GET',
-    });
+  async getOnboarding(): Promise<{ progress: OnboardingProgress; journey: MemberJourney }> {
+    const raw = await apiFetch<{ progress: OnboardingProgress; journey?: MemberJourney }>(
+      '/onboarding',
+      { method: 'GET' },
+    );
+    return {
+      progress: raw.progress,
+      journey: coerceMemberJourney(raw.progress, raw.journey),
+    };
   },
 
-  saveOnboardingStep(
+  async saveOnboardingStep(
     body: SaveOnboardingStep,
-  ): Promise<{ progress: OnboardingProgress }> {
-    return apiFetch<{ progress: OnboardingProgress }>('/onboarding', {
-      method: 'PUT',
-      body: JSON.stringify(body),
-    });
+  ): Promise<{ progress: OnboardingProgress; journey: MemberJourney }> {
+    const raw = await apiFetch<{ progress: OnboardingProgress; journey?: MemberJourney }>(
+      '/onboarding',
+      {
+        method: 'PUT',
+        body: JSON.stringify(body),
+      },
+    );
+    return {
+      progress: raw.progress,
+      journey: coerceMemberJourney(raw.progress, raw.journey),
+    };
   },
 
   completeOnboarding(): Promise<CompleteOnboardingResponse> {
@@ -321,6 +344,58 @@ export const api = {
     return apiFetch<{ selection: CharacterSelection }>('/characters/select', {
       method: 'POST',
       body: JSON.stringify(body),
+    });
+  },
+
+  getContentReadiness(): Promise<ContentReadinessResponse> {
+    return apiFetch<ContentReadinessResponse>('/characters/admin/content-readiness', {
+      method: 'GET',
+    });
+  },
+
+  getCoachBriefing(): Promise<CoachBriefingResponse> {
+    return apiFetch<CoachBriefingResponse>('/coach/briefing', { method: 'GET' });
+  },
+
+  getCoachContext(): Promise<CoachMemberContextView> {
+    return apiFetch<CoachMemberContextView>('/coach/context', { method: 'GET' });
+  },
+
+  postCoachMessage(body: PostCoachMessageRequest): Promise<PostCoachMessageResponse> {
+    return apiFetch<PostCoachMessageResponse>('/coach/messages', {
+      method: 'POST',
+      body: JSON.stringify(body),
+    });
+  },
+
+  confirmCoachAction(
+    proposalId: string,
+    idempotencyKey: string,
+  ): Promise<ConfirmCoachActionResponse> {
+    return apiFetch<ConfirmCoachActionResponse>(
+      `/coach/action-proposals/${proposalId}/confirm`,
+      {
+        method: 'POST',
+        body: JSON.stringify({}),
+        headers: { 'Idempotency-Key': idempotencyKey },
+      },
+    );
+  },
+
+  listCoachMemory(): Promise<ListCoachMemoryResponse> {
+    return apiFetch<ListCoachMemoryResponse>('/coach/memory', { method: 'GET' });
+  },
+
+  upsertCoachMemory(body: UpsertCoachMemoryRequest) {
+    return apiFetch('/coach/memory', {
+      method: 'PUT',
+      body: JSON.stringify(body),
+    });
+  },
+
+  deleteCoachMemory(id: string): Promise<{ ok: true }> {
+    return apiFetch<{ ok: true }>(`/coach/memory/${id}`, {
+      method: 'DELETE',
     });
   },
 

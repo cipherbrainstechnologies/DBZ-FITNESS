@@ -16,6 +16,7 @@
     "fuel": "Fuel",
     "progress": "Progress",
     "admin": "Admin",
+    "profile": "My Coach",
     "home": "Home"
   },
   "locale": {
@@ -26,7 +27,7 @@
   },
   "home": {
     "headline": "Your training arena starts here",
-    "supporting": "Create an account, pick a motivational theme, and train with a plan that respects your time, equipment, and recovery.",
+    "supporting": "Create an account, choose your personal coach, and train with a plan that respects your time, equipment, and recovery.",
     "ctaLogin": "Sign in",
     "ctaRegister": "Create account"
   },
@@ -64,7 +65,12 @@
     "timezone": "Time zone",
     "noStats": "No invented workout statistics are shown — only real planned sessions and logged sets. Meal intake appears only from meal logs.",
     "character": {
-      "title": "Today’s theme"
+      "title": "Your coach",
+      "loading": "Loading your coach…",
+      "myCoach": "My Coach",
+      "askCoach": "Ask your coach",
+      "send": "Send",
+      "sending": "Sending…"
     },
     "openAdmin": "Open admin",
     "training": {
@@ -259,7 +265,7 @@
       "SOME_EXERCISES_EXCLUDED_FOR_EQUIPMENT": "Some exercises were excluded because of available equipment.",
       "SOME_EXERCISES_EXCLUDED_FOR_SCREENING": "Some exercises were excluded because of screening restrictions.",
       "CHARACTER_EMPHASIS_BIAS_ONLY": "Character theme may bias preference ranking only.",
-      "CHARACTER_CANNOT_OVERRIDE_CONSTRAINTS": "Character theme cannot override safety, recovery, or equipment limits.",
+      "CHARACTER_CANNOT_OVERRIDE_CONSTRAINTS": "Your coach cannot override safety, recovery, or equipment limits.",
       "BUSY_DAY_SHORTEN_APPLIED": "Busy-day shortening was applied.",
       "BUSY_DAY_NO_SHORTEN_NEEDED": "No shortening was needed for the target duration.",
       "BUSY_DAY_DROPPED_OPTIONAL": "Optional exercises were dropped for a busy day.",
@@ -427,14 +433,14 @@
       "weight": "Weight (kg)"
     },
     "character": {
-      "legend": "Motivational character theme",
-      "disclaimer": "Your programme stays personalised to your goals, screening, equipment, and recovery. Character selection is a motivational theme only — it cannot override safety limits.",
-      "originalOnly": "These are original product portraits and training-emphasis interpretations. They are not official Dragon Ball Z stills, and no franchise licence is claimed.",
-      "inspiredBy": "Training emphasis inspired by {name}",
+      "legend": "Your personal coach",
+      "disclaimer": "Your programme stays personalised to your goals, screening, equipment, and recovery. Your coach explains that guidance — they cannot override safety limits.",
+      "originalOnly": "Original coaching language and product portraits. Not official Dragon Ball Z stills or authentic show quotations.",
+      "inspiredBy": "{name}",
       "originalArt": "Original artwork — not official Dragon Ball Z images",
-      "loading": "Loading characters…",
-      "unavailable": "No character presentations are available in the active content mode.",
-      "packOriginal": "ORIGINAL content pack"
+      "loading": "Loading coaches…",
+      "unavailable": "We couldn't load your coaches. Try again.",
+      "packOriginal": "Personal coach"
     },
     "notifications": {
       "legend": "Notification preferences",
@@ -447,14 +453,14 @@
       "legend": "How planning works",
       "body": "Later milestones will generate training and nutrition from your profile, screening, and availability. Rest and sustainable consistency count as progress.",
       "noFakeStats": "No workout or meal statistics are shown here — we do not invent member data or body-transformation predictions.",
-      "acknowledge": "I understand programmes are personalised and character theme does not change safety rules"
+      "acknowledge": "I understand programmes are personalised and my coach cannot change safety rules"
     },
     "confirm": {
       "legend": "Confirm and finish",
       "body": "Review that required setup is saved, then finish onboarding.",
       "screening": "Screening",
       "diet": "Diet preference",
-      "character": "Character theme",
+      "character": "Personal coach",
       "saved": "Saved",
       "pending": "Not saved yet",
       "noStats": "No fabricated workout or meal stats will appear after you continue.",
@@ -468,7 +474,53 @@
     "signedInAs": "Signed in as",
     "backToApp": "Back to Today",
     "deniedTitle": "Access denied",
-    "deniedBody": "This area requires the ADMIN role. Member accounts cannot enter administration."
+    "deniedBody": "This area requires the ADMIN role. Member accounts cannot enter administration.",
+    "contentReadiness": "Content catalogue readiness",
+    "mode": "Active content mode",
+    "locale": "Locale",
+    "pack": "Pack key",
+    "publishedCoaches": "Published coaches",
+    "diagnostic": "Diagnostic code",
+    "repair": "Repair action",
+    "missing": "Not found",
+    "none": "None",
+    "loadingReadiness": "Loading catalogue diagnostics…"
+  },
+  "coach": {
+    "title": "Choose your personal coach",
+    "supporting": "Pick the character who will guide your workouts, meals, and daily progress. You can change your coach later.",
+    "start": "Start training",
+    "startWith": "Start training with {name}",
+    "saving": "Saving your coach…",
+    "loading": "Loading your coaches…",
+    "retry": "Try again",
+    "catalogueError": "We couldn't load your coaches. Try again.",
+    "saveError": "We couldn't save your coach. Your selection is still here—please try again.",
+    "chooseToContinue": "Choose a coach to continue.",
+    "replacementRequired": "That coach is no longer available. Choose an available replacement. Your history is kept.",
+    "samplePreview": "Sample greeting (preview, not your history)",
+    "toneLegend": "Encouragement tone",
+    "tones": {
+      "GENTLE": "Gentle",
+      "BALANCED": "Balanced",
+      "DIRECT": "Direct"
+    },
+    "aiDisclosure": "This is an AI fitness coach presented through a character persona. It is not a human, the fictional character, or an official franchise service."
+  },
+  "profile": {
+    "coachTitle": "My Coach",
+    "chooseCoach": "Choose your coach",
+    "changeCoach": "Change Coach",
+    "historyKept": "Changing coach updates future messages. Logged workouts, meals, XP, and your current plan stay as they are.",
+    "memoryTitle": "Coaching notes",
+    "memoryEmpty": "No saved coaching notes yet.",
+    "deleteMemory": "Delete"
+  },
+  "about": {
+    "title": "About Saiyan Ascend",
+    "ai": "Coaching messages are generated by the app’s AI adapter when configured, or by a deterministic fallback. They are original product language — not authentic show quotations, and not a human trainer.",
+    "health": "Screening, recovery, equipment, time, and food restrictions stay authoritative. The selected character explains those rules; they cannot override them.",
+    "content": "Portraits are original product artwork. No franchise licence is claimed."
   },
   "progress": {
     "title": "Progress",

@@ -70,7 +70,7 @@
 - Reason: Milestone 2 client vertical slice; character is motivational theme only with explicit disclaimer; no fake workout/meal stats or licensed-asset claims.
 - Affected Modules: Web
 - Reversal Conditions: Move wizard into a dedicated marketing funnel route if product later separates setup from `/app`
-- Status: Active
+- Status: Superseded by Decision #016 (character is a persistent personal coach)
 
 ### Decision #008 – Milestone 3 TrainingFacade + constraint-first plan engine
 - Date: 2026-09-13
@@ -169,4 +169,13 @@
 - Reason: docs/08–09 privacy controls; honest dry-run until storage and deletion policy are ready; tests must not wipe DB.
 - Affected Modules: Privacy, Database, Contracts, Worker, Identity (re-auth)
 - Reversal Conditions: Enable real archive upload and account wipe only after owner authorisation + verified storage.
+- Status: Active
+
+### Decision #016 – Character is a persistent personal coach
+- Date: 2026-09-14
+- Author: Cursor Agent
+- Summary: The chosen DBZ-named first-party coach (Goku, Vegeta, Gohan, Future Trunks, Broly in ORIGINAL mode) is a versioned, server-persisted coaching persona. Post-auth routing uses `resolveAuthenticatedMemberJourney`. Optional ORIGINAL media must not block selection. Safety/screening/equipment/nutrition rules remain authoritative; the coach explains them. Original coaching copy only — not authentic quotations, not a franchise service.
+- Reason: Owner clarification supersedes “motivational theme only.” Catalogue listing by pack `mode` (not a single pack row) plus dedicated `/app/coach` after WELCOME/consent.
+- Affected Modules: Domain, Onboarding, Characters, Coaching, Notifications worker, Web, Mobile, Database, Contracts
+- Reversal Conditions: None while the personal-coach product requirement holds
 - Status: Active

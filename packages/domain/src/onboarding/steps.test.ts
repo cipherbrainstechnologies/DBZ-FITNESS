@@ -22,7 +22,12 @@ describe('onboarding step order', () => {
   it('advances next incomplete after completion', () => {
     const completed = withStepCompleted([], 'WELCOME');
     assert.deepEqual(completed, ['WELCOME']);
-    assert.equal(nextIncompleteStep(completed), 'GOALS');
+    assert.equal(nextIncompleteStep(completed), 'CHARACTER');
+  });
+
+  it('places character selection immediately after welcome', () => {
+    assert.equal(canSaveOnboardingStep('CHARACTER', ['WELCOME']), true);
+    assert.equal(canSaveOnboardingStep('GOALS', ['WELCOME']), false);
   });
 
   it('requires core steps before complete', () => {

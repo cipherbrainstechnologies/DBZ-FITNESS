@@ -205,6 +205,14 @@ export type OnboardingProgress = {
   completedAt: string | null;
   screeningRecordId: string | null;
   hasCharacterSelection: boolean;
+  welcomeComplete?: boolean;
+  onboardingComplete?: boolean;
+  hasValidCoachSelection?: boolean;
+};
+
+export type MemberJourney = {
+  destination: 'SELECT_COACH' | 'RESUME_ONBOARDING' | 'TODAY';
+  path: string;
 };
 
 export type CharacterPresentation = {
@@ -214,11 +222,15 @@ export type CharacterPresentation = {
   emphasis: string;
   tone: string;
   artworkUrl: string | null;
-  inspiredByLabel: string | null;
+  coachingDescription?: string;
+  sampleGreeting?: string;
 };
 
-export async function getOnboarding(): Promise<{ progress: OnboardingProgress }> {
-  return apiRequest<{ progress: OnboardingProgress }>('/onboarding', { method: 'GET' }, { auth: true });
+export async function getOnboarding(): Promise<{
+  progress: OnboardingProgress;
+  journey?: MemberJourney;
+}> {
+  return apiRequest('/onboarding', { method: 'GET' }, { auth: true });
 }
 
 export async function saveOnboardingStep(body: unknown): Promise<{ progress: OnboardingProgress }> {
@@ -240,7 +252,6 @@ export async function completeOnboarding(): Promise<{ progress: OnboardingProgre
 export async function listCharacters(): Promise<{
   presentations: CharacterPresentation[];
   unavailable: boolean;
-  message?: string;
 }> {
   return apiRequest('/characters', { method: 'GET' }, { auth: true });
 }

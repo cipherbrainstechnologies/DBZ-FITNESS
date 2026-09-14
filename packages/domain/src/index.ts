@@ -139,6 +139,18 @@ export {
 } from './onboarding/steps.js';
 
 export {
+  AUTHENTICATED_JOURNEY_DESTINATIONS,
+  JOURNEY_PATHS,
+  resolveAuthenticatedMemberJourney,
+  pathForAuthenticatedJourney,
+  evaluateSavedCoachValidity,
+  isSelectablePublicationStatus,
+  type AuthenticatedJourneyDestination,
+  type AuthenticatedJourneyInput,
+  type JourneyPath,
+} from './onboarding/journey.js';
+
+export {
   TRAINING_POLICY_VERSION,
   previewTrainingPlan,
   characterCannotOverrideEquipment,
@@ -218,3 +230,26 @@ export {
   type CoachProposalSafetyInput,
   type CoachProposalSafetyResult,
 } from './coaching/safety.js';
+
+export {
+  COACHING_TONES,
+  PERSONA_KEYS,
+  COACH_PERSONAS,
+  ARCHETYPE_TO_PERSONA,
+  COACH_SYSTEM_INSTRUCTION,
+  COACH_BRIEFING_ACTIONS,
+  personaKeyFromArchetype,
+  getCoachPersona,
+  isCoachingTone,
+  normalizeCoachingTone,
+  applyMemberTone,
+  composeCoachBriefing,
+  composeReminderCopy,
+  type CoachingTone,
+  type PersonaKey,
+  type CoachPersonaDefinition,
+  type CoachBriefingActionType,
+  type CoachBriefingSituation,
+  type CoachBriefingInput,
+  type CoachBriefingResult,
+} from './coaching/personas.js';

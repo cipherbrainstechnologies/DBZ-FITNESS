@@ -113,12 +113,12 @@ ID: DEP-M2-001
 Description: Commercial permissions for franchise character names, artwork, dialogue, and related media in `DBZ_LICENSED` content pack.  
 Status: PENDING  
 Affected feature: Published character presentations when `CONTENT_MODE=DBZ_LICENSED`; licensed media delivery.  
-Current fallback: `CONTENT_MODE=ORIGINAL` (default). Seed creates ORIGINAL archetypes (Explorer, Strategist, Scholar, Guardian, Titan) as PUBLISHED. DBZ_LICENSED pack rows exist for Goku/Vegeta/Gohan/Trunks/Broly with `publicationStatus` DRAFT or UNAVAILABLE and `rightsVerifiedAt=null`. These are structural placeholders only — not authentic licensed assets and not claimed as approved for publication.  
-Owner action: Provide verified rights grant evidence (holder, permitted uses, territories, validity) before any admin publishes DBZ presentations.  
+Current fallback: `CONTENT_MODE=ORIGINAL` (default). Seed publishes first-party coaches named Goku, Vegeta, Gohan, Future Trunks, and Broly (archetype keys explorer/strategist/scholar/guardian/titan). Original portraits and original coaching copy. DBZ_LICENSED pack rows remain DRAFT/UNAVAILABLE with `rightsVerifiedAt=null` until rights are verified. Missing optional media must not hide selectable coaches.  
+Owner action: Provide verified rights grant evidence (holder, permitted uses, territories, validity) before any admin publishes licensed DBZ presentations.  
 Secure configuration location: Admin rights-grant records (future) + env `CONTENT_MODE`; never commit grant documents with secrets.  
-Verification required: After grants are recorded, set pack/presentation publicationStatus to PUBLISHED only for covered uses; confirm `GET /api/v1/characters` returns licensed presentations solely when mode and rights allow.  
-Last checked: 2026-09-13  
-Notes: Selecting Broly (or Titan) must never auto-select an advanced programme; screening outcomes remain authoritative.
+Verification required: After grants are recorded, set pack/presentation publicationStatus to PUBLISHED only for covered uses; confirm `GET /api/v1/characters` returns licensed presentations solely when mode and rights allow. `GET /characters/admin/content-readiness` exposes mode, pack, published coach count, and repair action.  
+Last checked: 2026-09-14  
+Notes: ORIGINAL mode is the selectable named-coach catalogue. Licensed stills/names-as-franchise-identity remain PENDING. Selecting Broly must never auto-select an advanced programme; screening outcomes remain authoritative.
 
 ### DEP-M2-002 – Screening answer encryption at rest
 

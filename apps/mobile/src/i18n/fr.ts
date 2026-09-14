@@ -68,7 +68,7 @@ export const fr: Record<MessageKey, string> = {
     'Aucun symptôme urgent déclaré dans ce démarrage rapide. Ce n’est pas un diagnostic.',
   onboardingDiet: 'Régime par défaut : non végétarien. Modifiable plus tard dans Fuel.',
   onboardingCharacter:
-    'Choisissez un thème motivationnel. Portraits originaux — pas des images officielles Dragon Ball Z.',
+    'Choisissez le personnage qui guidera vos séances, vos repas et votre progression. Vous pourrez changer de coach plus tard. Portraits originaux — pas des images officielles Dragon Ball Z.',
   originalArtNote: 'Les libellés d’emphase sont des interprétations produit, pas une licence.',
   inspiredByPrefix: 'Emphase d’entraînement inspirée de',
   onboardingConfirm: 'Terminez pour accéder à Aujourd’hui. Le repos compte comme du progrès.',

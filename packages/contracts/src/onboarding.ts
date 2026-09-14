@@ -5,13 +5,13 @@ import { IsoDateTimeSchema, UuidSchema } from './common.js';
 /** Onboarding steps aligned with packages/domain (docs/02). */
 export const OnboardingStepSchema = z.enum([
   'WELCOME',
+  'CHARACTER',
   'GOALS',
   'EXPERIENCE',
   'AVAILABILITY',
   'SCREENING',
   'DIET',
   'MEASUREMENTS',
-  'CHARACTER',
   'NOTIFICATIONS',
   'PLAN_PREVIEW',
   'CONFIRM',
@@ -120,6 +120,7 @@ const MeasurementsPayloadSchema = z
 const CharacterPayloadSchema = z
   .object({
     presentationId: UuidSchema,
+    coachingTone: z.enum(['GENTLE', 'BALANCED', 'DIRECT']).optional(),
   })
   .strict();
 
@@ -174,11 +175,36 @@ export const OnboardingProgressSchema = z.object({
   screeningRecordId: UuidSchema.nullable(),
   hasDietPreference: z.boolean(),
   hasCharacterSelection: z.boolean(),
-  contentMode: z.enum(['ORIGINAL', 'DBZ_LICENSED']),
+  welcomeComplete: z.boolean(),
+  onboardingComplete: z.boolean(),
+  hasValidCoachSelection: z.boolean(),
+  coachReplacementRequired: z.boolean(),
+});
+
+export const MemberJourneyDestinationSchema = z.enum([
+  'SELECT_COACH',
+  'RESUME_ONBOARDING',
+  'TODAY',
+]);
+
+export const MemberJourneySchema = z.object({
+  destination: MemberJourneyDestinationSchema,
+  path: z.enum(['/app/coach', '/app/onboarding', '/app']),
+  nextOnboardingStep: OnboardingStepSchema.nullable(),
+  welcomeComplete: z.boolean(),
+  hasValidCoachSelection: z.boolean(),
+  coachReplacementRequired: z.boolean(),
+  onboardingComplete: z.boolean(),
+});
+
+export const GetOnboardingResponseSchema = z.object({
+  progress: OnboardingProgressSchema,
+  journey: MemberJourneySchema,
 });
 
 export const CompleteOnboardingResponseSchema = z.object({
   progress: OnboardingProgressSchema,
+  journey: MemberJourneySchema,
   completed: z.literal(true),
 });
 
@@ -186,4 +212,7 @@ export type OnboardingStep = z.infer<typeof OnboardingStepSchema>;
 export type ScreeningOutcome = z.infer<typeof ScreeningOutcomeSchema>;
 export type SaveOnboardingStep = z.infer<typeof SaveOnboardingStepSchema>;
 export type OnboardingProgress = z.infer<typeof OnboardingProgressSchema>;
+export type MemberJourneyDestination = z.infer<typeof MemberJourneyDestinationSchema>;
+export type MemberJourney = z.infer<typeof MemberJourneySchema>;
+export type GetOnboardingResponse = z.infer<typeof GetOnboardingResponseSchema>;
 export type CompleteOnboardingResponse = z.infer<typeof CompleteOnboardingResponseSchema>;

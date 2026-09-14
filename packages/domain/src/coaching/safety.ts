@@ -7,9 +7,15 @@
  */
 
 export const COACH_ALLOWED_ACTION_TYPES = [
-  'RESCHEDULE_SESSION',
+  'START_WORKOUT',
+  'PREVIEW_SHORTER_SESSION',
   'SELECT_SHORT_SESSION',
+  'RESCHEDULE_SESSION',
+  'PREVIEW_MEAL_SWAP',
   'SWAP_MEAL',
+  'LOG_CHECK_IN',
+  'REVIEW_WEEK',
+  'PROPOSE_FUTURE_PLAN_ADJUSTMENT',
   'UPDATE_NEXT_WEEK_AVAILABILITY',
 ] as const;
 
@@ -102,6 +108,8 @@ export function evaluateCoachProposalSafety(
     input.screeningOutcome &&
     !allowsAutomatedTrainingAction(input.screeningOutcome) &&
     (input.actionType === 'SELECT_SHORT_SESSION' ||
+      input.actionType === 'PREVIEW_SHORTER_SESSION' ||
+      input.actionType === 'START_WORKOUT' ||
       input.actionType === 'RESCHEDULE_SESSION' ||
       payload.forceTraining === true)
   ) {

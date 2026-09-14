@@ -17,9 +17,18 @@ export function CharacterPortrait({
 }) {
   const primary = characterArtworkSrc({ archetypeKey, artworkUrl });
   const [src, setSrc] = useState(primary || artworkUrl || '');
+  const [failed, setFailed] = useState(!src);
 
-  if (!src) {
-    return <div className={className ? `${className} character-portrait-fallback` : 'character-portrait-fallback'} aria-hidden="true" />;
+  if (failed || !src) {
+    return (
+      <div
+        className={className ? `${className} character-portrait-fallback` : 'character-portrait-fallback'}
+        role="img"
+        aria-label={name}
+      >
+        <span className="character-portrait-fallback__name">{name}</span>
+      </div>
+    );
   }
 
   return (
@@ -33,7 +42,9 @@ export function CharacterPortrait({
       onError={() => {
         if (artworkUrl && src !== artworkUrl) {
           setSrc(artworkUrl);
+          return;
         }
+        setFailed(true);
       }}
     />
   );

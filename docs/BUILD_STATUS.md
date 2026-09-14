@@ -1,30 +1,40 @@
 # Build Status — Saiyan Ascend
 
-Last updated: 2026-09-13 (auth BFF + original character art)
+Last updated: 2026-09-14 (personal coach selection)
 
 ## Current milestone
 
-Member login/session on split web/API hosts, original character portraits, production boot migrate/seed, and a usable mobile onboarding path are **implemented in-repo**. Railway production still serves the previous build until the owner authorises a redeploy.
+The chosen character is a **persistent personal coach**, not a motivational theme. Catalogue listing, post-login journey, ORIGINAL content-pack readiness, selection UI, Today briefing actions, and persona-aware notifications are **implemented in-repo**.
 
-Local Docker Compose / Postgres on this Windows host remains **BLOCKED**. Browser verification used the Next.js same-origin proxy against the live Railway API.
+Local Docker Compose / Postgres on this Windows host remains **BLOCKED**. Railway production still serves the previous build until the owner authorises a redeploy (migrate + seed on API boot).
 
 ## Milestone status summary
 
 | Milestone | Code status | Runtime / Docker verification |
 | --- | --- | --- |
 | M1 Foundation | Implemented + session BFF | Browser: register/login via proxy PASS; local Docker/Postgres E2E still BLOCKED |
-| M2 Onboarding + characters | Implemented + original portraits | Browser: post-login onboarding PASS; portraits on login/register |
-| M3 Training | Implemented | **BLOCKED** (`DEP-M3-002`) |
-| M4 Nutrition | Implemented | **BLOCKED** (`DEP-M4-002`) |
+| M2 Onboarding + characters | Personal coach journey + named ORIGINAL coaches | Domain tests PASS; live catalogue E2E **BLOCKED** until API+web redeploy + seed |
+| M3 Training | Implemented; coach can start/shorten eligible sessions | **BLOCKED** (`DEP-M3-002`) |
+| M4 Nutrition | Implemented; diet/allergy hard rules still apply | **BLOCKED** (`DEP-M4-002`) |
 | M5 Progression | Implemented | **BLOCKED** (`DEP-M5-001`) |
-| M6 Media | ORIGINAL static images served | Local public PNG PASS; licensed DBZ stills **not** claimed |
-| M7 Notifications | Foundational slice (SIMULATED delivery) | **BLOCKED** (`DEP-M7-002`) |
-| M8 AI coach | Thin slice implemented (fixture provider) | **BLOCKED** (`DEP-M8-002`); OpenAI **PENDING** (`DEP-M8-001`) |
+| M6 Media | ORIGINAL static images served; missing art does not block coaches | Local public PNG PASS; licensed DBZ stills **not** claimed |
+| M7 Notifications | SIMULATED delivery; worker re-resolves current persona | **BLOCKED** (`DEP-M7-002`) |
+| M8 AI coach | Fixture persona fallback + briefing/actions | **BLOCKED** (`DEP-M8-002`); OpenAI **PENDING** (`DEP-M8-001`) |
 | M9 Privacy export/deletion | Thin slice (FIXTURE_DRY_RUN; no DB wipe) | **BLOCKED** (`DEP-M9-003`); storage/wipe **PENDING** |
-| M10 Admin | Not started | — |
+| M10 Admin | Content-readiness diagnostics on `/admin` | Full CMS not started |
 | M11 Release scaffolding | Templates in-repo; boot migrate/seed | **NOT REDEPLOYED** — owner authorisation required |
 
 ## Completed behaviour
+
+### Personal coach (2026-09-14)
+
+- Post-auth resolver `resolveAuthenticatedMemberJourney`: no session → sign-in; loading without redirect; no valid coach → `/app/coach`; incomplete fitness onboarding → `/app/onboarding`; complete → `/app` Today. Temporary fetch errors keep the session and do not clear a saved coach.
+- CHARACTER is the first personalised onboarding step after WELCOME/consent. Existing members without a selection see coach selection on the next authenticated visit. A valid selection is not re-asked on every login.
+- ORIGINAL catalogue lists **published presentations by `contentPack.mode`**, not a single pack row. Empty catalogue is a recoverable page error with operator diagnostics (`GET /characters/admin/content-readiness`); it is not a highlighted-field validation error and does not leak `ORIGINAL` to members.
+- Seed publishes first-party coaches named Goku, Vegeta, Gohan, Future Trunks, and Broly. Does not republish WITHDRAWN rows or overwrite custom administrator display names. Does not backfill a default coach onto existing members.
+- Selection is stored on `CharacterSelection` (presentationId, personaVersion, coachingTone, timestamps) scoped to the authenticated user. Change Coach from Profile and Today. Changing coach increments personaVersion, bumps pending reminder `scheduleVersion`, and does not alter training load, calories, XP, or logs.
+- Today briefing is persona-specific with a working follow-through (`START_WORKOUT`, shorter session when eligible, check-in, or honest href). Fixture coach fallback remains when OpenAI is unset.
+- Worker re-resolves the current selection before simulated MOTIVATION / WORKOUT_REMINDER / WEEKLY_REVIEW / MEAL_REMINDER copy.
 
 ### Auth BFF, original character art, production boot (2026-09-13)
 
@@ -74,11 +84,22 @@ Local Docker Compose / Postgres on this Windows host remains **BLOCKED**. Browse
 
 ## Files or modules changed
 
-### Auth BFF + original art (this update)
+### Personal coach (2026-09-14)
+
+- `packages/domain` — journey resolver, step order WELCOME→CHARACTER, personas/briefing, expanded coach actions
+- `packages/database` — `personaVersion`, `coachingTone`, `CoachingMemoryEntry`, migration `20260914120000_m12_personal_coach`, ORIGINAL seed names Goku–Broly
+- `packages/contracts` — journey, presentation persona fields, briefing/context/memory, action types
+- `apps/api` — catalogue by pack mode, content-readiness, selection versioning, GET `/onboarding` journey, `/coach/briefing|context|memory`, confirmable actions
+- `apps/web` — `/app/coach`, journey gate, login/register routing, Today briefing CTAs, Profile My Coach, About disclosures, admin readiness
+- `apps/mobile` — matching step order and coach copy
+- `apps/worker` — re-resolve persona before simulated reminder copy
+- `docs/BUILD_STATUS.md`, `docs/03-character-and-progression.md`, `docs/16-decisions-and-dependencies.md`, `memory-bank/**`
+
+### Auth BFF + original art (prior)
 
 - `apps/web/src/app/api/v1/[...path]/route.ts` — same-origin cookie BFF
 - `apps/web/src/lib/api.ts`, login/register forms, character UI, public portraits
-- `apps/api` — static `/static`, boot migrate/seed, character `artworkUrl` / `inspiredByLabel`, `GET /characters/selection`
+- `apps/api` — static `/static`, boot migrate/seed, character `artworkUrl`, `GET /characters/selection`
 - `packages/contracts`, `packages/database` seed + prisma CLI as runtime dependency
 - `apps/mobile` — onboarding, portraits, Today theme, Android API default
 - `.env.example`, `.railway/railway.ts`, `docs/BUILD_STATUS.md`, `memory-bank/**`
@@ -87,16 +108,18 @@ Local Docker Compose / Postgres on this Windows host remains **BLOCKED**. Browse
 
 | Command | Result |
 | --- | --- |
-| `pnpm install` | PASS |
-| `pnpm --filter @saiyan/contracts build` | PASS |
-| `pnpm --filter @saiyan/domain build` | PASS |
-| `pnpm --filter @saiyan/database build` | PASS |
-| `pnpm --filter @saiyan/api build` | PASS |
-| `pnpm --filter @saiyan/web build` | PASS (Next.js 15.5.25) |
-| `pnpm --filter @saiyan/mobile exec tsc -p tsconfig.json --noEmit` | PASS |
-| `pnpm --filter @saiyan/domain test` | PASS — **63 tests** |
-| Browser: register → onboarding; logout → login → onboarding via same-origin proxy to Railway API | PASS |
+| `pnpm --filter @saiyan/database generate` | PASS |
+| `pnpm --filter @saiyan/domain test` | PASS — **78 tests** |
+| `pnpm --filter @saiyan/providers test` | PASS — **3 tests** |
+| Domain / contracts / API / web / worker / mobile `tsc` | PASS |
+| `@saiyan/web` `next build` | PASS (`/app/coach`, `/app/profile`, `/about`) |
+| `@saiyan/api` `tsc -p tsconfig.build.json` | PASS |
+| Browser: home “personal coach” copy; About AI/health/content disclosure; signed-in member without a valid coach lands on `/app/coach` | PASS against local Next + live Railway API |
+| Live `GET /characters` still returns empty catalogue + `No content pack configured for mode ORIGINAL` | Expected until API redeploy runs migrate/seed; web maps this to “We couldn't load your coaches” (not a field error) |
+| `pnpm db:migrate` / `pnpm db:seed` | **NOT RUN** (no local Postgres) |
 | `pnpm docker:up` / local Postgres `:5432` | **NOT RUN / refused** on this host |
+
+Prepared (not run against a database): `pnpm db:migrate` or `prisma migrate deploy`, then `pnpm db:seed`. Production API boot already runs migrate+seed when `APP_ENV=production` (`SEED_ON_BOOT`).
 
 ## What was simulated (honest modes)
 
@@ -112,8 +135,8 @@ Local Docker Compose / Postgres on this Windows host remains **BLOCKED**. Browse
 - DEP-M9-001 export storage PENDING; DEP-M9-002 authorised wipe PENDING.
 - Prior DEP-M3/M4/M5/M6/M7 Postgres E2E blockers still open.
 - DEP-M11-001 Railway access + deploy authorisation PENDING. Redeploy web with `API_PROXY_TARGET` (private or public API URL) and API with `APP_ENV=production` so migrate/seed and portraits go live. Live Railway still serves the previous build.
-- Official Dragon Ball Z stills / names-as-licensed-identity remain PENDING (`DEP-M2-001`). Original portraits are the current production fallback.
-- After Docker is healthy: `pnpm docker:up` → `pnpm db:migrate` → `pnpm db:seed` → smoke coach messages + export/deletion fixture paths.
+- Official Dragon Ball Z stills / names-as-licensed-identity remain PENDING (`DEP-M2-001`). ORIGINAL named coaches with original portraits are the current production fallback.
+- After Docker is healthy: `pnpm docker:up` → `pnpm db:migrate` → `pnpm db:seed` → register → `/app/coach` → remaining onboarding → Today briefing CTA.
 
 ## External dependencies
 

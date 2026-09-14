@@ -25,12 +25,12 @@ import { colors, fonts, spacing } from '@/src/theme';
 
 const STEPS = [
   'WELCOME',
+  'CHARACTER',
   'GOALS',
   'EXPERIENCE',
   'AVAILABILITY',
   'SCREENING',
   'DIET',
-  'CHARACTER',
   'CONFIRM',
 ] as const;
 
@@ -81,8 +81,8 @@ export default function OnboardingScreen() {
 
   const bootOnboarding = useCallback(async () => {
     try {
-      const { progress } = await getOnboarding();
-      if (progress.completedAt) {
+      const { progress, journey } = await getOnboarding();
+      if (progress.completedAt || journey?.destination === 'TODAY') {
         setBoot('done');
         return;
       }
@@ -108,11 +108,12 @@ export default function OnboardingScreen() {
     void listCharacters()
       .then((result) => {
         setCharacters(result.presentations);
-        const first = result.presentations[0];
-        if (first && !presentationId) setPresentationId(first.id);
+        if (result.unavailable || result.presentations.length === 0) {
+          setError(t('unknownError'));
+        }
       })
       .catch(() => setError(t('unknownError')));
-  }, [presentationId, step, t]);
+  }, [step, t]);
 
   if (status === 'loading' || boot === 'loading') {
     return <LoadingBlock label={t('onboardingLoading')} />;
@@ -288,12 +289,11 @@ export default function OnboardingScreen() {
                   ) : null}
                   <View style={styles.characterCopy}>
                     <Text style={styles.choiceText}>{item.approvedName}</Text>
-                    {item.inspiredByLabel ? (
-                      <Text style={styles.inspired}>
-                        {t('inspiredByPrefix')} {item.inspiredByLabel}
-                      </Text>
-                    ) : null}
-                    <Text style={styles.note}>{item.emphasis}</Text>
+                    {item.coachingDescription ? (
+                      <Text style={styles.note}>{item.coachingDescription}</Text>
+                    ) : (
+                      <Text style={styles.note}>{item.emphasis}</Text>
+                    )}
                   </View>
                 </Pressable>
               );

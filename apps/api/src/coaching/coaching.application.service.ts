@@ -11,9 +11,15 @@ import type {
   PostCoachMessageRequest,
   PostCoachMessageResponse,
   RejectCoachActionResponse,
+  UpsertCoachMemoryRequest,
 } from '@saiyan/contracts';
 import {
+  composeCoachBriefing,
   evaluateCoachProposalSafety,
+  getCoachPersona,
+  localDateInTimeZone,
+  normalizeCoachingTone,
+  type CoachBriefingSituation,
   type CoachScreeningOutcome,
 } from '@saiyan/domain';
 import {
@@ -25,16 +31,14 @@ import type { Prisma } from '@saiyan/database';
 
 import type { Env } from '../config/env.js';
 import { ENV } from '../config/tokens.js';
+import { CharacterFacade } from '../characters/character.facade.js';
 import { PrismaService } from '../database/prisma.service.js';
+import { NutritionFacade } from '../nutrition/nutrition.facade.js';
 import { OnboardingFacade } from '../onboarding/onboarding.facade.js';
+import { ProfileFacade } from '../profiles/profile.facade.js';
+import { TrainingFacade } from '../training/training.facade.js';
 
 const PROPOSAL_TTL_MS = 30 * 60 * 1000;
-const DEFAULT_MOTIVATIONAL = [
-  "Let's make today's session fit the time you have.",
-  'Choose your session. Follow the plan. Record the work.',
-  'A demanding week can still include a manageable routine.',
-  'Rest and consistency both move you forward.',
-] as const;
 
 /**
  * Owns CoachConversation / CoachMessage / CoachActionProposal.
@@ -48,6 +52,10 @@ export class CoachingApplicationService {
   constructor(
     private readonly prisma: PrismaService,
     private readonly onboarding: OnboardingFacade,
+    private readonly characters: CharacterFacade,
+    private readonly profiles: ProfileFacade,
+    private readonly training: TrainingFacade,
+    private readonly nutrition: NutritionFacade,
     @Inject(ENV) private readonly env: Env,
   ) {
     const resolved = resolveCoachProvider(this.env);
@@ -61,6 +69,8 @@ export class CoachingApplicationService {
   ): Promise<PostCoachMessageResponse> {
     const screening = await this.onboarding.getLatestScreeningSummary(userId);
     const diet = await this.onboarding.getLatestDietPreferenceSummary(userId);
+    const selection = await this.characters.getSelection(userId);
+    const runtime = await this.loadRuntimeHints(userId, 'UTC');
 
     const conversation = body.conversationId
       ? await this.requireConversation(userId, body.conversationId)
@@ -68,7 +78,7 @@ export class CoachingApplicationService {
           data: { userId },
         });
 
-    const approvedContent = await this.loadApprovedContent();
+    const approvedContent = await this.loadApprovedContent(selection?.presentation.archetypeKey);
 
     const structured = await this.coach.complete({
       memberMessage: body.message,
@@ -77,7 +87,14 @@ export class CoachingApplicationService {
         screeningOutcome: screening?.outcome ?? null,
         allergies: diet?.allergyRestrictions ?? [],
         dietaryPattern: diet?.pattern ?? null,
-        tone: body.tone ?? null,
+        tone: body.tone ?? selection?.coachingTone ?? null,
+        personaKey: selection?.presentation.personaKey ?? null,
+        coachDisplayName: selection?.presentation.approvedName ?? null,
+        coachingTone: selection?.coachingTone ?? body.tone ?? null,
+        hasEligibleShortSession: runtime.hasEligibleShortSession,
+        hasPlannedSession: runtime.hasPlannedSession,
+        hasEligibleMealSwap: runtime.hasEligibleMealSwap,
+        plannedSessionId: runtime.plannedSessionId,
       },
     });
 
@@ -254,7 +271,26 @@ export class CoachingApplicationService {
       });
     }
 
-    // Thin slice: confirm records intent only — does not silently mutate plans.
+    // Apply only after member confirmation. Informational actions stay unapplied.
+    let applied = false;
+    let note = `Proposal confirmed. idempotencyKey=${idempotencyKey.trim()}`;
+
+    try {
+      const appliedResult = await this.applyConfirmedAction(userId, proposal.actionType, payload);
+      applied = appliedResult.applied;
+      note = appliedResult.note;
+    } catch (error) {
+      await this.prisma.client.coachActionProposal.update({
+        where: { id: proposal.id },
+        data: {
+          status: 'FAILED_SAFETY',
+          safetyStatus: 'REFUSED',
+          rejectionReason: error instanceof Error ? error.message : 'APPLY_FAILED',
+        },
+      });
+      throw error;
+    }
+
     const updated = await this.prisma.client.coachActionProposal.update({
       where: { id: proposal.id },
       data: {
@@ -265,8 +301,8 @@ export class CoachingApplicationService {
 
     return {
       proposal: mapProposal(updated),
-      applied: false,
-      note: `Proposal confirmed for member follow-up. Plan mutations remain in Training/Nutrition façades. idempotencyKey=${idempotencyKey.trim()}`,
+      applied,
+      note,
     };
   }
 
@@ -314,6 +350,254 @@ export class CoachingApplicationService {
     };
   }
 
+  async getContext(userId: string, timeZone: string) {
+    const [selection, profile, screening, diet, plan, meals] = await Promise.all([
+      this.characters.getSelection(userId),
+      this.profiles.getLatestSummary(userId),
+      this.onboarding.getLatestScreeningSummary(userId),
+      this.onboarding.getLatestDietPreferenceSummary(userId),
+      this.training.getCurrentPlan(userId),
+      this.nutrition.getCurrentMealPlan(userId),
+    ]);
+    const runtime = await this.loadRuntimeHints(userId, timeZone);
+    const unknownInputs: string[] = [];
+    if (!profile?.goals?.length) unknownInputs.push('goals');
+    if (!profile?.equipment) unknownInputs.push('equipment');
+    if (!diet) unknownInputs.push('diet');
+    if (!screening) unknownInputs.push('screening');
+
+    return {
+      persona: selection ? toPersonaView(selection) : null,
+      primaryGoals: profile?.goals ?? [],
+      experience: profile?.experience ?? null,
+      equipment: profile?.equipment ?? [],
+      availableMinutes: profile?.sessionDurationMinutes ?? profile?.weeklyAvailabilityMinutes ?? null,
+      foodPattern: diet?.pattern ?? null,
+      allergies: diet?.allergyRestrictions ?? [],
+      ingredientExclusions: diet?.ingredientExclusions ?? [],
+      screeningOutcome: screening?.outcome ?? null,
+      screeningRestrictions: screening?.restrictions ?? [],
+      timeZone,
+      notificationConsent: null,
+      dataFreshness: {
+        hasPlan: Boolean(plan.plan),
+        hasMealPlan: Boolean(meals.plan),
+        hasRecentWorkoutLog: runtime.hasRecentWorkoutLog,
+        hasRecentMealLog: runtime.hasRecentMealLog,
+        unknownInputs,
+      },
+    };
+  }
+
+  async getBriefing(userId: string, timeZone: string) {
+    const selection = await this.characters.getSelection(userId);
+    if (!selection) {
+      throw new UnprocessableEntityException({
+        code: 'CHARACTER_SELECTION_REQUIRED',
+        message: 'Choose a coach before viewing Today.',
+        retryable: false,
+      });
+    }
+    const runtime = await this.loadRuntimeHints(userId, timeZone);
+    let situation: CoachBriefingSituation = 'NO_PLAN';
+    if (runtime.hasPlan && runtime.hasPlannedSession) {
+      situation = 'SESSION_READY';
+    } else if (runtime.hasPlan) {
+      situation = 'REST_DAY';
+    }
+    const busy = await this.prisma.client.coachingMemoryEntry.findUnique({
+      where: { userId_key: { userId, key: 'busy_day' } },
+    });
+    if (busy && Date.now() - busy.occurredAt.getTime() < 18 * 60 * 60 * 1000) {
+      situation = 'BUSY_DAY';
+    }
+
+    const composed = composeCoachBriefing({
+      archetypeKey: selection.presentation.archetypeKey,
+      displayName: selection.presentation.approvedName,
+      coachingTone: selection.coachingTone,
+      situation,
+      sessionMinutes: runtime.sessionMinutes,
+      hasEligibleShortSession: runtime.hasEligibleShortSession,
+      hasPlannedSession: runtime.hasPlannedSession,
+      hasEligibleMealSwap: runtime.hasEligibleMealSwap,
+    });
+
+    const href = hrefForAction(composed.action?.actionType ?? 'LOG_CHECK_IN', runtime.plannedSessionId);
+    return {
+      persona: toPersonaView(selection),
+      messageText: composed.messageText,
+      situation,
+      action: composed.action
+        ? {
+            actionType: composed.action.actionType,
+            label: composed.action.label,
+            href,
+            appliedClaim: false as const,
+            payload: {
+              ...(runtime.plannedSessionId ? { plannedSessionId: runtime.plannedSessionId } : {}),
+            },
+          }
+        : null,
+      limitations: composed.limitations,
+      providerMode: 'fixture' as const,
+    };
+  }
+
+  async listMemory(userId: string) {
+    const rows = await this.prisma.client.coachingMemoryEntry.findMany({
+      where: { userId },
+      orderBy: { occurredAt: 'desc' },
+      take: 50,
+    });
+    return {
+      entries: rows.map((row) => ({
+        id: row.id,
+        key: row.key,
+        valueText: row.valueText,
+        sourceRef: row.sourceRef,
+        occurredAt: row.occurredAt.toISOString(),
+        updatedAt: row.updatedAt.toISOString(),
+      })),
+    };
+  }
+
+  async upsertMemory(userId: string, body: UpsertCoachMemoryRequest) {
+    const row = await this.prisma.client.coachingMemoryEntry.upsert({
+      where: { userId_key: { userId, key: body.key } },
+      create: {
+        userId,
+        key: body.key,
+        valueText: body.valueText,
+        sourceRef: body.sourceRef ?? null,
+      },
+      update: {
+        valueText: body.valueText,
+        sourceRef: body.sourceRef ?? null,
+        occurredAt: new Date(),
+      },
+    });
+    return {
+      id: row.id,
+      key: row.key,
+      valueText: row.valueText,
+      sourceRef: row.sourceRef,
+      occurredAt: row.occurredAt.toISOString(),
+      updatedAt: row.updatedAt.toISOString(),
+    };
+  }
+
+  async deleteMemory(userId: string, id: string) {
+    const existing = await this.prisma.client.coachingMemoryEntry.findFirst({
+      where: { id, userId },
+    });
+    if (!existing) {
+      throw new NotFoundException({
+        code: 'COACHING_MEMORY_NOT_FOUND',
+        message: 'Coaching memory entry not found',
+        retryable: false,
+      });
+    }
+    await this.prisma.client.coachingMemoryEntry.delete({ where: { id } });
+    return { ok: true as const };
+  }
+
+  private async applyConfirmedAction(
+    userId: string,
+    actionType: string,
+    payload: Record<string, unknown>,
+  ): Promise<{ applied: boolean; note: string }> {
+    const plannedSessionId =
+      typeof payload.plannedSessionId === 'string' ? payload.plannedSessionId : null;
+
+    if (actionType === 'START_WORKOUT') {
+      if (!plannedSessionId) {
+        return { applied: false, note: 'Start workout needs a planned session. Open Train to choose one.' };
+      }
+      await this.training.startWorkout(userId, { plannedSessionId });
+      return { applied: true, note: 'Workout session started.' };
+    }
+
+    if (actionType === 'PREVIEW_SHORTER_SESSION' || actionType === 'SELECT_SHORT_SESSION') {
+      if (!plannedSessionId) {
+        return {
+          applied: false,
+          note: 'We can shorten a session once an eligible planned session is selected in Train.',
+        };
+      }
+      const minutes =
+        typeof payload.maxMinutes === 'number'
+          ? payload.maxMinutes
+          : typeof payload.targetDurationMinutes === 'number'
+            ? payload.targetDurationMinutes
+            : 15;
+      await this.training.shortenPlannedSession(userId, plannedSessionId, {
+        targetDurationMinutes: Math.max(10, Math.min(180, Math.round(minutes))),
+      });
+      return { applied: true, note: 'The planned session was shortened.' };
+    }
+
+    if (actionType === 'LOG_CHECK_IN') {
+      await this.upsertMemory(userId, {
+        key: 'check_in',
+        valueText:
+          typeof payload.note === 'string' && payload.note.trim()
+            ? payload.note.trim()
+            : 'Checked in',
+        sourceRef: 'coach-action',
+      });
+      return { applied: true, note: 'Check-in saved.' };
+    }
+
+    if (actionType === 'PREVIEW_MEAL_SWAP' || actionType === 'SWAP_MEAL') {
+      return {
+        applied: false,
+        note: 'We can preview an eligible meal swap on Fuel. No meal was changed yet.',
+      };
+    }
+
+    if (actionType === 'RESCHEDULE_SESSION') {
+      return {
+        applied: false,
+        note: 'We can move your workout from Train. No session was moved yet.',
+      };
+    }
+
+    if (actionType === 'REVIEW_WEEK' || actionType === 'PROPOSE_FUTURE_PLAN_ADJUSTMENT' || actionType === 'UPDATE_NEXT_WEEK_AVAILABILITY') {
+      return {
+        applied: false,
+        note: 'This is a proposal for you to confirm in Progress or Train. Nothing was changed yet.',
+      };
+    }
+
+    return { applied: false, note: 'No plan change was applied.' };
+  }
+
+  private async loadRuntimeHints(userId: string, timeZone: string) {
+    const localDate = localDateInTimeZone(timeZone || 'UTC', new Date());
+    const [plan, sessions, meals] = await Promise.all([
+      this.training.getCurrentPlan(userId),
+      this.training.listPlannedSessions(userId),
+      this.nutrition.getCurrentMealPlan(userId),
+    ]);
+    const today = sessions.sessions.find((session) => session.localDate === localDate);
+    const hasEligibleShortSession = Boolean(
+      today &&
+        (today.status === 'PLANNED' || today.status === 'SHORTENED') &&
+        today.durationBudget > 10,
+    );
+    return {
+      hasPlan: Boolean(plan.plan),
+      hasPlannedSession: Boolean(today),
+      plannedSessionId: today?.id ?? null,
+      sessionMinutes: today?.durationBudget ?? null,
+      hasEligibleShortSession,
+      hasEligibleMealSwap: Boolean(meals.plan),
+      hasRecentWorkoutLog: today?.status === 'IN_PROGRESS' || today?.status === 'COMPLETED',
+      hasRecentMealLog: false,
+    };
+  }
+
   private async requireConversation(userId: string, conversationId: string) {
     const conversation = await this.prisma.client.coachConversation.findFirst({
       where: { id: conversationId, userId },
@@ -328,7 +612,8 @@ export class CoachingApplicationService {
     return conversation;
   }
 
-  private async loadApprovedContent() {
+  private async loadApprovedContent(archetypeKey?: string) {
+    const persona = getCoachPersona(archetypeKey);
     const quotes = await this.prisma.client.quote.findMany({
       where: {
         kind: 'ORIGINAL_COPY',
@@ -351,10 +636,14 @@ export class CoachingApplicationService {
       select: { id: true },
     });
 
-    const motivationalLines =
-      quotes.length > 0
-        ? quotes.map((q) => q.text)
-        : [...DEFAULT_MOTIVATIONAL];
+    const motivationalLines = [
+      persona.busyDayLine,
+      persona.sessionReadyLine,
+      persona.missedLogLine,
+      persona.mealLine,
+      persona.fallbackLine,
+      ...quotes.map((q) => q.text),
+    ];
 
     return {
       motivationalLines,
@@ -419,9 +708,15 @@ function mapProposal(row: {
   return {
     id: row.id,
     actionType: row.actionType as
-      | 'RESCHEDULE_SESSION'
+      | 'START_WORKOUT'
+      | 'PREVIEW_SHORTER_SESSION'
       | 'SELECT_SHORT_SESSION'
+      | 'RESCHEDULE_SESSION'
+      | 'PREVIEW_MEAL_SWAP'
       | 'SWAP_MEAL'
+      | 'LOG_CHECK_IN'
+      | 'REVIEW_WEEK'
+      | 'PROPOSE_FUTURE_PLAN_ADJUSTMENT'
       | 'UPDATE_NEXT_WEEK_AVAILABILITY',
     status: row.status as
       | 'PENDING'
@@ -435,4 +730,47 @@ function mapProposal(row: {
     rejectionReason: row.rejectionReason,
     createdAt: row.createdAt.toISOString(),
   };
+}
+
+function toPersonaView(selection: {
+  presentationId: string;
+  personaVersion: number;
+  coachingTone: 'GENTLE' | 'BALANCED' | 'DIRECT' | null;
+  presentation: {
+    archetypeKey: string;
+    personaKey: string;
+    approvedName: string;
+    artworkUrl: string | null;
+    mediaFallback: boolean;
+  };
+}) {
+  return {
+    presentationId: selection.presentationId,
+    archetypeKey: selection.presentation.archetypeKey,
+    personaKey: selection.presentation.personaKey,
+    displayName: selection.presentation.approvedName,
+    personaVersion: selection.personaVersion,
+    coachingTone: normalizeCoachingTone(selection.coachingTone),
+    artworkUrl: selection.presentation.artworkUrl,
+    mediaFallback: selection.presentation.mediaFallback,
+  };
+}
+
+function hrefForAction(actionType: string, plannedSessionId: string | null): string {
+  switch (actionType) {
+    case 'START_WORKOUT':
+      return plannedSessionId ? `/app/train/session/${plannedSessionId}` : '/app/train';
+    case 'PREVIEW_SHORTER_SESSION':
+    case 'SELECT_SHORT_SESSION':
+    case 'RESCHEDULE_SESSION':
+      return '/app/train';
+    case 'PREVIEW_MEAL_SWAP':
+    case 'SWAP_MEAL':
+      return '/app/fuel';
+    case 'REVIEW_WEEK':
+    case 'PROPOSE_FUTURE_PLAN_ADJUSTMENT':
+      return '/app/progress';
+    default:
+      return '/app';
+  }
 }

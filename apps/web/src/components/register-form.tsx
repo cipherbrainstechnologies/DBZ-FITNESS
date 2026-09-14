@@ -51,8 +51,10 @@ export function RegisterForm() {
     setPending(true);
     try {
       await register(parsed.data);
+      let next = '/app/onboarding';
       try {
-        await api.getOnboarding();
+        const { journey } = await api.getOnboarding();
+        next = journey.path;
       } catch (afterAuth) {
         if (afterAuth instanceof ApiClientError && afterAuth.status === 401) {
           setError(t('errors.sessionCookie'));
@@ -61,7 +63,7 @@ export function RegisterForm() {
         throw afterAuth;
       }
       setSuccess(true);
-      router.replace('/app/onboarding');
+      router.replace(next);
     } catch (err) {
       const mapped = mapApiError(err, t);
       setError(mapped.message);

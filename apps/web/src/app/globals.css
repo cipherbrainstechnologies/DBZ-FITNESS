@@ -596,6 +596,36 @@ p {
     #141a2e;
 }
 
+.character-portrait-fallback {
+  display: grid;
+  place-items: center;
+}
+
+.character-portrait-fallback__name {
+  font-family: var(--font-display), system-ui, sans-serif;
+  letter-spacing: 0.06em;
+  text-align: center;
+  padding: var(--space-sm);
+}
+
+.coach-preview {
+  padding: var(--space-md);
+  border: 1px solid rgba(255, 138, 61, 0.28);
+  border-radius: 0.75rem;
+  background: rgba(255, 138, 61, 0.08);
+}
+
+.tone-row {
+  display: grid;
+  gap: var(--space-sm);
+}
+
+.coach-chat {
+  display: grid;
+  gap: 0.4rem;
+  margin-top: var(--space-md);
+}
+
 .character-inspired {
   color: var(--color-primary);
   font-size: var(--font-size-sm);
